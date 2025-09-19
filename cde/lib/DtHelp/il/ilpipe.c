@@ -1365,5 +1365,3 @@ ilError                 error;
             }   /* END while true: execute strips */
         }       /* END switch pipe state */
 }
-
-
