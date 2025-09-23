@@ -1963,7 +1963,7 @@ int sh_exec(register const Shnode_t *t, int flags)
 			int flag = errorflg|OPTIMIZE_FLAG;
 			struct dolnod	*argsav=0;
 			struct comnod	*tp;
-			char *cp, *trap, *nullptr = 0;
+			char *cp, *trap;
 			int nameref, refresh=1;
 			char *av[5];
 #if SHOPT_OPTIMIZE
@@ -2008,7 +2008,7 @@ int sh_exec(register const Shnode_t *t, int flags)
 					save_prompt = sh.nextprompt;
 					sh.nextprompt = 3;
 					sh.timeout = 0;
-					sh.exitval=sh_readline(&nullptr,0,1,(size_t)0,1000*sh.st.tmout);
+					sh.exitval=sh_readline(NULL,0,1,(size_t)0,1000*sh.st.tmout);
 					sh.nextprompt = save_prompt;
 					if(sh.exitval||sfeof(sfstdin)||sferror(sfstdin))
 					{
