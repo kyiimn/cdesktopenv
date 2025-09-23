@@ -77,7 +77,7 @@ NlsStrings   		smNLS;
 static int LibError( Display *, XErrorEvent *) ;
 static int LibIOError( void ) ;
 static void ToolkitWarning( char *) ;
-static void ToolkitError( char *) ;
+static void ToolkitError( char *) __attribute__((noreturn)) ;
 
 
 

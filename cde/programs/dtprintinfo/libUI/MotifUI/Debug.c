@@ -21,6 +21,7 @@
  * Floor, Boston, MA 02110-1301 USA
  */
 /* $TOG: Debug.c /main/5 1998/04/06 13:32:19 mgreess $ */
+#define _POSIX_C_SOURCE 2
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -39,7 +40,7 @@ static  const char *SysErrorMsg(int n);
 /* Error Handlers */
 static  int XIOError(Display *dpy);
 static  int XError(Display *dpy, XErrorEvent *event);
-static  void _XtError(String);
+static  void _XtError(String) __attribute__((noreturn));
 
 static Boolean G_DumpCore;
 
@@ -59,6 +60,7 @@ Debug(
  *   FUNCTION:
  *   RETURNS:
  */
+__attribute__((noreturn))
 static int
 XError(
    Display *dpy,
@@ -69,8 +71,7 @@ XError(
         return 0;
     if (G_DumpCore)
         kill(getpid(), SIGQUIT);
-    else
-        exit(1);
+    exit(1);
 }
 
 /*
@@ -78,6 +79,7 @@ XError(
  *   FUNCTION:
  *   RETURNS:
  */
+__attribute__((noreturn))
 static int
 XIOError(
    Display *dpy
@@ -92,8 +94,7 @@ XIOError(
         fprintf(stderr, INT_MESSAGE5);
     if (G_DumpCore)
         kill(getpid(), SIGQUIT);
-    else
-        exit(1);
+    exit(1);
 }
 
 /*
@@ -245,6 +246,7 @@ PrintXError(
  *   FUNCTION:
  *   RETURNS:
  */
+__attribute__((noreturn))
 static void
 _XtError(
     String string
@@ -253,6 +255,5 @@ _XtError(
     (void)fprintf(stderr, "XtToolkit Error: %s\n", string);
     if (G_DumpCore)
         kill(getpid(), SIGQUIT);
-    else
-        exit(1);
+    exit(1);
 }
