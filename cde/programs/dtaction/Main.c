@@ -578,7 +578,6 @@ AddSuLog(
 
 {
     char        *toString;
-    struct tm  *localtime ();
 
        FILE * f;
     struct stat st;
