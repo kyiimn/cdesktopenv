@@ -1032,8 +1032,6 @@ cms_update_entry_5_svc(cms_update_args *args, struct svc_req *svcrq)
 			args->entry.id, args->scope, args->entry.time,
 			args->pid);
 
-	free(appt);
-
 	/* reply */
 	if (cal->fversion >= _DtCM_FIRST_EXTENSIBLE_DATA_VERSION ||
 	    (cal->fversion < _DtCM_FIRST_EXTENSIBLE_DATA_VERSION &&
@@ -1045,6 +1043,7 @@ cms_update_entry_5_svc(cms_update_args *args, struct svc_req *svcrq)
 		_DtCm_free_cms_entry(newentry);
 	}
 
+	free(appt);
 	return (&res);
 }
 
@@ -1266,8 +1265,8 @@ _DtCmsCreateCallog(char *user, cms_create_args *args, _DtCmsCalendar **newcal)
 	/* dump file */
 	if ((stat = _DtCmsAppendCalAttrsByFN(log, cal->num_attrs, cal->attrs))
 	    != CSA_SUCCESS) {
-		free(log);
 		unlink(log);
+		free(log);
 		_DtCmsFreeCalendar(cal);
 		return (stat);
 	}
