@@ -181,7 +181,7 @@ Verify(
         case NOTIFY_OK:
 	    if(d->session)
 	      argv = parseArgs (argv,d->session);
-              break;
+            break;
         case NOTIFY_ALT_DTS:
 	    if((argv = setDt(d,argv,notify_dt)) == NULL)
 		/*if no startup file, startup the regular desktop*/

@@ -667,7 +667,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 	(void) XtFree(accelerator);
 	(void) XtFree(acceleratorText);
     }
-    if (menuBar || (!menuBar && firstPopup))
+    if (menuBar || (!menuBar && firstPopup)) {
 #ifdef	PULLDOWN_ACCELERATORS
 	ks = XStringToKeysym(GETMESSAGE(NL_SETN_ViewMenu,21, "W"));
 	(void) _DtTermViewCreateCascadeButton(menu, pulldown[pc], 
@@ -679,6 +679,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 	        (GETMESSAGE(NL_SETN_ViewMenu,20, "Window")),
 		NoSymbol, NULL, NULL, NULL, NULL);
 #endif	/* PULLDOWN_ACCELERATORS */
+    }
 
     (void) pc++;
     if (first) {
@@ -710,7 +711,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 	(void) XtFree(accelerator);
 	(void) XtFree(acceleratorText);
     }
-    if (menuBar || (!menuBar && firstPopup))
+    if (menuBar || (!menuBar && firstPopup)) {
 #ifdef	PULLDOWN_ACCELERATORS
 	ks = XStringToKeysym(GETMESSAGE(NL_SETN_ViewMenu,31, "E"));
 	(void) _DtTermViewCreateCascadeButton(menu, pulldown[pc], 
@@ -722,6 +723,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 	        (GETMESSAGE(NL_SETN_ViewMenu,30, "Edit")),
 		NoSymbol, NULL, NULL, NULL, NULL);
 #endif	/* PULLDOWN_ACCELERATORS */
+    }
 
     (void) pc++;
     if (first) {
@@ -777,7 +779,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 		ks,
 		NULL, NULL, NULL, NULL);
     }
-    if (menuBar || (!menuBar && firstPopup))
+    if (menuBar || (!menuBar && firstPopup)) {
 #ifdef	PULLDOWN_ACCELERATORS
         ks = XStringToKeysym(GETMESSAGE(NL_SETN_ViewMenu,47, "O"));
 	(void) _DtTermViewCreateCascadeButton(menu, pulldown[pc], 
@@ -789,6 +791,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 	          (GETMESSAGE(NL_SETN_ViewMenu,46, "Options")),
 		NoSymbol, NULL, NULL, NULL, NULL);
 #endif	/* PULLDOWN_ACCELERATORS */
+    }
 
     (void) pc++;
     if (first) {
@@ -905,7 +908,7 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 		NULL, NULL, helpAboutDttermCallback, NULL);
     }
 
-    if (menuBar || (!menuBar && firstPopup))
+    if (menuBar || (!menuBar && firstPopup)) {
 #ifdef	PULLDOWN_ACCELERATORS
 	ks = XStringToKeysym(GETMESSAGE(NL_SETN_ViewMenu,81,"H"));
 	cascade = _DtTermViewCreateCascadeButton(menu, pulldown[pc], 
@@ -918,6 +921,8 @@ CreateMenu(Widget termView, Widget parent, Boolean menuBar,
 		NoSymbol, NULL, NULL, NULL, NULL);
 #endif	/* PULLDOWN_ACCELERATORS */
 #endif	/* HPVUE */
+    }
+
     if (menuBar) {
 	/* this is the help button... */
 	i = 0;

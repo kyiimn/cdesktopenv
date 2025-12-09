@@ -4111,17 +4111,18 @@ WorkSpaceRemoved (
 	       for(k=0;
 		 k<desktop_data->workspaceData[new_index]->files_selected;k++)
                {
-                /* Adjust the selectedDTWindows of current to accommadate the old list */
+                /* Adjust the selectedDTWindows of current to accommodate the old list */
 		  if(desktop_data->workspaceData[new_index]->
 		       selectedDTWindows[k] == desktop_data->desktopWindows[i])
 		  {
 		    desktop_data->workspaceData[new_index]->
 					selectedDTWindows[k] = NULL;
-		    for(;k<desktop_data->workspaceData[new_index]->files_selected;k++)
+		    for(;k<desktop_data->workspaceData[new_index]->files_selected;k++) {
 		      desktop_data->workspaceData[new_index]->
 	 	       selectedDTWindows[k] = desktop_data->
 			  workspaceData[new_index]-> selectedDTWindows[k+1];
 		      desktop_data->workspaceData[new_index]->files_selected--;
+		    }
 		    break;
 		  }
                }

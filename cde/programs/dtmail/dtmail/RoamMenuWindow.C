@@ -5459,23 +5459,23 @@ Widget parent=NULL;
   }
     if(!parent)
             parent = theApplication->baseWidget();
-    	    DtMailGenDialog *genDialog = new DtMailGenDialog("Dialog",parent,XmDIALOG_FULL_APPLICATION_MODAL);
+    DtMailGenDialog *genDialog = new DtMailGenDialog("Dialog",parent,XmDIALOG_FULL_APPLICATION_MODAL);
 
-            char *errMsg = (char *) XtCalloc(1,10240+strlen(fsname));
+    char *errMsg = (char *) XtCalloc(1,10240+strlen(fsname));
 
 
-                // Serious error here -- No Space on Filesystem --
-                sprintf(errMsg,"Insufficient space on %s filesystem. Dtmail unable to show any new \n messages, delete messages, or save further changes to the open \n mailbox. Please contact your System Administrator to correct the \n filesystem space problem.",fsname);
-	    free(fsname);
-            genDialog->setToErrorDialog(
-                                CATGETS(DT_catd, 1, 6, "Mailer"),
-                                errMsg);
-            XtFree(errMsg);
+	// Serious error here -- No Space on Filesystem --
+	sprintf(errMsg,"Insufficient space on %s filesystem. Dtmail unable to show any new \n messages, delete messages, or save further changes to the open \n mailbox. Please contact your System Administrator to correct the \n filesystem space problem.",fsname);
+    free(fsname);
+    genDialog->setToErrorDialog(
+			CATGETS(DT_catd, 1, 6, "Mailer"),
+			errMsg);
+    XtFree(errMsg);
 
-            genDialog->post_and_return(
-                                CATGETS(DT_catd, 3, 9, "OK"),
-                                NULL);
-            delete genDialog;
+    genDialog->post_and_return(
+			CATGETS(DT_catd, 3, 9, "OK"),
+			NULL);
+    delete genDialog;
 }
 void
 RoamMenuWindow::stopAutoSave(void)

@@ -2481,7 +2481,7 @@ activate_cb(	Widget w,
     XmProcessTraversal((Widget)combo_w, 
 			(XmTraversalDirection) XmTRAVERSE_CURRENT);
 
-    if (Type(combo_w) == DtDROP_DOWN_COMBO_BOX)
+   if (Type(combo_w) == DtDROP_DOWN_COMBO_BOX)
 	TextFieldActivate(combo_p, call_data);
 
     /*

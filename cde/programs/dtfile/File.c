@@ -5706,23 +5706,30 @@ UpdateOneFileIcon(
 
    /* Build the rest of the arg list and either create or reuse the widget. */
 
-   XtSetArg (args[n], XmNstring, icon_label);                        n++;
+   XtSetArg (args[n], XmNstring, icon_label);
+   n++;
    argi_imageName = n;
    if (pixmapData)
      XtSetArg (args[n], XmNimageName, pixmapData->iconFileName);
    else
      XtSetArg (args[n], XmNimageName, NULL);
    n++;
-   XtSetArg (args[n], XmNmaxPixmapWidth, layout_data->pixmap_width);   n++;
-   XtSetArg (args[n], XmNmaxPixmapHeight, layout_data->pixmap_height); n++;
-   XtSetArg (args[n], XmNuserData, directory_set);                     n++;
-   XtSetArg (args[n], XmNunderline, False);                            n++;
-   XtSetArg (args[n], XmNfillMode, XmFILL_TRANSPARENT);                n++;
+   XtSetArg (args[n], XmNmaxPixmapWidth, layout_data->pixmap_width);
+   n++;
+   XtSetArg (args[n], XmNmaxPixmapHeight, layout_data->pixmap_height);
+   n++;
+   XtSetArg (args[n], XmNuserData, directory_set);
+   n++;
+   XtSetArg (args[n], XmNunderline, False);
+   n++;
+   XtSetArg (args[n], XmNfillMode, XmFILL_TRANSPARENT);
+   n++;
    if (file_mgr_data->view == BY_NAME_AND_ICON &&
        file_mgr_data->show_type != MULTIPLE_DIRECTORY)
       XtSetArg (args[n], XmNpixmapPosition, XmPIXMAP_TOP);
    else
-      XtSetArg (args[n], XmNpixmapPosition, XmPIXMAP_LEFT);            n++;
+      XtSetArg (args[n], XmNpixmapPosition, XmPIXMAP_LEFT);
+   n++;
 
    /* See if we can re-use the same or some other icon gadget */
    if (file_view_data->widget)
@@ -5738,7 +5745,8 @@ UpdateOneFileIcon(
       /* reuse the icon gadget */
       if (icon_widget != file_view_data->widget || file_mgr_data->newSize)
       {
-         XtSetArg (args[n], XmNdropSiteOperations, XmDROP_NOOP);n++;
+         XtSetArg (args[n], XmNdropSiteOperations, XmDROP_NOOP);
+	 n++;
          XtRemoveAllCallbacks(icon_widget, XmNdropCallback);
          file_view_data->registered = False;
       }
@@ -5766,25 +5774,34 @@ UpdateOneFileIcon(
    else
    {
       /* create a new or duplicate an existing widget */
-      XtSetArg (args[n], XmNshadowThickness, 2);             n++;
-      XtSetArg (args[n], XmNdropSiteOperations, XmDROP_NOOP);n++;
-      XtSetArg (args[n], XmNfontList, user_font);            n++;
+      XtSetArg (args[n], XmNshadowThickness, 2);
+      n++;
+      XtSetArg (args[n], XmNdropSiteOperations, XmDROP_NOOP);
+      n++;
+      XtSetArg (args[n], XmNfontList, user_font);
+      n++;
       if( keybdFocusPolicy == XmEXPLICIT)
       {
-         XtSetArg (args[n], XmNtraversalOn, True);           n++;
+         XtSetArg (args[n], XmNtraversalOn, True);
+	 n++;
       }
       else
       {
-         XtSetArg (args[n], XmNtraversalOn, False);          n++;
-         XtSetArg (args[n], XmNhighlightThickness, 0);       n++;
+         XtSetArg (args[n], XmNtraversalOn, False);
+	 n++;
+         XtSetArg (args[n], XmNhighlightThickness, 0);
+	 n++;
       }
-      XtSetArg (args[n], XmNborderType, DtNON_RECTANGLE);   n++;
+      XtSetArg (args[n], XmNborderType, DtNON_RECTANGLE);
+      n++;
 
       if (layout_data->dup_icon_widget == NULL)
       {
 #ifdef HARDCODED_ICON_MARGINS
-         XtSetArg (args[n], XmNmarginWidth, 0);  n++;
-         XtSetArg (args[n], XmNmarginHeight, 0); n++;
+         XtSetArg (args[n], XmNmarginWidth, 0);
+	 n++;
+         XtSetArg (args[n], XmNmarginHeight, 0);
+	 n++;
 #endif
          XtSetArg (args[n], XmNx, -999);  n++;
          XtSetArg (args[n], XmNy, -999);  n++;
@@ -5815,9 +5832,12 @@ UpdateOneFileIcon(
          icon_widget->core.y = -999;
 
          /* make sure colors, drop operations, and clipping are right */
-         XtSetArg(args[i], XmNdropSiteOperations, XmDROP_NOOP);             i++;
-         XtSetArg(args[i], XmNmaxPixmapWidth, layout_data->pixmap_width);   i++;
-         XtSetArg(args[i], XmNmaxPixmapHeight, layout_data->pixmap_height); i++;
+         XtSetArg(args[i], XmNdropSiteOperations, XmDROP_NOOP);
+	 i++;
+         XtSetArg(args[i], XmNmaxPixmapWidth, layout_data->pixmap_width);
+	 i++;
+         XtSetArg(args[i], XmNmaxPixmapHeight, layout_data->pixmap_height);
+	 i++;
          XtSetValues (icon_widget, args, i);
       }
       XtAddCallback(icon_widget, XmNhelpCallback,

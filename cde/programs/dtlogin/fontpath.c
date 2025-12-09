@@ -142,7 +142,8 @@ ApplyFontPathMods( struct display *d, Display *dpy )
             for (s=fph, i=j=0; j<numHeads; j++) {
                 if (!PathInPList(s,newList,i))
                     newList[i++] = s;
-                while (*s) s++; s++;
+                while (*s) s++;
+		s++;
             }
             for (j=0; j<numPaths; j++) {
                 if (!PathInPList(fontPath[j],newList,i) &&
@@ -153,7 +154,8 @@ ApplyFontPathMods( struct display *d, Display *dpy )
             for (s=fpt, j=0; j<numTails; j++) {
                 if (!PathInPList(s,newList,i))
                     newList[i++] = s;   
-                while (*s) s++; s++;
+                while (*s) s++;
+		s++;
             }
             if (debugLevel > 0)
                 DebugFontPath("Request (XSetFontPath)",newList,i);
@@ -239,7 +241,8 @@ PathInZList(char *path, char *fplist, int listlen)
             s++; while (*s == '/') s++;
         }
         if (!*s && !*t) return 1;
-        while (*t) t++; t++;
+        while (*t) t++;
+	t++;
     }
     return 0;    
 }

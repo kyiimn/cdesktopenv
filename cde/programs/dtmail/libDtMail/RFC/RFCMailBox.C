@@ -1875,7 +1875,7 @@ RFCMailBox::mapFile(DtMailEnv & error,
       DEBUG_PRINTF(
         ("mapFile: Error mmap(1) == %p, errno = %d\n", map->map_region, errno));
 
-      if (_errorLogging)
+      if (_errorLogging) {
         writeToDumpFile(
 	    mmap_format_string,
 	    pname, err_phase,
@@ -1885,6 +1885,7 @@ RFCMailBox::mapFile(DtMailEnv & error,
 	    "%s(%d): statbuf: ino=%d, dev=%d, nlink=%d, size=%ld\n",
 	    pname, err_phase,
 	    statbuf.st_ino, statbuf.st_dev, statbuf.st_nlink, statbuf.st_size);
+      }
 
       if (map->map_region == (char *) -1)
       {
@@ -2030,7 +2031,7 @@ RFCMailBox::mapFile(DtMailEnv & error,
 	    (map->map_region[offset_from_map+map->file_size-1] == '\0'))
        ) {
 
-      if (_errorLogging)
+      if (_errorLogging) {
         writeToDumpFile(
 	    "%s(%d):  SafeRead(%d(%s), 0x%08lx, %d) == %d, errno == %d\n",
 	    pname, err_phase, _fd, _real_path, map->map_region, bytesToRead,
@@ -2039,6 +2040,7 @@ RFCMailBox::mapFile(DtMailEnv & error,
 	    "%s(%d):  stat buf: ino=%d, dev=%d, nlink=%d, size=%ld\n",
 	    pname, err_phase, statbuf.st_ino, statbuf.st_dev,
 	    statbuf.st_nlink, statbuf.st_size);
+      }
 
       if (readResults > 0) {
         if (_errorLogging)

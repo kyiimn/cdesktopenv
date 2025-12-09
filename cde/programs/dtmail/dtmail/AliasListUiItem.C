@@ -339,7 +339,7 @@ void AliasListUiItem::handleChangeButtonPress()
 		    XmNvalue, &value_str,
 		    NULL);
 
-      if(key_str != NULL)
+      if(key_str != NULL) {
 	if(strlen(key_str) > 0)
 	  {
 
@@ -378,6 +378,7 @@ void AliasListUiItem::handleChangeButtonPress()
 			    TRUE);
 	  }
 	props_changed = TRUE;
+      }
     }
 }
 ///////////////////////////////////////////////////////////

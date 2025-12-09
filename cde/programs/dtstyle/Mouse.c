@@ -1566,12 +1566,13 @@ ButtonCB(
 	   }
 	 mouse.dclickChanged = False;
 
-	 if (mouse.btn2Changed)
+	 if (mouse.btn2Changed) {
 	   if(mouse.function == TRANSFER)
 	     sprintf(enableBtn1Res, enableBtn1TransferString, "button2_transfer");
 	   else
 	     sprintf(enableBtn1Res, enableBtn1TransferString, "True");
 	   _DtAddToResource(style.display,enableBtn1Res);
+	 }
 
 	 break;
 	 

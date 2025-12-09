@@ -914,67 +914,96 @@ SetValues(
                                          LARGE);
 
       n = 0;
-      XtSetArg (args[n], XmNstring, icon_label);                        n++;
+      XtSetArg (args[n], XmNstring, icon_label);
+      n++;
       if (pixmapData)
         XtSetArg (args[n], XmNimageName, pixmapData->iconFileName);
       else
-        XtSetArg (args[n], XmNimageName, NULL);                         n++;
-      XtSetArg (args[n], XmNunderline, False);                          n++;
+        XtSetArg (args[n], XmNimageName, NULL);
+      n++;
+      XtSetArg (args[n], XmNunderline, False);
+      n++;
 
-      XtSetArg (args[n], XmNpixmapPosition, XmPIXMAP_TOP);              n++;
-      XtSetArg (args[n], XmNbehavior, XmICON_BUTTON);                   n++;
-      XtSetArg (args[n], XmNfillMode, XmFILL_PARENT);              n++;
+      XtSetArg (args[n], XmNpixmapPosition, XmPIXMAP_TOP);
+      n++;
+      XtSetArg (args[n], XmNbehavior, XmICON_BUTTON);
+      n++;
+      XtSetArg (args[n], XmNfillMode, XmFILL_PARENT);
+      n++;
 
-      XtSetArg (args[n], XmNforeground, foreground_color);           n++;
-      XtSetArg (args[n], XmNarmColor, white_pixel);                  n++;
+      XtSetArg (args[n], XmNforeground, foreground_color);
+      n++;
+      XtSetArg (args[n], XmNarmColor, white_pixel);
+      n++;
       if (background_color == white_pixel)
       {
-         XtSetArg (args[n], XmNbackground, white_pixel);             n++;
-         XtSetArg (args[n], XmNpixmapBackground, white_pixel);       n++;
-         XtSetArg (args[n], XmNpixmapForeground, black_pixel);       n++;
+         XtSetArg (args[n], XmNbackground, white_pixel);
+	 n++;
+         XtSetArg (args[n], XmNpixmapBackground, white_pixel);
+	 n++;
+         XtSetArg (args[n], XmNpixmapForeground, black_pixel);
+	 n++;
       }
       else if (background_color == black_pixel)
       {
-         XtSetArg (args[n], XmNbackground, black_pixel);             n++;
-         XtSetArg (args[n], XmNpixmapBackground, white_pixel);       n++;
-         XtSetArg (args[n], XmNpixmapForeground, black_pixel);       n++;
+         XtSetArg (args[n], XmNbackground, black_pixel);
+	 n++;
+         XtSetArg (args[n], XmNpixmapBackground, white_pixel);
+	 n++;
+         XtSetArg (args[n], XmNpixmapForeground, black_pixel);
+	 n++;
       }
       else
       {
-         XtSetArg (args[n], XmNbackground, background_color);        n++;
-         XtSetArg (args[n], XmNpixmapBackground, pixmap_background); n++;
-         XtSetArg (args[n], XmNpixmapForeground, pixmap_foreground); n++;
+         XtSetArg (args[n], XmNbackground, background_color);
+	 n++;
+         XtSetArg (args[n], XmNpixmapBackground, pixmap_background);
+	 n++;
+         XtSetArg (args[n], XmNpixmapForeground, pixmap_foreground);
+	 n++;
       }
 
       if (i - count < num_children)
       {
          icon_widget = mgr->composite.children[i - count];
-         XtSetArg (args[n], XmNx, x);                                   n++;
-         XtSetArg (args[n], XmNy, 5);                                   n++;
-         XtSetArg (args[n], XmNuserData, user_data);                    n++;
+         XtSetArg (args[n], XmNx, x);
+	 n++;
+         XtSetArg (args[n], XmNy, 5);
+	 n++;
+         XtSetArg (args[n], XmNuserData, user_data);
+	 n++;
          XtSetValues(icon_widget, args, n);
          XtRemoveAllCallbacks (icon_widget, XmNcallback);
 
       }
       else
       {
-         XtSetArg (args[n], XmNx, x);                                   n++;
-         XtSetArg (args[n], XmNy, 5);                                   n++;
-         XtSetArg (args[n], XmNshadowThickness, 2);                     n++;
-         XtSetArg (args[n], XmNfontList, user_font);                    n++;
+         XtSetArg (args[n], XmNx, x);
+	 n++;
+         XtSetArg (args[n], XmNy, 5);
+	 n++;
+         XtSetArg (args[n], XmNshadowThickness, 2);
+	 n++;
+         XtSetArg (args[n], XmNfontList, user_font);
+	 n++;
          if(keybdFocusPolicy == XmEXPLICIT)
          {
-            XtSetArg (args[n], XmNtraversalOn, True);                   n++;
+            XtSetArg (args[n], XmNtraversalOn, True);
+	    n++;
          }
          else
          {
-            XtSetArg (args[n], XmNtraversalOn, False);                  n++;
-            XtSetArg (args[n], XmNhighlightThickness, 0);               n++;
+            XtSetArg (args[n], XmNtraversalOn, False);
+	    n++;
+            XtSetArg (args[n], XmNhighlightThickness, 0);
+	    n++;
          }
-         XtSetArg (args[n], XmNborderType, DtNON_RECTANGLE);           n++;
+         XtSetArg (args[n], XmNborderType, DtNON_RECTANGLE);
+	 n++;
          if (mgr->composite.num_children == 0)
          {
-            XtSetArg (args[n], XmNuserData, user_data);                 n++;
+            XtSetArg (args[n], XmNuserData, user_data);
+	    n++;
             icon_widget= _DtCreateIcon ((Widget)mgr, "icon", args, n);
          }
          else
@@ -984,8 +1013,10 @@ SetValues(
                           (XmString)args[0].value, (String)args[1].value,
                           (XtPointer)user_data, (Boolean)args[2].value);
             n = 0;
-            XtSetArg (args[n], XmNx, x);                                n++;
-            XtSetArg (args[n], XmNy, 5);                                n++;
+            XtSetArg (args[n], XmNx, x);
+	    n++;
+            XtSetArg (args[n], XmNy, 5);
+	    n++;
             XtSetValues(icon_widget, args, n);
          }
          XtAddCallback(icon_widget, XmNhelpCallback,
@@ -1020,18 +1051,25 @@ SetValues(
          /* Draw the selected icon as selected */
          if (background_color == white_pixel)
          {
-            XtSetArg (args[n], XmNbackground, black_pixel);             n++;
-            XtSetArg (args[n], XmNforeground, white_pixel);             n++;
+            XtSetArg (args[n], XmNbackground, black_pixel);
+	    n++;
+            XtSetArg (args[n], XmNforeground, white_pixel);
+	    n++;
          }
          else
          {
-            XtSetArg (args[n], XmNbackground, white_pixel);             n++;
-            XtSetArg (args[n], XmNforeground, black_pixel);             n++;
+            XtSetArg (args[n], XmNbackground, white_pixel);
+	    n++;
+            XtSetArg (args[n], XmNforeground, black_pixel);
+	    n++;
          }
 
-         XtSetArg (args[n], XmNpixmapBackground, white_pixel);          n++;
-         XtSetArg (args[n], XmNpixmapForeground, black_pixel);          n++;
-         XtSetArg (args[n], XmNarmColor, white_pixel);                  n++;
+         XtSetArg (args[n], XmNpixmapBackground, white_pixel);
+	 n++;
+         XtSetArg (args[n], XmNpixmapForeground, black_pixel);
+	 n++;
+         XtSetArg (args[n], XmNarmColor, white_pixel);
+	 n++;
          XtSetValues(icon_widget, args, n);
       }
    }
@@ -1054,7 +1092,8 @@ SetValues(
          {
             n = 0;
             XtSetArg(args[n], XmNy,
-                     5 + (max - mgr->composite.children[i]->core.height)); n++;
+                     5 + (max - mgr->composite.children[i]->core.height));
+	    n++;
             XtSetValues(mgr->composite.children[i], args, n);
          }
       }

@@ -922,11 +922,9 @@ _DtTermPrimScrollCompleteIfNecessary(Widget w, short scrollTopRow,
 	if ((lines + tpd->scroll.jump.scrollLines > maxJumpScrollLines) ||
 		(lines + tpd->scroll.jump.scrollLines < -maxJumpScrollLines))
 	    (void) _DtTermPrimScrollComplete(w, True);
-	    return;
     } else {
 	if (!tw->term.jumpScroll && tpd->scroll.nojump.pendingScroll) {
 	    (void) _DtTermPrimScrollComplete(w, True);
-	    return;
 	}
     }
 }

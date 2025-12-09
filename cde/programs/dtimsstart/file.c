@@ -637,10 +637,12 @@ int	read_selection_file(FileSel *fsel, FILE *fp)
 	    if (str_to_int(valp, &i) && i >= 0)
 		select_mode = i;
 	} else if (strncmp(lp + 1, STR_IMSNAME, 4) == 0) {
-	    vp = valp; cut_field(valp);
+	    vp = valp;
+	    cut_field(valp);
 	    RENEWSTR(imsname, vp);
 	} else if (strncmp(lp + 1, STR_HOSTNAME, 4) == 0) {
-	    vp = valp; cut_field(valp);
+	    vp = valp;
+	    cut_field(valp);
 	    FREE(hostname);
 	    if (strcmp(vp, NAME_LOCAL))
 		hostname = NEWSTR(vp);

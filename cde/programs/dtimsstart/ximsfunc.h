@@ -223,9 +223,9 @@ void	*_mp_;
 #define	is_white(c)		((c) == ' ' || (c) == '\t' || (c) == '\n')
 #define	skip_white(p)		while (is_white(*(p)))	(p)++
 #define	next_field(p)	\
-	for ((p)++; *(p) && !is_white(*(p)); (p)++) ; skip_white(p)
+	do { for ((p)++; *(p) && !is_white(*(p)); (p)++) ; skip_white(p); } while (0)
 #define	cut_field(p)	\
-	for ((p)++; *(p) && !is_white(*(p)); (p)++) ; *(p)++ = 0; skip_white(p)
+	do { for ((p)++; *(p) && !is_white(*(p)); (p)++) ; *(p)++ = 0; skip_white(p); } while (0)
 
 	/* misc */
 #define Max(a, b)	((a) < (b) ? (b) : (a))

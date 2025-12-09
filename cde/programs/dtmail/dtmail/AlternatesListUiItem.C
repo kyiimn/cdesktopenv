@@ -295,7 +295,7 @@ void AlternatesListUiItem::handleChangeButtonPress()
 		    XmNvalue, &test_str,
 		    NULL);
 
-      if(test_str != NULL)
+      if(test_str != NULL) {
 	if(strlen(test_str) > 1)
 	  {
 
@@ -323,6 +323,7 @@ void AlternatesListUiItem::handleChangeButtonPress()
 			    TRUE);
 	  }
 	props_changed = TRUE;
+      }
     }
 }
 ///////////////////////////////////////////////////////////

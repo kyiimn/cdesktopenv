@@ -1957,7 +1957,7 @@ void _DtHelpSetupDisplayType(
          {
             /* Update the History and Jump Lists */
 
-            if (updateType == DtHISTORY_AND_JUMP)
+            if (updateType == DtHISTORY_AND_JUMP) {
               _DtHelpUpdateJumpList(hw->help_dialog.display.manPage,
                                  DtHELP_TYPE_MAN_PAGE, (Widget)hw);
     
@@ -1966,6 +1966,7 @@ void _DtHelpSetupDisplayType(
               _DtHelpDisplayAreaSetList (hw->help_dialog.help.pDisplayArea,
                                       topicHandle, FALSE, 
                                       hw->help_dialog.backtr.scrollPosition);
+	    }
           }
         else
           {

@@ -641,9 +641,11 @@ changeSampleFontCB(
 
     /* Set the sample System Font string to different Font */
     n = 0;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].sysFont); n++;
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].sysFont);
+    n++;
     /* string_val = CMPSTR(SYSTEM_MSG);*/
-    XtSetArg (args[n], XmNlabelString, CMPSTR(SYSTEM_MSG));  n++;
+    XtSetArg (args[n], XmNlabelString, CMPSTR(SYSTEM_MSG));
+    n++;
     XtSetValues (font.systemLabel, args, n); 
 
     /* 
@@ -652,8 +654,10 @@ changeSampleFontCB(
      */
     n = 0;
     if (!font.userTextChanged) 
-      XtSetArg (args[n], XmNvalue, USER_MSG);  n++;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].userFont); n++;
+      XtSetArg (args[n], XmNvalue, USER_MSG);
+    n++;
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].userFont);
+    n++;
     XtSetValues (font.userText, args, n);
     XmTextShowPosition(font.userText, 0);
 }

@@ -1887,7 +1887,8 @@ FileTypePreview(
       if (pixmapData)
         XtSetArg (args[n], XmNimageName, pixmapData->iconFileName);
       else
-        XtSetArg (args[n], XmNimageName, NULL);                 n++;
+        XtSetArg (args[n], XmNimageName, NULL);
+      n++;
       XtSetValues (call_struct->file_type_widget, args, n);
 
       _DtCheckAndFreePixmapData(file_type,
