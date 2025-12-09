@@ -61,6 +61,17 @@
 static int flood_min_x, flood_min_y, flood_max_x, flood_max_y;
 
 
+static void Set_FloodLimits(int x, int y);
+static void Flood_Fill(
+	XImage *color_image,
+        XImage *mono_image,
+        int x,
+        int y,
+        int width,
+        int height,
+        unsigned long new_pixel,
+        unsigned long new_mono);
+
 /***************************************************************************
  *                                                                         *
  * Routine:   Mirror_Image                                                 *
@@ -76,7 +87,6 @@ int
 Mirror_Image(
         int orientation )
 {
-  XRectangle tmp_box;
   XImage *new_image, *old_image, *new_mono, *old_mono;
   unsigned long n;
   int i, j;
@@ -416,7 +426,7 @@ Flood_Region(
  *                                                                         *
  *X11***********************************************************************/
 
-void
+static void
 Set_FloodLimits(
         int x,
         int y )
@@ -473,7 +483,7 @@ struct seg {short y, xl, xr, dy;};
   int local_debug=False, p_cnt;
 #endif
 
-int
+static void
 Flood_Fill(
         XImage *color_image,
         XImage *mono_image,
@@ -489,7 +499,7 @@ Flood_Fill(
   struct seg stack[MAX], *sp = stack;
 
   old_pixel = XGetPixel(color_image, x, y);	/* read pv at seed point */
-  if (old_pixel==new_pixel || x<0 || x>width || y<0 || y>height) return 0;
+  if (old_pixel==new_pixel || x<0 || x>width || y<0 || y>height) return;
   PUSH(y, x, x, 1);			/* needed in some cases */
   PUSH(y+1, x, x, -1);		/* seed segment (popped 1st) */
 

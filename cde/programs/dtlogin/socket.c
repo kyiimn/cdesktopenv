@@ -108,20 +108,20 @@ extern int	WellKnownSocketsMax;
 void registerHostname (char *name, int namelen); // xdmcp.c
 
 
-int
+void
 CreateWellKnownSockets (void)
 {
     struct sockaddr_in	sock_addr;
     char		*name, *localHostname();
 
     if (request_port == 0)
-	    return 0;
+	    return;
     Debug ("creating socket %d\n", request_port);
     xdmcpFd = socket (AF_INET, SOCK_DGRAM, 0);
     if (xdmcpFd == -1) {
 	LogError (ReadCatalog(MC_LOG_SET,MC_LOG_FAIL_SOCK,MC_DEF_LOG_FAIL_SOCK),
 		  request_port);
-	return 0;
+	return;
     }
     name = localHostname ();
     registerHostname (name, strlen (name));
@@ -140,7 +140,7 @@ CreateWellKnownSockets (void)
 		  request_port, errno);
 	close (xdmcpFd);
 	xdmcpFd = -1;
-	return 0;
+	return;
     }
     WellKnownSocketsMax = xdmcpFd;
     FD_SET (xdmcpFd, &WellKnownSocketsMask);
@@ -150,7 +150,7 @@ CreateWellKnownSockets (void)
     if (chooserFd == -1)
     {
 	LogError ((unsigned char *)"chooser socket creation failed, errno %d\n", errno);
-	return 0;
+	return;
     }
     listen (chooserFd, 5);
     if (chooserFd > WellKnownSocketsMax)

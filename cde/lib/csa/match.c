@@ -1046,7 +1046,7 @@ match_this_attribute(Appt_4 *appt, cms_attribute attr, CSA_enum op)
 
 		return (_DtCm_match_sint32_attribute(&oldattr,
 			(attr.value ? &matchattr : NULL), op));
-	defalut:
+	default:
 		return (B_FALSE);
 	}
 }

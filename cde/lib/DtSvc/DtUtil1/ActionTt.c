@@ -852,10 +852,9 @@ static int _DtAct_tt_message_arg_reptype( Tt_message message, int arg )
 
     status = tt_message_arg_ival( message, arg, &testVal );
 
-    if (status == TT_OK)
-	return( DtACT_TT_REP_INT);
-    else if (status == TT_ERR_NUM)
-	return( DtACT_TT_REP_BUFFER );
+    if (status == TT_ERR_NUM)
+	return DtACT_TT_REP_BUFFER;
+    return DtACT_TT_REP_INT;
 }
 
 /******************************************************************************

@@ -1654,14 +1654,12 @@ const char* PdmOidNotifyString(PdmOidNotify notify)
     {
     case PDMOID_NOTIFY_UNSUPPORTED:
 	return (const char*)NULL;
-	break;
     case PDMOID_NOTIFY_NONE:
 	return NOTIFY_NONE_STR;
-	break;
     case PDMOID_NOTIFY_EMAIL:
 	return NOTIFY_EMAIL_STR;
-	break;
     }
+    return (const char*)NULL;
 }
 
 /*

@@ -2159,7 +2159,7 @@ rename the file you are changing so it no longer has the same name.");
            }  /* end switch (mode) */
 
    }  /* end switch (message) */
-
+   return "";
 }  /* end getVariableMessage */
 
 static Boolean

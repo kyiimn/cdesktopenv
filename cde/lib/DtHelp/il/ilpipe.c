@@ -1364,4 +1364,5 @@ ilError                 error;
 
             }   /* END while true: execute strips */
         }       /* END switch pipe state */
+    return IL_EXECUTE_AGAIN;
 }

@@ -173,6 +173,7 @@ ushort GetContentsType(void)
     return((ushort)CA_FT_CNTLONG);
   }
   /* NOTREACHED */
+  return -1;
 }
 
 /******************************************************************************/

@@ -848,7 +848,7 @@ extern int  source(
 /*******************************     socket.c	  **************************/
 
 extern int  AnyWellKnownSockets( void ) ;
-extern int  CreateWellKnownSockets( void ) ;
+extern void CreateWellKnownSockets( void ) ;
 extern void DestroyWellKnownSockets( void ) ;
 extern char * NetworkAddressToHostname( 
 #if NeedWidePrototypes

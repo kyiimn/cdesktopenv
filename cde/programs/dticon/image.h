@@ -28,5 +28,3 @@ int Mirror_Image(int orientation);
 int Block_Rotate(XImage *src_image, XImage *dst_image, int rtype);
 void Scale_Image(void);
 int Flood_Region(int flood_x, int flood_y);
-void Set_FloodLimits(int x, int y);
-int Flood_Fill(XImage *color_image, XImage *mono_image, int x, int y, int width, int height, unsigned long new_pixel, unsigned long new_mono);

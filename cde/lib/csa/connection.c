@@ -864,5 +864,6 @@ regstat4_to_dtcmstatus(Registration_Status_4 stat4)
 	case confused_4:
 		return (CSA_E_FAILURE);
 	}
+	return CSA_E_FAILURE;
 }
 

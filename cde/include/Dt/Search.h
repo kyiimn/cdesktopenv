@@ -213,7 +213,7 @@ extern void	DtSearchFreeMessages (void);
 extern int	DtSearchGetMaxResults (void);
 extern void	DtSearchSetMaxResults (int new_max_results);
 extern char	*DtSearchFormatObjdate (DtSrObjdate objdate);
-extern void	DtSearchExit (int return_code);
+extern void	DtSearchExit (int return_code) __attribute__((noreturn));
 extern void	DtSearchAddUserExit (void (*user_exit)(int));
 extern void	DtSearchRemoveUserExit (void);
 

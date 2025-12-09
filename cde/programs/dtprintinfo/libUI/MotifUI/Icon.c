@@ -2049,6 +2049,7 @@ QueryGeometry(
 	desired->width = 1;
     if (desired->height == 0)
 	desired->height = 1;
+    return XtGeometryYes;
 }
 
 /*

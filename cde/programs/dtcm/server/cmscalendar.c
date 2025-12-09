@@ -601,16 +601,10 @@ _DtCmsSetCalendarAttrs4Parser(
 extern CSA_return_code
 _DtCmsRbToCsaStat(Rb_Status rb_stat)
 {
-	switch (rb_stat) {
-	case rb_ok:
-		return (CSA_SUCCESS);
-	case rb_duplicate:
-	case rb_badtable:
-	case rb_notable:
-	case rb_failed:
-	case rb_other:
-		return (CSA_E_FAILURE);
+	if (rb_stat == rb_ok) {
+		return CSA_SUCCESS;
 	}
+	return CSA_E_FAILURE;
 }
 
 extern void

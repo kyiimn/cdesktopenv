@@ -111,6 +111,7 @@ void	(*austext_exit_last) (int) =	NULL;
 /*		DtSearchExit		*/
 /*					*/
 /****************************************/
+__attribute__((noreturn))
 void	DtSearchExit (int return_code)
 {
     if (austext_exit_first != NULL)

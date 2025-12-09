@@ -579,11 +579,9 @@ static DtSrResult *ditto_sort (DtSrResult * lst)
 	    return merge_by_prox (ditto_sort (lst), ditto_sort (lst2));
 	case DtSrSORT_DATE:
 	    return merge_by_date (ditto_sort (lst), ditto_sort (lst2));
-	default:
-	    fprintf (aa_stderr, PROGNAME "525 Invalid Sort Type %d.\n",
-		ditsort_type);
-	    DtSearchExit (32);
     }
+    fprintf (aa_stderr, PROGNAME "525 Invalid Sort Type %d.\n", ditsort_type);
+    DtSearchExit (32);
 }  /* ditto_sort() */
 
 
