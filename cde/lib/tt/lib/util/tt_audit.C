@@ -292,8 +292,6 @@ entry(const char *argskey, _Tt_entry_pt func, ...)
 		break;
 	}
 
-	va_start(ap, func);
-
 	// paramater checking for NULL & cascaded errors, over-long
 	// propnames, etc.
 	preview = argskey;
