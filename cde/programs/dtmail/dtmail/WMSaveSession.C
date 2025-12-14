@@ -373,6 +373,7 @@ RoamMenuWindow::restoreSession(char *buf)
 	{
 	    fscanf(fp,"%s[\n]",buf);
     	    LOG_CLOSEFILEPTR(log);
+	    delete [] workspaces;
 	    return NULL;
 	}
 
@@ -472,6 +473,7 @@ RoamMenuWindow::restoreSession(char *buf)
 	rmw->manage();
     }
 
+    delete [] workspaces;
     LOG_CLOSEFILEPTR(log);
     return rmw;
 }
@@ -594,6 +596,7 @@ SendMsgDialog::restoreSession(char *buf)
 	{
 	    fscanf(fp,"%s[\n]",buf);
     	    LOG_CLOSEFILEPTR(log);
+	    delete [] workspaces;
 	    return;
 	}
 
@@ -671,6 +674,7 @@ SendMsgDialog::restoreSession(char *buf)
 	smd->manage();
     }
     
+    delete [] workspaces;
     LOG_CLOSEFILEPTR(log);
 }
 

@@ -313,6 +313,7 @@ DmxMsg::display (void)
       env.logError(DTM_FALSE, "DEBUG dtmailpr: v3_cs = %s\n", v3_cs);
 #endif
    }
+   delete [] v3_cs;
    to_cs = firstPart->locToConvName();
 
 #ifdef DEBUG
@@ -358,16 +359,11 @@ DmxMsg::display (void)
     if (converted && contents)
 	   free(contents);
 
-	char	*numbuf = new char [10241];
-	memset (numbuf, 0, 1024);
-
-#ifdef NEVER
-	// Don't want "Message 1:" appearing in print output
-	sprintf (numbuf, "Messsage %s:\n%s\n",
-		addlInfo, printHeader (MSGHEADER));
-#endif
-	puts(printHeader(MSGHEADER));
+	char *msgh = printHeader(MSGHEADER);
+	puts(msgh);
 	puts(buf);
+	delete [] buf;
+	delete [] msgh;
 
 	fflush(stdout);
 
@@ -418,12 +414,12 @@ DmxMsg::display (void)
 		printf ("[%d] \"%s\"%s, ", i, name, description);
 		printf ("%s, %lu bytes\n", type, length);
 
-		if (attbuf != NULL)
+		if (attbuf != NULL) {
 			delete [] attbuf;
-
+			attbuf = NULL;
+		}
 	}
 
-	delete [] v3_cs;
 	return;
 }
 
