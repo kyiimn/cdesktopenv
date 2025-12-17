@@ -73,7 +73,7 @@ isrewcurr(int isfd, char *record)
     Fab	*fab;
     int			reclen;
     int			ret;
-    int			recnum;
+    Recno		recnum;
 
     /*
      * Get File Access Block.

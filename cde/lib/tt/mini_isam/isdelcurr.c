@@ -67,7 +67,7 @@ isdelcurr(int isfd)
     int			_am_delcurr();
     Fab	*fab;
     int			ret;
-    int			recnum;
+    Recno		recnum;
 
     /*
      * Get File Access Block.
