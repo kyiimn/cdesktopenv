@@ -617,6 +617,7 @@ lib/tt/bin/Makefile
 lib/tt/bin/shell/Makefile
 lib/tt/bin/ttauth/Makefile
 lib/tt/bin/scripts/Makefile
+lib/tt/bin/scripts/ttce2xdr
 lib/tt/bin/tttar/Makefile
 lib/tt/bin/tt_type_comp/Makefile
 lib/tt/bin/tttrace/Makefile

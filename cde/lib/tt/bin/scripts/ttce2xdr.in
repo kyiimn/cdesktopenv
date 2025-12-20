@@ -1,18 +1,18 @@
-XCOMM! /bin/sh
-XCOMM $XConsortium: ttce2xdr.cpp /main/4 1996/04/21 19:11:34 drk $
-XCOMM (c) Copyright 1996 Digital Equipment Corporation.
-XCOMM (c) Copyright 1993,1994,1996 Hewlett-Packard Company.
-XCOMM (c) Copyright 1993,1994,1996 International Business Machines Corp.
-XCOMM (c) Copyright 1992-1994,1996 Sun Microsystems, Inc.
-XCOMM (c) Copyright 1993,1994,1996 Novell, Inc.
-XCOMM (c) Copyright 1996 FUJITSU LIMITED.
-XCOMM (c) Copyright 1996 Hitachi.
-XCOMM
-XCOMM ttce2xdr - Convert ToolTalk Classing Engine tables to XDR types database
+#!/bin/sh
+# $XConsortium: ttce2xdr.cpp /main/4 1996/04/21 19:11:34 drk $
+# (c) Copyright 1996 Digital Equipment Corporation.
+# (c) Copyright 1993,1994,1996 Hewlett-Packard Company.
+# (c) Copyright 1993,1994,1996 International Business Machines Corp.
+# (c) Copyright 1992-1994,1996 Sun Microsystems, Inc.
+# (c) Copyright 1993,1994,1996 Novell, Inc.
+# (c) Copyright 1996 FUJITSU LIMITED.
+# (c) Copyright 1996 Hitachi.
+#
+# ttce2xdr - Convert ToolTalk Classing Engine tables to XDR types database
 
-XCOMM
-XCOMM usage
-XCOMM
+#
+# usage
+#
 usage() {
 	echo "$1: convert ToolTalk CE tables to XDR types database"
 	echo "Usage: $1 [-xn][-d user|system]"
@@ -29,32 +29,32 @@ usage() {
 	echo "  <OPENWINHOME2>	OWv3 installation to write to"
 }
 
-XCOMM
-XCOMM version
-XCOMM
+#
+# version
+#
 version() {
-	echo TT_VERSION_STRING
+	echo "CDE Version @CDE_VERSION_MAJOR@.@CDE_VERSION_MINOR@.@CDE_VERSION_MICRO@@CDE_VERSION_DEV@"
 }
 
-XCOMM
-XCOMM cleanup - Call me before exiting
-XCOMM
+#
+# cleanup - Call me before exiting
+#
 cleanup() {
 	rm -f /tmp/ttce2xdr.types.$$ /tmp/ttce2xdr.types.$$.deps /tmp/ttce2xdr.ceascii.$$
 }
 
-XCOMM
-XCOMM nullit - create null ~/.tt/xdr.types so auto convert won't be run
-XCOMM next time
-XCOMM
+#
+# nullit - create null ~/.tt/xdr.types so auto convert won't be run
+# next time
+#
 nullit() {
 	test -d $HOME/.tt || mkdir $HOME/.tt
 	touch $HOME/.tt/types.xdr
 }
 
-XCOMM
-XCOMM Main
-XCOMM
+#
+# Main
+#
 trap cleanup 0 1 2 3 15
 
 cmd=`basename $0`
@@ -64,9 +64,9 @@ database=
 ow1=
 ow2=
 
-XCOMM
-XCOMM Parse command line
-XCOMM
+#
+# Parse command line
+#
 args=$*
 while getopts hxnvrfd: option
 do
@@ -79,14 +79,14 @@ do
 	esac
 done
 
-XCOMM
-XCOMM Discard args processed by getopts
-XCOMM
+#
+# Discard args processed by getopts
+#
 shift `expr $OPTIND - 1`
 
-XCOMM
-XCOMM Process mandatory args
-XCOMM
+#
+# Process mandatory args
+#
 if [ $# -gt 0 ]; then
 	ow1=$1
 	shift
@@ -96,9 +96,9 @@ if [ $# -gt 0 ]; then
 	fi
 fi
 
-XCOMM
-XCOMM Check for extraneous args
-XCOMM
+#
+# Check for extraneous args
+#
 if [ $# -gt 0 ]; then
 	usage $cmd
 	exit 1
@@ -122,13 +122,13 @@ else
 	database="user"
 fi
 
-XCOMM if we are doing user (perhaps automatic) conversion. make
-XCOMM sure there is some conversion to do, otherwise we can bail out
-XCOMM early.
+# if we are doing user (perhaps automatic) conversion. make
+# sure there is some conversion to do, otherwise we can bail out
+# early.
 
 if [ "$database" = "user" ]; then
 	if [ ! -f $HOME/.cetables/cetables ]; then
-XCOMM		user doesn't even have a cetables, nothing to do
+#		user doesn't even have a cetables, nothing to do
 		nullit
 		exit 0
 	fi
@@ -138,22 +138,22 @@ XCOMM		user doesn't even have a cetables, nothing to do
 	if egrep -s "NS_NAME=SUN_TOOLTALK_TYPES" /tmp/ttce2xdr.ceascii.$$ ; then
 		:
 	else
-XCOMM		user has cetables, but no ToolTalk types
+#		user has cetables, but no ToolTalk types
 		nullit
 		exit 0
 	fi
 
-XCOMM	Now, we know the user has a cetables with ToolTalk types.  Now
-XCOMM	check for a possible malformed cetables with no ToolTalk name
-XCOMM	space definition.
+#	Now, we know the user has a cetables with ToolTalk types.  Now
+#	check for a possible malformed cetables with no ToolTalk name
+#	space definition.
 
 	if egrep -s '^NS_ATTR=$' /tmp/ttce2xdr.ceascii.$$ ; then
 
-XCOMM 		The cetables exists, and has ToolTalk types, but
-XCOMM		since the basic definitions in the network CE database
-XCOMM		may be gone, we need to add them back in.  Eventually
-XCOMM		in a future release we should remove all ToolTalk info
-XCOMM		from user's cetables.
+# 		The cetables exists, and has ToolTalk types, but
+#		since the basic definitions in the network CE database
+#		may be gone, we need to add them back in.  Eventually
+#		in a future release we should remove all ToolTalk info
+#		from user's cetables.
 
 		ed /tmp/ttce2xdr.ceascii.$$  >/dev/null <<- 'EOF'
 /^NS_ATTR=$/d
@@ -222,11 +222,11 @@ else
 	fi
 	rm -f /tmp/ttce2xdr.types.$$
 	if tt_type_comp -Eps $dbopt > /tmp/ttce2xdr.types.$$; then :; else
-XCOMM		Conversion failed for some reason. If we're working on a
-XCOMM		user database, we're probably doing an automatic conversion.
-XCOMM		and there's no point in continuing to retry this every time.
-XCOMM		Just touch the .tt/types.xdr file so auto conversion won't
-XCOMM		keep getting run.
+#		Conversion failed for some reason. If we're working on a
+#		user database, we're probably doing an automatic conversion.
+#		and there's no point in continuing to retry this every time.
+#		Just touch the .tt/types.xdr file so auto conversion won't
+#		keep getting run.
 	
 		case $database in
 			user)
