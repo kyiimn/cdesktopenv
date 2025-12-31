@@ -417,7 +417,9 @@ typedef unsigned long Context;
 typedef unsigned long Behavior;
 typedef unsigned long GroupArg;
 
-typedef Boolean (*WmFunction) ();
+typedef struct _ClientData ClientData;
+
+typedef Boolean (*WmFunction) (String args, ClientData *pCD, XEvent *);
 
 #define NO_MODIFIER	0		/* value for state field */
 
@@ -1547,7 +1549,7 @@ typedef struct _WmWorkspaceData *PtrWorkspaceData;
  *
  *************************************<->***********************************/
 
-typedef struct _ClientData
+struct _ClientData
 {
     int		dataType;			/* client data type */
 
@@ -1740,7 +1742,7 @@ typedef struct _ClientData
 
     long	window_status;			/* used for Tear-off Menus */
 
-} ClientData;
+};
 
 typedef struct _ClientData *PtrClientData;
 

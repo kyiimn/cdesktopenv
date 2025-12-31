@@ -809,7 +809,7 @@ extern Boolean FileMoveCopy(
                         char **file_set,
                         int file_count,
                         unsigned int modifiers,
-                        void (*finish_callback)(),
+                        void (*finish_callback)(void *, int),
                         XtPointer callback_data);
 extern void RepositionIcons(
                         FileMgrData *file_mgr_data,
@@ -963,7 +963,7 @@ extern Boolean FileManip(
                         char *from,
                         char *to,
                         Boolean isContainer,
-                        void (*errorHandler)(),
+                        void (*errorHandler)(Widget, XtPointer, XtPointer),
                         Boolean checkForBusyDir,
                         int type);
 extern int CheckAccess(
@@ -1353,7 +1353,7 @@ extern Boolean FileMoveCopyDesktop(
                         int file_count,
                         unsigned int modifiers,
                         DesktopRec *desktopWindow,
-                        void (*finish_callback)(),
+                        void (*finish_callback)(void *, int),
                         XtPointer callback_data);
 extern void SaveDesktopInfo(
                         int session) ;
@@ -1473,7 +1473,7 @@ extern void MakeFile(
                         char *directory_name,
                         char *new_name,
                         unsigned char type,
-                        void (*finish_callback)(),
+                        void (*finish_callback)(void *, char *, int),
                         XtPointer callback_data) ;
 extern Boolean MakeFilesFromBuffers(
                              FileMgrData *file_mgr_data,
@@ -1483,7 +1483,7 @@ extern Boolean MakeFilesFromBuffers(
                              char **host_set,
                              BufferInfo *buffer_set,
                              int num_of_buffers,
-                             void (*finish_callback)(),
+                             void (*finish_callback)(void *, int),
                              XtPointer callback_data); 
 extern Boolean MakeFilesFromBuffersDT(
                              FileViewData *file_view_data,
@@ -1493,7 +1493,7 @@ extern Boolean MakeFilesFromBuffersDT(
                              BufferInfo *buffer_set,
                              int num_of_buffers,
                              DesktopRec *desktopWindow,
-                             void (*finish_callback)(),
+                             void (*finish_callback)(void *, int),
                              XtPointer callback_data); 
 
 /* prototype for fsDialog.c */

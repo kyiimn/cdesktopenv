@@ -81,13 +81,13 @@ static void PendingDestroy(
 static Boolean WtabDestroy( 
                         caddr_t callData) ;
 static int _CreateWidget( 
-                        Widget (*func)(),
+                        Widget (*func)(const char *, WidgetClass, Widget, ArgList, Cardinal),
                         int argc,
                         char *argv[]) ;
 static int _DTKSH_XtDestroyWidget( 
                         Widget w) ;
 static int do_single_widget_arg_func( 
-                        int (*func)(),
+                        Boolean (*func)(Widget),
                         int argc,
                         char **argv) ;
 static void mainloopsighandler( 
@@ -102,7 +102,7 @@ static void RemoveCmdStr(
                         char type,
                         long id) ;
 static int do_RootWindowCmd( 
-                        int (*func)(),
+                        Window (*func)(Screen *),
                         int argc,
                         char *argv[]) ;
 static int cvtfontstruct( 
@@ -140,9 +140,9 @@ static int XtSetSensitive_usage(
 static int GetDisplayHandle(
                         int argc,
                         char **argv,
-	                Widget (*func)());
+	                Display * (*func)(Widget));
 static int RegisterTranslations( 
-                        void (*func)(),
+                        void (*func)(Widget w, XtTranslations translations),
                         int argc,
                         char *argv[]) ;
 static int LocateEHRecord( 
@@ -154,23 +154,23 @@ static int GetWorkspaceList(
                         int argc,
                         char *argv[]) ;
 static int DtTurnOnOrOffHourGlass( 
-                        void (*func)(),
+                        void (*func)(Widget),
                         int argc,
                         char *argv[]) ;
 static int WsmCommonProc(
                         int argc,
                         char *argv[],
-	                void (*func)());
+	                void (*func)(Display *, Window));
 static int ttdt_SaveOrRevert(
-                        Tt_status (*func)(),
+                        Tt_status (*func)(struct _Tt_message_handle *, const char *, Tt_scope,  struct _XtAppStruct *, int),
                         int argc,
                         char *argv[] ) ;
 static int message_DestroyOrReply( 
-                        Tt_status (*func)(),
+                        Tt_status (*func)(struct _Tt_message_handle *),
                         int argc,
                         char *argv[] );
 static int message_FailOrReject( 
-                        Tt_status (*func)(),
+                        Tt_status (*func)(struct _Tt_message_handle *, Tt_status,  const char *, int),
                         int argc,
                         char *argv[] );
 static Tt_message TtFileCB(
@@ -182,7 +182,8 @@ static Tt_message TtFileCB(
 	                int sameProcId ) ;
 static int tt_netfile_handler( 
                         int paramCount,
-                        char * (*func)(),
+                        char * (*func)(const char *),
+                        char * (*func2)(const char *, const char *),
                         char * usageMsg,
                         int argc,
                         char *argv[] ) ;
@@ -345,29 +346,29 @@ int * npListSizes = NULL;
 int nestingLevel = -1;
 
 static Namdisc_t transDiscipline ={0, NULL, NULL, NULL, NULL, 
-                                  (Namval_t *(*)())transCreateDisc, NULL, NULL};
+                                  (Namval_t *(*)(Namval_t*, const char*, int, Namfun_t*)) transCreateDisc, NULL, NULL};
 static Namdisc_t ehDiscipline = {0, NULL, NULL, NULL, NULL, 
-                                  (Namval_t *(*)())ehCreateDisc, NULL, NULL};
+                                  (Namval_t *(*)(Namval_t*, const char*, int, Namfun_t*)) ehCreateDisc, NULL, NULL};
 static Namdisc_t dftDiscipline = {0, NULL, NULL, NULL, NULL, 
-                                  (Namval_t *(*)())dftCreateDisc, NULL, NULL};
+                                  (Namval_t *(*)(Namval_t*, const char*, int, Namfun_t*)) dftCreateDisc, NULL, NULL};
 static Namdisc_t nopDiscipline = {0, NULL, NULL, NULL, NULL, 
-                                  (Namval_t *(*)())nopCreateDisc, NULL, NULL};
+                                  (Namval_t *(*)(Namval_t*, const char*, int, Namfun_t*)) nopCreateDisc, NULL, NULL};
 
-static Namdisc_t text_doit_disc = {0, (void (*)())SetTextDoit, NULL, NULL, NULL,
+static Namdisc_t text_doit_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextDoit, NULL, NULL, NULL,
                                   NULL, NULL, NULL};
-static Namdisc_t text_startpos_disc = {0, (void (*)())SetTextStartPos, NULL, 
+static Namdisc_t text_startpos_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextStartPos, NULL, 
                                   NULL, NULL,NULL, NULL, NULL};
-static Namdisc_t text_endpos_disc = {0, (void (*)())SetTextEndPos, NULL, NULL, 
+static Namdisc_t text_endpos_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextEndPos, NULL, NULL, 
                                   NULL, NULL, NULL, NULL};
-static Namdisc_t text_ptr_disc = {0, (void (*)())SetTextPtr, NULL, NULL, NULL,
+static Namdisc_t text_ptr_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextPtr, NULL, NULL, NULL,
                                   NULL, NULL, NULL};
-static Namdisc_t text_len_disc = {0, (void (*)())SetTextLen, NULL, NULL, NULL,
+static Namdisc_t text_len_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextLen, NULL, NULL, NULL,
                                   NULL, NULL, NULL};
-static Namdisc_t text_format_disc = {0, (void (*)())SetTextFormat, NULL, NULL, 
+static Namdisc_t text_format_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextFormat, NULL, NULL, 
                                   NULL, NULL, NULL, NULL};
-static Namdisc_t text_wcsptr_disc = {0, (void (*)())SetTextWCSptr, NULL, NULL, 
+static Namdisc_t text_wcsptr_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextWCSptr, NULL, NULL, 
                                   NULL, NULL, NULL, NULL};
-static Namdisc_t text_wcslen_disc = {0, (void (*)())SetTextWCSlen, NULL, NULL, 
+static Namdisc_t text_wcslen_disc = {0, (void	(*)(Namval_t*, const char*, int, Namfun_t*)) SetTextWCSlen, NULL, NULL, 
                                   NULL, NULL, NULL, NULL};
 
 static const XtActionsRec Ksh_actions[] = {
@@ -692,7 +693,7 @@ do_XtInitialize(
 
 static int
 _CreateWidget(
-        Widget (*func)(),
+        Widget (*func)(const char *, WidgetClass, Widget, ArgList, Cardinal),
         int argc,
         char *argv[] )
 {
@@ -913,7 +914,7 @@ _DTKSH_XtDestroyWidget(
 
 static int
 do_single_widget_arg_func(
-        int (*func)(),
+        Boolean (*func)(Widget),
         int argc,
         char **argv )
 {
@@ -942,12 +943,12 @@ do_XtDestroyWidget(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_arg_func(_DTKSH_XtDestroyWidget, argc, argv));
+   return(do_single_widget_arg_func((Boolean (*)(Widget)) _DTKSH_XtDestroyWidget, argc, argv));
 }
 
 int
 do_single_widget_test_func(
-        int (*func)(),
+        Boolean (*func)(Widget),
         int argc,
         char **argv )
 {
@@ -974,7 +975,7 @@ do_XtIsSensitive(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_test_func((int(*)())XtIsSensitive, argc, argv));
+   return(do_single_widget_test_func(XtIsSensitive, argc, argv));
 }
 
 
@@ -1009,7 +1010,7 @@ do_XtIsManaged(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_test_func((int(*)())XtIsManaged, argc, argv));
+   return(do_single_widget_test_func(XtIsManaged, argc, argv));
 }
 
 int
@@ -1017,7 +1018,7 @@ do_XtIsRealized(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_test_func((int(*)())XtIsRealized, argc, argv));
+   return(do_single_widget_test_func(XtIsRealized, argc, argv));
 }
 
 int
@@ -1025,7 +1026,7 @@ do_XtRealizeWidget(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_arg_func((int(*)())XtRealizeWidget, argc, argv));
+   return(do_single_widget_arg_func((Boolean (*)(Widget)) XtRealizeWidget, argc, argv));
 }
 
 int
@@ -1033,7 +1034,7 @@ do_XtUnrealizeWidget(
         int argc,
         char *argv[] )
 {
-   return(do_single_widget_arg_func((int(*)())XtUnrealizeWidget, argc, argv));
+   return(do_single_widget_arg_func((Boolean (*)(Widget)) XtUnrealizeWidget, argc, argv));
 }
 
 /*
@@ -1093,7 +1094,7 @@ do_XtPopdown(
         int argc,
         char **argv )
 {
-   return(do_single_widget_arg_func((int(*)())XtPopdown, argc, argv));
+   return(do_single_widget_arg_func((Boolean (*)(Widget)) XtPopdown, argc, argv));
 }
 
 int
@@ -1118,7 +1119,7 @@ do_XtDisplay(
         int argc,
         char **argv )
 {
-   return(GetDisplayHandle(argc, argv, (Widget (*)())XtDisplay));
+   return(GetDisplayHandle(argc, argv, XtDisplay));
 }
 
 
@@ -1127,7 +1128,7 @@ do_XtDisplayOfObject(
         int argc,
         char **argv )
 {
-   return(GetDisplayHandle(argc, argv, (Widget (*)())XtDisplayOfObject));
+   return(GetDisplayHandle(argc, argv, XtDisplayOfObject));
 }
 
 
@@ -1135,7 +1136,7 @@ static int
 GetDisplayHandle(
         int argc,
         char **argv,
-	Widget (*func)())
+	Display * (*func)(Widget))
 {
    wtab_t *w;
    char *arg0 = argv[0];
@@ -2014,7 +2015,7 @@ do_XtUnmanageChildren(
         int argc,
         char *argv[] )
 {
-	return(do_managelist_func(argc, argv, (int (*)())XtUnmanageChildren));
+	return(do_managelist_func(argc, argv, XtUnmanageChildren));
 }
 
 int
@@ -2022,14 +2023,14 @@ do_XtManageChildren(
         int argc,
         char *argv[] )
 {
-	return(do_managelist_func(argc, argv, (int (*)())XtManageChildren));
+	return(do_managelist_func(argc, argv, XtManageChildren));
 }
 
 int
 do_managelist_func(
         int argc,
         char *argv[],
-        int (*func)() )
+        void (*func)(WidgetList, Cardinal) )
 {
 	wtab_t *w;
 	int i;
@@ -2187,7 +2188,7 @@ do_XBell(
 
 static int
 do_RootWindowCmd(
-        int (*func)(),
+        Window (*func)(Screen *),
         int argc,
         char *argv[] )
 {
@@ -2225,7 +2226,7 @@ do_XRootWindowOfScreen(
         int argc,
         char *argv[] )
 {
-   return(do_RootWindowCmd((int (*)())XRootWindowOfScreen, argc, argv));
+   return(do_RootWindowCmd(XRootWindowOfScreen, argc, argv));
 }
 
 int
@@ -2233,7 +2234,7 @@ do_XWidthOfScreen(
         int argc,
         char *argv[] )
 {
-   return(do_RootWindowCmd(XWidthOfScreen, argc, argv));
+   return(do_RootWindowCmd((Window (*)(Screen *)) XWidthOfScreen, argc, argv));
 }
 
 int
@@ -2241,7 +2242,7 @@ do_XHeightOfScreen(
         int argc,
         char *argv[] )
 {
-   return(do_RootWindowCmd(XHeightOfScreen, argc, argv));
+   return(do_RootWindowCmd((Window (*)(Screen *)) XHeightOfScreen, argc, argv));
 }
 
 int
@@ -2399,7 +2400,7 @@ cvtfont(
         char *name,
         Font *fn )
 {
-   int (*oldHandler)();
+   int (*oldHandler)(Display *, XErrorEvent *);
 
    invalidFont = False;
    oldHandler = XSetErrorHandler(CatchNonFatalFontError);
@@ -2469,7 +2470,7 @@ do_XTextWidth(
 
 static int
 invokeXDrawFunction(
-        int function,
+        const int function,
         int argc,
         char *argv[] )
 {
@@ -2485,8 +2486,6 @@ invokeXDrawFunction(
    int i;
    int mode, parse = 0;
    int text = FALSE;
-   int (*func)() = NULL;
-   int argtype = 0;
    int polymode = 0;
    int coordmode;
    GC  gc = NULL;
@@ -2529,7 +2528,6 @@ invokeXDrawFunction(
    if (function == COPY_AREA) 
    {
       parse = 0;
-      func = XCopyArea;
 
       destination = (Window)strtoul(argv[3], &sp, 0);
       if (sp == argv[3]) 
@@ -2553,18 +2551,14 @@ invokeXDrawFunction(
    else if (function == DRAW_RECTANGLE) 
    {
       parse = 4;
-      func = XDrawRectangle;
    } 
    else if (function == FILL_RECTANGLE) 
    {
       parse = 4;
-      func = XFillRectangle;
    } 
    else if (function == FILL_POLYGON) 
    {
       parse = PARSE_POINTLIST;
-      func = XFillPolygon;
-      argtype = POLYGON_ARGS;
       polymode = Complex;
       coordmode = CoordModeOrigin;
       if (argc > 3)
@@ -2592,18 +2586,14 @@ invokeXDrawFunction(
    else if (function == DRAW_LINE) 
    {
       parse = 4;
-      func = XDrawLine;
    } 
    else if (function == DRAW_SEGMENTS) 
    {
       parse = PARSE_SEGMENTLIST;
-      func = XDrawSegments;
    } 
    else if (function == DRAW_LINES) 
    {
       parse = PARSE_POINTLIST;
-      func = XDrawLines;
-      argtype = LINE_ARGS;
       coordmode = CoordModeOrigin;
       if (argc > 3)
       {
@@ -2625,34 +2615,27 @@ invokeXDrawFunction(
    {
       parse = 2;
       text = TRUE;
-      func = XDrawString;
    } 
    else if (function == DRAW_IMAGE_STRING) 
    {
       parse = 2;
       text = TRUE;
-      func = XDrawImageString;
    } 
    else if (function == DRAW_ARC) 
    {
       parse = 6;
-      func = XDrawArc;
    } 
    else if (function == FILL_ARC) 
    {
       parse = 6;
-      func = XFillArc;
    } 
    else if (function == DRAW_POINT) 
    {
       parse = 2;
-      func = XDrawPoint;
    } 
    else if (function == DRAW_POINTS) 
    {
       parse = PARSE_POINTLIST;
-      func = XDrawPoints;
-      argtype = LINE_ARGS;
       coordmode = CoordModeOrigin;
       if (argc > 3)
       {
@@ -2673,12 +2656,10 @@ invokeXDrawFunction(
    else if (function == CLEAR_WINDOW) 
    {
       parse = 0;
-      func = XClearWindow;
    } 
    else if (function == CLEAR_AREA) 
    {
       parse = PARSE_AREA;
-      func = XClearArea;
    }
 
    if (Standard_GC == NULL)
@@ -2839,22 +2820,15 @@ invokeXDrawFunction(
          points[npoints].x = atoi(argv[i]);
          points[npoints].y = atoi(argv[i+1]);
       }
-
-      switch (argtype) 
-      {
-         case POLYGON_ARGS:
-         {
-            (*func)(display, drawable, gc, points, argc/2, polymode, coordmode);
-            break;
-         }
-
-         case LINE_ARGS:
-         {
-            (*func)(display, drawable, gc, points, argc/2, coordmode);
-            break;
-         }
+      
+      if(function == FILL_POLYGON) {
+         XFillPolygon(display, drawable, gc, points, argc/2, polymode, coordmode);
+      } else if(function == DRAW_POINTS) {
+         XDrawPoints(display, drawable, gc, points, argc/2, coordmode);
+      } else if(function == DRAW_LINES) {
+         XDrawLines(display, drawable, gc, points, argc/2, coordmode);         
       }
-
+ 
       free(points);
       argc -= 2*npoints;
       argv += 2*npoints;
@@ -2874,7 +2848,7 @@ invokeXDrawFunction(
          segments[nsegments].y2 = atoi(argv[i+3]);
       }
 
-      (*func)(display, drawable, gc, segments, argc/4);
+      XDrawSegments(display, drawable, gc, segments, argc/4);
       free(segments);
       argc -= 4*nsegments;
       argv += 4*nsegments;
@@ -2904,7 +2878,7 @@ invokeXDrawFunction(
          argv ++;
       }
 
-      (*func)(display, drawable, p[0], p[1], p[2], p[3], exposures);
+      XClearArea(display, drawable, p[0], p[1], p[2], p[3], exposures);
    }
    else 
    {
@@ -2913,24 +2887,50 @@ invokeXDrawFunction(
          for (i = 0; i < parse && i < argc; i++) 
             p[i] = atoi(argv[i]);
 
-         if (text) 
+         if (text)
          {
-            (*func)(display, drawable, gc, 
+            if(function == DRAW_IMAGE_STRING) {
+               XDrawImageString(display, drawable, gc, 
                     p[0], p[1], argv[i], strlen(argv[i]));
+            } else if(function == DRAW_STRING) {
+               XDrawString(display, drawable, gc, 
+                    p[0], p[1], argv[i], strlen(argv[i]));
+            } else {
+               // TODO Some error check
+            }
             argc--;
             argv++;
          } 
-         else if (func == XClearWindow)
-            (*func)(display, drawable);
-         else if (func == XCopyArea)
-         {
-            (*func)(display, drawable, destination, gc,
-                    srcX, srcY, width, height, destX, destY);
+         else if (function == CLEAR_WINDOW) {
+            XClearWindow(display, drawable);
          }
-         else
+         else if (function == COPY_AREA)
          {
-            (*func)(display, drawable, gc, 
-                    p[0], p[1], p[2], p[3], p[4], p[5]);
+            XCopyArea(display, drawable, destination, gc, srcX, srcY, width, height, destX, destY);
+         }
+         else if (function == FILL_RECTANGLE)
+         {
+            XFillRectangle(display, drawable, gc, p[0], p[1], p[2], p[3]);
+         }
+         else if (function == DRAW_RECTANGLE)
+         {
+            XDrawRectangle(display, drawable, gc, p[0], p[1], p[2], p[3]);
+         }
+         else if (function == DRAW_LINE)
+         {
+            XDrawLine(display, drawable, gc, p[0], p[1], p[2], p[3]);
+         }
+         else if (function == DRAW_ARC)
+         {
+            XDrawArc(display, drawable, gc, p[0], p[1], p[2], p[3], p[4], p[5]);
+         }
+         else if (function == FILL_ARC)
+         {
+            XFillArc(display, drawable, gc, p[0], p[1], p[2], p[3], p[4], p[5]);
+         }
+         else if (function == DRAW_POINT)
+         {
+            XDrawPoint(display, drawable, gc, p[0], p[1]);
          }
 
          argc -= parse;
@@ -4105,7 +4105,7 @@ do_XtSetSensitive(
 
 static int
 RegisterTranslations(
-        void (*func)(),
+        void (*func)(Widget w, XtTranslations translations),
         int argc,
         char *argv[] )
 {
@@ -4686,7 +4686,7 @@ do_DtWsmAddWorkspaceFunctions(
         int argc,
         char *argv[] )
 {
-   return(WsmCommonProc(argc, argv, (void (*)())DtWsmAddWorkspaceFunctions));
+   return(WsmCommonProc(argc, argv, DtWsmAddWorkspaceFunctions));
 }
 
 
@@ -4695,7 +4695,7 @@ do_DtWsmRemoveWorkspaceFunctions(
         int argc,
         char *argv[] )
 {
-   return(WsmCommonProc(argc, argv, (void (*)())DtWsmRemoveWorkspaceFunctions));
+   return(WsmCommonProc(argc, argv, DtWsmRemoveWorkspaceFunctions));
 }
 
 
@@ -4703,7 +4703,7 @@ static int
 WsmCommonProc(
         int argc,
         char *argv[],
-	void (*func)())
+	void (*func)(Display *, Window))
 {
    wtab_t *w;
    Display * display;
@@ -5083,7 +5083,7 @@ do_DtWsmOccupyAllWorkspaces(
         int argc,
         char *argv[] )
 {
-   return(WsmCommonProc(argc, argv, (void (*)())DtWsmOccupyAllWorkspaces));
+   return(WsmCommonProc(argc, argv, DtWsmOccupyAllWorkspaces));
 }
 
 
@@ -5128,7 +5128,7 @@ do__DtGetHourGlassCursor(
 
 static int
 DtTurnOnOrOffHourGlass(
-        void (*func)(),
+        void (*func)(Widget),
         int argc,
         char *argv[] )
 {
@@ -6578,7 +6578,7 @@ do_ttdt_Get_Modified(
  */
 static int
 ttdt_SaveOrRevert(
-        Tt_status (*func)(),
+        Tt_status (*func)(struct _Tt_message_handle *, const char *, Tt_scope,  struct _XtAppStruct *, int),
         int argc,
         char *argv[] )
 {
@@ -6691,7 +6691,7 @@ do_tt_error_pointer(
 
 static int
 message_DestroyOrReply( 
-        Tt_status (*func)(),
+        Tt_status (*func)(struct _Tt_message_handle *),
         int argc,
         char *argv[] )
 {
@@ -6756,7 +6756,7 @@ do_tt_message_reply(
 
 static int
 message_FailOrReject( 
-        Tt_status (*func)(),
+        Tt_status (*func)(struct _Tt_message_handle *, Tt_status,  const char *, int),
         int argc,
         char *argv[] )
 {
@@ -6847,7 +6847,8 @@ do_tttk_message_fail(
 static int
 tt_netfile_handler( 
         int paramCount,
-        char * (*func)(),
+        char * (*func)(const char *),
+        char * (*func2)(const char *, const char *),
         char * usageMsg,
         int argc,
         char *argv[] )
@@ -6866,9 +6867,9 @@ tt_netfile_handler(
    }
 
    if (paramCount == 4)
-      convertedName = (char *)(*func)(argv[3]);
+      convertedName = (*func)(argv[3]);
    else
-      convertedName = (char *)(*func)(argv[3], argv[4]);
+      convertedName = (*func2)(argv[3], argv[4]);
 
    /* 
     * Map the ttStatus into a string.  Note that we can't call the XtConvert
@@ -6903,7 +6904,7 @@ do_tt_file_netfile(
 
    usageMsg = strdup(GETMESSAGE(
              "Usage: tt_file_netfile variable status filename"));
-   results = tt_netfile_handler(4, tt_file_netfile, usageMsg, argc, argv);
+   results = tt_netfile_handler(4, tt_file_netfile, NULL, usageMsg, argc, argv);
    XtFree(usageMsg);
    return(results);
 }
@@ -6919,7 +6920,7 @@ do_tt_netfile_file(
 
    usageMsg = strdup(GETMESSAGE(
              "Usage: tt_netfile_file variable status netfilename"));
-   results = tt_netfile_handler(4, tt_netfile_file, usageMsg, argc, argv);
+   results = tt_netfile_handler(4, tt_netfile_file, NULL, usageMsg, argc, argv);
    XtFree(usageMsg);
    return(results);
 }
@@ -6935,7 +6936,7 @@ do_tt_host_file_netfile(
 
    usageMsg = strdup(GETMESSAGE(
              "Usage: tt_host_file_netfile variable status host filename"));
-   results = tt_netfile_handler(5, tt_host_file_netfile, usageMsg, argc, argv);
+   results = tt_netfile_handler(5, NULL, tt_host_file_netfile, usageMsg, argc, argv);
    XtFree(usageMsg);
    return(results);
 }
@@ -6951,7 +6952,7 @@ do_tt_host_netfile_file(
 
    usageMsg = strdup(GETMESSAGE(
              "Usage: tt_host_netfile_file variable status host netfilename"));
-   results = tt_netfile_handler(5, tt_host_netfile_file, usageMsg, argc, argv);
+   results = tt_netfile_handler(5, NULL, tt_host_netfile_file, usageMsg, argc, argv);
    XtFree(usageMsg);
    return(results);
 }
@@ -7886,7 +7887,7 @@ ProcessHelpCallbackReason(
 Namval_t *
 nopCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -7913,7 +7914,7 @@ nopCreateDisc(
 Namval_t *
 dftCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -7953,7 +7954,7 @@ dftCreateDisc(
 Namval_t *
 ehCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -7984,7 +7985,7 @@ ehCreateDisc(
 Namval_t *
 transCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8014,7 +8015,7 @@ transCreateDisc(
 Namval_t *
 scaleCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8054,7 +8055,7 @@ scaleCreateDisc(
 Namval_t *
 arrowCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8102,7 +8103,7 @@ arrowCreateDisc(
 Namval_t *
 comboCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8148,7 +8149,7 @@ comboCreateDisc(
 Namval_t *
 cmdCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8197,7 +8198,7 @@ cmdCreateDisc(
 Namval_t *
 dAreaCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8237,7 +8238,7 @@ dAreaCreateDisc(
 Namval_t *
 dbtnCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8287,7 +8288,7 @@ dbtnCreateDisc(
 Namval_t *
 fselCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8366,7 +8367,7 @@ fselCreateDisc(
 Namval_t *
 listCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8465,7 +8466,7 @@ listCreateDisc(
 Namval_t *
 pbtnCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8513,7 +8514,7 @@ pbtnCreateDisc(
 Namval_t *
 rcCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8567,7 +8568,7 @@ rcCreateDisc(
 Namval_t *
 sbarCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8614,7 +8615,7 @@ sbarCreateDisc(
 Namval_t *
 swinCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8656,7 +8657,7 @@ swinCreateDisc(
 Namval_t *
 sboxCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8705,7 +8706,7 @@ sboxCreateDisc(
 Namval_t *
 tbtnCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8749,7 +8750,7 @@ tbtnCreateDisc(
 Namval_t *
 textCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -8906,7 +8907,7 @@ textCreateDisc(
 Namval_t *
 textCreateDisc2(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -9018,7 +9019,7 @@ textCreateDisc2(
 Namval_t *
 helpCreateDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {
@@ -9098,7 +9099,7 @@ helpCreateDisc(
 Namval_t *
 dtPrintSetupProcDisc(
         Namval_t *np,
-        char *name,
+        const char *name,
 	int flags,
         Namfun_t *fp )
 {

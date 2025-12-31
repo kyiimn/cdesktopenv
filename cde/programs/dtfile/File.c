@@ -851,7 +851,7 @@ OrderFiles(
 
    /*  Sort the files and if the sub_sort function is non-null,  */
    /*  sort sets of the files broken according to file type.     */
-   qsort (order_list, file_count, sizeof (FileViewData *), (int (*)())sort);
+   qsort (order_list, file_count, sizeof (FileViewData *), (int (*)(const void *, const void *)) sort);
 
    if (sub_sort != NULL)
    {
@@ -864,7 +864,7 @@ OrderFiles(
              order_list[i]->file_data->logical_type)
          {
             qsort (order_list + start, i - start,
-                   sizeof (FileViewData *), (int (*)())sub_sort);
+                   sizeof (FileViewData *), (int (*)(const void *, const void *)) sub_sort);
             start = i;
          }
 
@@ -872,7 +872,7 @@ OrderFiles(
       }
 
       qsort (order_list + start, i - start, sizeof (FileViewData *),
-                                                         (int (*)())sub_sort);
+                                                        (int (*)(const void *, const void *)) sub_sort);
    }
 }
 
@@ -5344,8 +5344,11 @@ AddFileIcons(
 
 /* compare function for qsort and bsearch */
 static int
-WidgetCmp(Widget *w1, Widget *w2)
+WidgetCmp(const void *v1, const void *v2)
 {
+  const Widget *w1 = v1;
+  const Widget *w2 = v2;
+  
   return *w1 - *w2;
 }
 
@@ -5379,7 +5382,7 @@ MakeReuseList(
      /* create a sorted list of children */
      sorted_chilren = (Widget *)XtMalloc(num_children * sizeof(Widget));
      memcpy(sorted_chilren, children, num_children * sizeof(Widget));
-     qsort(sorted_chilren, num_children, sizeof(Widget), (int (*)())WidgetCmp);
+     qsort(sorted_chilren, num_children, sizeof(Widget), WidgetCmp);
 
      /* create reuse flags; initially assume all children can be reused */
      reuse = (Boolean *)XtMalloc(num_children * sizeof(Boolean));
@@ -5412,7 +5415,7 @@ MakeReuseList(
 	       {
 		 p = bsearch(&order_list[i]->widget,
 			     sorted_chilren, num_children, sizeof(Widget),
-			     (int (*)())WidgetCmp);
+			    WidgetCmp);
 		 if (p)
 		   {
 		     /* don't reuse this widget for any other file */
@@ -5435,7 +5438,7 @@ MakeReuseList(
 	       {
 		 p = bsearch(&order_list[i]->treebtn,
 			     sorted_chilren, num_children, sizeof(Widget),
-			     (int (*)())WidgetCmp);
+			     WidgetCmp);
 		 if (p)
 		   {
 		     /* don't reuse this widget for any other file */

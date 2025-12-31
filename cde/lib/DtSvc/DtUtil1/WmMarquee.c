@@ -243,7 +243,7 @@ _DtWsmAddMarqueeSelectionCallback (
      */
     pCbCtx->pattern = pattern;
     pCbCtx->widget = widget;
-    pCbCtx->ws_cb = marquee_selection;
+    pCbCtx->ws_cb = (DtWsmCBProc) marquee_selection;
     pCbCtx->client_data = client_data;
 
     XtFree (sName);

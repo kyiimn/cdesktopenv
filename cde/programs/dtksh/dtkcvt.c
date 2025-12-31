@@ -976,7 +976,7 @@ DtkshCvtStringToPrintSetupProc(
         XrmValuePtr toval,
         XtPointer data)
 {
-	static void (*proc)();
+	static void (*proc)(void *, DtPrintSetupData *);
 	extern wtab_t *DTKSHConversionWidget;
 	wtab_t *w = DTKSHConversionWidget;
 	extern char *DTKSHConversionResource;

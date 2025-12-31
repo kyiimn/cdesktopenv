@@ -2552,7 +2552,7 @@ static void ProcessJumpBack(
  *
  ****************************************************************************/
 void _DtHelpDialogHypertextCB (
-    XtPointer pDisplayAreaStruct,
+    DtHelpDispAreaStruct *pDisplayAreaStruct,
     XtPointer clientData,
     DtHelpHyperTextStruct *hyperData)
 {

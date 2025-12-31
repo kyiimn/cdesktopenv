@@ -249,7 +249,8 @@ TTmedia_ptype_declareCB(
 {
     Editor *pPad;
     char *filename;
-    Tt_message TTdt_message_acceptCB(), incoming;
+    Tt_message TTdt_message_acceptCB(struct _Tt_message_handle *, void *, struct _Tt_message_handle *);
+    Tt_message incoming;
     Tt_pattern *ttrc;
     DtEditorContentRec  contentRec;
     DtEditorErrorCode   errorCode;

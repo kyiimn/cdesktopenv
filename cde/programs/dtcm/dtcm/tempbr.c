@@ -86,8 +86,8 @@ static  char sccsid[] = "@(#)tempbr.c 1.48 95/03/28 Copyr 1991 Sun Microsystems,
 #include "cmfns.h"
 #endif
 
-static void tb_cancel_cb();
-static void tb_close_cb();
+static void tb_cancel_cb(Widget widget, XtPointer client_data, XmPushButtonCallbackStruct *cb);
+static void tb_close_cb(Widget w, XtPointer data, XtPointer cbs);
 static void tempbr_show_cb(Widget w, XtPointer data, XtPointer cbs);
 #include <string.h>
 
@@ -305,7 +305,7 @@ make_std_tempbr(Calendar *c)
                 NULL);
 	XmStringFree(label_str);
         XtAddCallback(tb->cancel_button, 
-			XmNactivateCallback, tb_cancel_cb, NULL);
+			XmNactivateCallback, (void *) tb_cancel_cb, NULL);
 
         label_str = XmStringCreateLocalized(CATGETS(c->DT_catd, 1, 77, "Help"));
         tb->help_button = XtVaCreateWidget("helpButton",

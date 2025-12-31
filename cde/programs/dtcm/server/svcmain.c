@@ -489,8 +489,8 @@ static void
 init_alarm(void)
 {
 	int next;
-	extern void garbage_collect();
-	extern void debug_switch();
+	extern void garbage_collect(int);
+	extern void debug_switch(int);
 
 #if defined(SVR4) && !defined(__linux__)
 	extern void (*sigset(int, void (*)(int)))(int);

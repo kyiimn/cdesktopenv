@@ -178,91 +178,91 @@ typedef struct _formatStruct {
  ******************************************************************************/
 static	int	AddRowToTable(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	AllocateBlock(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	Cdata(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CheckForSnb(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CheckType(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CleanUpBlock(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	ClearAndCheckSnref(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	ColInfoToTableInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CopyAnchorId(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CopyDocInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CopyIdInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	ResolveSpcInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CopyEntryInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	CopyTossInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	FakeEnd(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
@@ -272,43 +272,43 @@ static	_DtCvSegment  *FindSnbEntry(
 static	char	*GetInterpCmd(SdlOption	interp_type);
 static	int	IfInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	InitLast(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	LoadGraphic(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	MarkFound(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	OnlyOne(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	OnlyOneEach(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	OneToN(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
@@ -320,13 +320,13 @@ static	int	ParseSDL(
 			SDLMask		*process_mask);
 static	int	ProcessEnterAttr(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*cur_except,
 			SDLMask		*process_mask);
 static	int	ProcessExitAttr(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*cur_except,
 			SDLMask		*process_mask);
@@ -338,19 +338,19 @@ static	int	ProcessSDLMarkup(
 			SDLMask		*process_mask);
 static	int	RegisterLink(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	RegisterSnbLink(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	RegisterSwitch(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
@@ -359,43 +359,43 @@ static	int	ResolveIf(
 			_DtCvSegment	*prev_data);
 static	int	SaveItemInfo(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	SaveLangCharSet(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	SetSaveSnref(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	SetTransit(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	SetType(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	ZeroOrOne(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
 static	int	ZeroToN(
 			FormatStruct	*my_struct,
-			SDLMask		*element_types,
+			const SDLMask		*element_types,
 			enum SdlElement	 sig_element,
 			SDLMask		*exceptions,
 			SDLMask		*process_mask);
@@ -3531,8 +3531,8 @@ DuplicateElement(
     _DtCvSegment	 *src_seg,
     _DtCvSegment	**prev_data,
     _DtCvSegment	**last_seg,
-    void                (*load_font)(),
-    _DtCvValue		(*resolve_spc)(),
+    void                (*load_font)(void *, char *, const char *, _DtHelpFontHints, void **),
+    _DtCvValue		(*resolve_spc)(void *, char *, const char *, _DtHelpFontHints,  const char *, void **, _DtCvUnit *, _DtCvUnit *, _DtCvUnit *),
     _DtCvUnit		  line_height,
     int			  ave_char,
     _DtHelpFontHints	  srcFonts,
@@ -6149,7 +6149,7 @@ GetInterpCmd(SdlOption	interp_type)
 static	int
 CheckForSnb(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6206,7 +6206,7 @@ CheckForSnb(
 static	int
 SetSaveSnref(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6232,7 +6232,7 @@ SetSaveSnref(
 static	int
 ClearAndCheckSnref(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6270,7 +6270,7 @@ ClearAndCheckSnref(
 static	int
 CheckType(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6320,7 +6320,7 @@ CheckType(
 static	int
 SetType(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6365,7 +6365,7 @@ SetType(
 static	int
 IfInfo(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6400,7 +6400,7 @@ IfInfo(
 static	int
 MarkFound(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6462,7 +6462,7 @@ MarkFound(
 static	int
 SaveItemInfo(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6504,7 +6504,7 @@ SaveItemInfo(
 static	int
 AllocateBlock(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6546,7 +6546,7 @@ AllocateBlock(
 static	int
 CleanUpBlock(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6575,7 +6575,7 @@ CleanUpBlock(
 static	int
 RegisterLink(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6753,7 +6753,7 @@ ResolveIf(
 static	int
 ZeroOrOne(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6800,7 +6800,7 @@ ZeroOrOne(
 static	int
 ZeroToN(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6858,7 +6858,7 @@ ZeroToN(
 static	int
 OneToN(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6909,7 +6909,7 @@ OneToN(
 static	int
 OnlyOne(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -6954,7 +6954,7 @@ OnlyOne(
 static	int
 OnlyOneEach(
     FormatStruct	*my_struct,
-    SDLMask		*element_types,
+    const SDLMask		*element_types,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7008,7 +7008,7 @@ OnlyOneEach(
 static	int
 Cdata(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7077,7 +7077,8 @@ Cdata(
                     strmove (&string[i], &string[i+1]);
                     if (string[i] == '\0')
                       {
-                        string[i] = BufFileGet(my_struct->my_file);
+                        int ignored = 0;
+                        string[i] = BufFileGet(ignored, my_struct->my_file);
                         if (string[i] == BUFFILEEOF)
                             return -1;
                         string[i+1] = '\0';
@@ -7133,7 +7134,8 @@ Cdata(
 			  {
 			    do
 			      {
-			        string[i] = BufFileGet(my_struct->my_file);
+			        int ignored = 0;
+			        string[i] = BufFileGet(ignored, my_struct->my_file);
 				if (string[i] == BUFFILEEOF)
 				    return -1;
 				i++;
@@ -7276,7 +7278,8 @@ Cdata(
 		if (string == NULL) return -1;
 
 		while (curLen < 0 && len < multiLen) {
-		    string[myLen] = BufFileGet(my_struct->my_file);
+		    int ignored = 0;
+		    string[myLen] = BufFileGet(ignored, my_struct->my_file);
 
 		    if (string[myLen] == BUFFILEEOF) return -1;
 
@@ -7439,7 +7442,7 @@ Cdata(
 static	int
 ProcessEnterAttr(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7472,7 +7475,7 @@ ProcessEnterAttr(
 static	int
 ProcessExitAttr(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7504,7 +7507,7 @@ ProcessExitAttr(
 static	int
 FakeEnd(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7532,7 +7535,7 @@ FakeEnd(
 static	int
 AddRowToTable(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7568,7 +7571,7 @@ AddRowToTable(
 static	int
 SaveLangCharSet(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7611,7 +7614,7 @@ SaveLangCharSet(
 static	int
 CopyDocInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7654,7 +7657,7 @@ CopyDocInfo(
 static	int
 CopyAnchorId(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7696,7 +7699,7 @@ CopyAnchorId(
 static	int
 LoadGraphic(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7781,7 +7784,7 @@ LoadGraphic(
 static	int
 ColInfoToTableInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7901,7 +7904,7 @@ ColInfoToTableInfo(
 static	int
 CopyIdInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -7943,7 +7946,7 @@ CopyIdInfo(
 static	int
 RegisterSnbLink(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8035,7 +8038,7 @@ RegisterSnbLink(
 static	int
 RegisterSwitch(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8081,7 +8084,7 @@ RegisterSwitch(
 static	int
 ResolveSpcInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8194,7 +8197,7 @@ ResolveSpcInfo(
 static	int
 CopyTossInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8299,7 +8302,7 @@ CopyTossInfo(
 static	int
 CopyEntryInfo(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8349,7 +8352,7 @@ CopyEntryInfo(
 static	int
 InitLast(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -8387,7 +8390,7 @@ InitLast(
 static	int
 SetTransit(
     FormatStruct	*my_struct,
-    SDLMask		*cur_element,
+    const SDLMask		*cur_element,
     enum SdlElement	 sig_element,
     SDLMask		*exceptions,
     SDLMask		*process_mask)
@@ -9352,7 +9355,7 @@ CreateTitleChunks(
     SDLMask		  *stop_mask,
     const char		  *lang,
     const char		  *char_set,
-    _DtCvValue		(*resolve_spc)(),
+    _DtCvValue		(*resolve_spc)(void *, char *, const char *, _DtHelpFontHints,  const char *, void **, _DtCvUnit *, _DtCvUnit *, _DtCvUnit *),
     _DtCvPointer	  client_data,
     int			  *ret_cnt,
     void		***ret_chunks)
@@ -9506,7 +9509,7 @@ ProcessSegmentsToChunks(
     SDLMask		  *stop_mask,
     const char		  *lang,
     const char		  *char_set,
-    _DtCvValue		(*resolve_spc)(),
+    _DtCvValue		(*resolve_spc)(void *, char *, const char *, _DtHelpFontHints, const char *, void **, _DtCvUnit *, _DtCvUnit *, _DtCvUnit *),
     _DtCvPointer	  client_data,
     void		***ret_chunks)
 {

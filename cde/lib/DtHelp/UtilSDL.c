@@ -158,7 +158,8 @@ SkipWhiteSpace (
     char   c;
 
     do {
-        c = BufFileGet(f);
+        int ignored = 0;
+        c = BufFileGet(ignored, f);
 	if (c == BUFFILEEOF)
 	    return -1;
 
@@ -222,7 +223,8 @@ GetSDLElement (
     char    c;
 
     do {
-	c = BufFileGet(f);
+	int ignored = 0;
+	c = BufFileGet(ignored, f);
 
 	/*
 	 * [chars][space]	(nonWhite == True  && IsWhiteSpace(c))
@@ -367,6 +369,7 @@ _DtHelpCeGetSdlAttribute (
     char	*attribute_name)
 {
     int   len = 0;
+    int ignored = 0;
     char  c;
 
     if (SkipWhiteSpace(f) != 0)
@@ -375,7 +378,7 @@ _DtHelpCeGetSdlAttribute (
     /*
      * check that the attribute name starts correctly
      */
-    c = BufFileGet(f);
+    c = BufFileGet(ignored, f);
     if (c == '>')
 	return 1;
 
@@ -387,13 +390,13 @@ _DtHelpCeGetSdlAttribute (
 
 	attribute_name[len++] = c;
 
-	c = BufFileGet(f);
+	c = BufFileGet(ignored, f);
 
     } while (c != BUFFILEEOF && !IsWhiteSpace(c) && c != '=' && len < max_len);
 
     while (c != '=')
       {
-	c = BufFileGet(f);
+	c = BufFileGet(ignored, f);
 	if (c == BUFFILEEOF)
 	    return -1;
       }
@@ -577,7 +580,8 @@ _DtHelpCeGetSdlCdata (
       }
 
     do {
-	c = BufFileGet(f);
+	int ignored = 0;
+	c = BufFileGet(ignored, f);
 
 	buf[len++] = c;
 	buf[len]   = '\0';
@@ -633,7 +637,8 @@ _DtHelpCeGetSdlCdata (
 			/*
 			 * get the next character.
 			 */
-			c = BufFileGet(f);
+			int ignored = 0;
+			c = BufFileGet(ignored, f);
 
 			/*
 			 * if it is the first character of the numeric entity,
@@ -822,7 +827,8 @@ _DtHelpCeGetSdlAttributeCdata (
 	return -1;
 
     do {
-	c = BufFileGet(f);
+	int ignored = 0;
+	c = BufFileGet(ignored, f);
 	if (c == BUFFILEEOF)
 	  {
 	    if (myStr != NULL)
@@ -915,7 +921,8 @@ _DtHelpCeSkipCdata (
     char        c;
 
     do {
-	c = BufFileGet(f);
+	int ignored = 0;
+	c = BufFileGet(ignored, f);
 	if (c == BUFFILEEOF)
 	    return -1;
 
@@ -933,7 +940,7 @@ _DtHelpCeSkipCdata (
 	      }
 	    else if (c == '-')
 	      {
-		c = BufFileGet(f);
+		c = BufFileGet(ignored, f);
 		if (c == BUFFILEEOF)
 	    	return -1;
 	    
@@ -981,7 +988,8 @@ _DtHelpCeSkipCdata (
 	      }
 	    else if (comment && c == '-')
 	      {
-		c = BufFileGet(f);
+		int ignored = 0;
+		c = BufFileGet(ignored, f);
 		if (c == BUFFILEEOF)
 		    return -1;
 	    
@@ -1096,7 +1104,8 @@ _DtHelpCeFindSkipSdlElementEnd (
 	return -1;
 
     do {
-	c = BufFileGet(f);
+	int ignored = 0;
+	c = BufFileGet(ignored, f);
 	if (c == BUFFILEEOF)
 	  return -1;
 
@@ -1341,7 +1350,7 @@ _DtHelpCeSaveString(
     int           link_index,
     int           multi_len,
     int           flags,
-    void	(*load_font)(),
+    void	(*load_font)(void *, char *, const char *, _DtHelpFontHints, void **),
     _SdlFontMode  resolve_font,
     _DtCvValue     newline)
 {

@@ -98,7 +98,7 @@ static int cm_beep = 0;			/* beep reminder */
 static int cm_open = 0;			/* open reminder */
 static int cm_mail = 0;			/* mail reminder */
 
-static void cm_args();			/* parse command line */
+static void cm_args(int argc, char **argv);	/* parse command line */
 
 static char**
 grab(char **argv,				/* command line arguments */

@@ -206,7 +206,7 @@ typedef struct
    char *directory;
    int file_count;
    DirUpdate *updates;
-   void (*finish_callback)();
+   void (*finish_callback)(void *, int);
    XtPointer callback_data;
    int child;
 } FileOpCBData;
@@ -233,7 +233,7 @@ typedef struct
    char *to_host;
    char *to_dir;
    char *to_file;
-   void (*finish_callback)();
+   void (*finish_callback)(void *, char *, int);
    XtPointer callback_data;
    int child;
 } MakeFileCBData;
@@ -308,9 +308,9 @@ PipeWriteString(
 	char *s)
 {
    short len, sent = 0;
-   void (*oldPipe)();
+   void (*oldPipe)(int);
 
-   oldPipe = (void (*)())signal(SIGPIPE, SIG_IGN);
+   oldPipe = signal(SIGPIPE, SIG_IGN);
 
    if (s == NULL)
       len = 0;
@@ -949,11 +949,11 @@ FileMoveCopyProcess(
         if (strncmp(directory, desktop_dir, strlen(desktop_dir)) == 0)
             return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from, to,
                                     isContainer,
-                                    FileOpError, True, DESKTOP);
+                                    (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True, DESKTOP);
         else
             return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from, to,
                                     isContainer,
-                                    FileOpError, True, NOT_DESKTOP);
+                                    (void (*)(Widget, XtPointer, XtPointer))FileOpError, True, NOT_DESKTOP);
         XtFree( (char *) from );
       }
 
@@ -1154,11 +1154,11 @@ FileMoveCopyProcess(
                     if (strncmp(directory, desktop_dir, strlen(desktop_dir)) == 0)
                       return_val = FileManip((Widget) (intptr_t) pipe_s2m, MERGE_DIR, from,
                                              to, isContainer,
-                                             FileOpError, True, DESKTOP);
+                                             (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True, DESKTOP);
                     else
                       return_val = FileManip((Widget) (intptr_t) pipe_s2m, MERGE_DIR, from,
                                              to, isContainer,
-                                             FileOpError, True, NOT_DESKTOP);
+                                             (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True, NOT_DESKTOP);
                     break;
 
                 case PIPEMSG_REPLACE_BUFFER:
@@ -1195,7 +1195,7 @@ FileMoveCopyProcess(
                 default:
                     if (strncmp(directory, desktop_dir, strlen(desktop_dir)) == 0)
                       return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from, to,
-                                             isContainer,FileOpError, True,
+                                             isContainer, (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True,
                                              DESKTOP);
                     else
                     {
@@ -1220,14 +1220,14 @@ FileMoveCopyProcess(
                             strcat(toFile, newFile);
 
                             return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from,
-                                                   toFile, False, FileOpError,
+                                                   toFile, False, (void (*)(Widget, XtPointer, XtPointer)) FileOpError,
                                                    True, NOT_DESKTOP);
                             XtFree(path);
                             XtFree(toFile);
                         }
                         else
                             return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from,
-                                                   to, isContainer, FileOpError,
+                                                   to, isContainer, (void (*)(Widget, XtPointer, XtPointer)) FileOpError,
                                                    True, NOT_DESKTOP);
                     }
             } /* endswitch */
@@ -1375,7 +1375,7 @@ FileMoveCopyProcessDesktop(
       else
       {
         return_val = FileManip((Widget) (intptr_t) pipe_s2m, mode, from, to, TRUE,
-                               FileOpError, True, DESKTOP);
+                               (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True, DESKTOP);
         XtFree (from);
         from = NULL;
       }
@@ -2032,7 +2032,7 @@ _FileMoveCopy(
         int file_count,
         unsigned int modifiers,
         DesktopRec *desktopWindow,
-        void (*finish_callback)(),
+        void (*finish_callback)(void *, int),
         XtPointer callback_data)
 {
    static char *pname = "_FileMoveCopy";
@@ -2330,7 +2330,7 @@ FileMoveCopy(
         char **file_set,
         int file_count,
         unsigned int modifiers,
-        void (*finish_callback)(),
+        void (*finish_callback)(void *, int),
         XtPointer callback_data)
 {
    return _FileMoveCopy( (XtPointer)file_mgr_data, to_file, directory, host,
@@ -2348,7 +2348,7 @@ FileMoveCopyDesktop(
       int file_count,
       unsigned int modifiers,
       DesktopRec *desktopWindow,
-      void (*finish_callback)(),
+      void (*finish_callback)(void *, int),
       XtPointer callback_data)
 {
   return _FileMoveCopy ((XtPointer)file_view_data,
@@ -2446,7 +2446,7 @@ ChangeIconNameProcess(
      return 1;
    }
    success = FileManip((Widget) (intptr_t) pipe_fd, MOVE_FILE, old_full_name, full_name, TRUE,
-                       FileOpError, True, NOT_DESKTOP);
+                       (void (*)(Widget, XtPointer, XtPointer)) FileOpError, True, NOT_DESKTOP);
    XtFree( old_full_name );
    /* send a 'done' msg through the pipe */
    rc = success? 0: -1;
@@ -3217,7 +3217,6 @@ MakeFilePipeCB(
  * MakeFile:
  *    Start the background process and set up callback for the pipe.
  *------------------------------------------------------------------*/
-
 void
 MakeFile(
         Widget w,
@@ -3225,7 +3224,7 @@ MakeFile(
         char *directory_name,
         char *new_name,
         unsigned char type,
-        void (*finish_callback)(),
+        void (*finish_callback)(void *, char *, int),
         XtPointer callback_data)
 {
    static char *pname = "MakeFile";
@@ -3310,7 +3309,7 @@ MakeFilesFromBuffers(
                      char **host_set,
                      BufferInfo *buffer_set,
                      int num_of_buffers,
-                     void (*finish_callback)(),
+                     void (*finish_callback)(void *, int),
                      XtPointer callback_data)
 {
   return _FileMoveCopy ((XtPointer)file_mgr_data, NULL, directory, host,
@@ -3328,7 +3327,7 @@ MakeFilesFromBuffersDT(
                      BufferInfo *buffer_set,
                      int num_of_buffers,
                      DesktopRec *desktopWindow,
-                     void (*finish_callback)(),
+                     void (*finish_callback)(void *, int),
                      XtPointer callback_data)
 {
   return _FileMoveCopy ((XtPointer)file_view_data, NULL, directory,
