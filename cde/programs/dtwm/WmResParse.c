@@ -96,6 +96,7 @@
 #include "WmFunction.h"
 #include "WmImage.h"
 #include "WmXSMP.h"
+#include <unistd.h>
 
 # include <errno.h>
 # ifdef X_NOT_STDC_ENV
@@ -5971,7 +5972,7 @@ Boolean ParseWmFuncActionArg (unsigned char **linePP,
 static void
 PreprocessConfigFile (void)
 {
-#define CPP_NAME_SIZE	((L_tmpnam)+1)
+#define CPP_NAME_SIZE	32
     char pchCmd[MAXWMPATH+1];
 
     if (wmGD.cppCommand && *wmGD.cppCommand)
@@ -5982,7 +5983,8 @@ PreprocessConfigFile (void)
 	pConfigStackTop->cppName = XtMalloc (CPP_NAME_SIZE * sizeof(char));
 	if (pConfigStackTop->cppName)
 	{
-	    (void) tmpnam (pConfigStackTop->cppName);
+	    strcpy(pConfigStackTop->cppName, "/tmp/dtwm_XXXXXX");
+	    { int _tf = mkstemp(pConfigStackTop->cppName); if (_tf >= 0) close(_tf); }
 
 	    /*
 	     * Build up the command line.

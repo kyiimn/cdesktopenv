@@ -246,7 +246,7 @@ WillingMsg( void )
     static char retbuf[LINEBUFSIZE];
     char	tmpbuf[LINEBUFSIZE * 8];
     char	*cp;
-    char	tmpfilename[L_tmpnam + 1];
+    char	tmpfilename[32];
     FILE	*f;
 
 
@@ -260,7 +260,9 @@ WillingMsg( void )
     strcat(tmpbuf,"awk '{printf(\"%s %-.5s  load: %.3s, %.3s, %.3s\",$(NF-6),$(NF-5),$(NF-2),$(NF-1),$NF)}'");
     strcat(tmpbuf," > ");
 
-    if ( tmpnam(tmpfilename) != (char *)NULL ) {
+    strcpy(tmpfilename, "/tmp/dtlogin_XXXXXX");
+    { int _tf = mkstemp(tmpfilename); if (_tf >= 0) close(_tf); }
+    if ( tmpfilename[0] != '\0' ) {
 
 	strcat(tmpbuf,tmpfilename);
 

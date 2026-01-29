@@ -58,6 +58,7 @@
 #include <Xm/TextF.h>
 #include <Xm/LabelG.h>
 #include <Dt/HourGlass.h>
+#include <unistd.h>
 
 
 /************************************************************************
@@ -255,10 +256,11 @@ LoadFile(
 char *
 GetTempFile(void)
 {
-    char *tempname = (char *)XtMalloc(L_tmpnam); /* Temporary file name. */
+    char *tempname = (char *)XtMalloc(32); /* Temporary file name. */
     FILE *tfp;
 
-    (void)tmpnam(tempname);
+    strcpy(tempname, "/tmp/dtpad_XXXXXX");
+    { int _tf = mkstemp(tempname); if (_tf >= 0) close(_tf); }
     if ((tfp = fopen(tempname, "w")) == NULL)
     {
         pid_t pid;

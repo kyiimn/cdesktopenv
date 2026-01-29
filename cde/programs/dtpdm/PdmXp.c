@@ -38,6 +38,7 @@
 #include "PdmXp.h"
 
 #include <X11/Intrinsic.h>
+#include <unistd.h>
 
 typedef enum {
     PDMXP_JOB, PDMXP_DOC, PDMXP_PRINTER, PDMXP_SERVER,
@@ -488,9 +489,11 @@ void
 PdmXpUpdateAttributes(PdmXp* me)
 {
 #if 0 && defined(PRINTING_SUPPORTED)
-    char fname[L_tmpnam];
+    char fname[32];
     
-    if(tmpnam(fname))
+    strcpy(fname, "/tmp/dtpdm_XXXXXX");
+    { int _tf = mkstemp(fname); if (_tf >= 0) close(_tf); }
+    if(fname[0] != '\0')
     {
 	int i;
 	XrmDatabase pool;

@@ -588,9 +588,10 @@ FileOpenRtnFd (
     if (*ret_fd == -1)
       {
 	/*
-	 * get a temporary name
+	 * get a temporary name using mkstemp for security
 	 */
-	(void) tmpnam (tmpName);
+	strcpy(tmpName, "/tmp/dthelp_XXXXXX");
+	{ int _tf = mkstemp(tmpName); if (_tf >= 0) close(_tf); }
 
 	/*
 	 * malloc memory for the dot Z file name.
@@ -1087,9 +1088,10 @@ _DtHelpCeGetUncompressedFileName (
     if (access (name, F_OK) == -1)
       {
 	/*
-	 * get a temporary name
+	 * get a temporary name using mkstemp for security
 	 */
-	(void) tmpnam (tmpName);
+	strcpy(tmpName, "/tmp/dthelp_XXXXXX");
+	{ int _tf = mkstemp(tmpName); if (_tf >= 0) close(_tf); }
 
 	/*
 	 * malloc memory for the dot Z file name.

@@ -5181,6 +5181,7 @@ typedef struct {
 #define WORDPREV(d,at) (((at == d->wordbase) ? d->wordlimit : at) - 1)	/* function  */
 
 #include <locale.h>
+#include <unistd.h>
 extern int _nl_space_alt;
 
 
@@ -6873,7 +6874,7 @@ DoAdjust(
         XmTextPosition	start,
         XmTextPosition	end)
 {
-    char tempName1[L_tmpnam], tempName2[L_tmpnam];
+    char tempName1[32], tempName2[32];
     DtEditorErrorCode returnVal;
     AdjRec adjRec;
 
@@ -6961,8 +6962,9 @@ DoAdjust(
        /*
         * Create the two temp files
         */
-       (void)tmpnam(tempName1);
-       (void)tmpnam(tempName2);
+       strcpy(tempName1, "/tmp/dtedit1_XXXXXX");
+       strcpy(tempName2, "/tmp/dtedit2_XXXXXX");
+       { int _tf1 = mkstemp(tempName1), _tf2 = mkstemp(tempName2); if (_tf1 >= 0) close(_tf1); if (_tf2 >= 0) close(_tf2); }
        if ((adjRec.infp = fopen(tempName1, "w")) != (FILE *)NULL) {
 
          /* 

@@ -60,6 +60,7 @@
 #define X_INCLUDE_STRING_H
 #define XOS_USE_XT_LOCKING
 #include <X11/Xos_r.h>
+#include <unistd.h>
 
 extern XtPointer
 _XmStringUngenerate(XmString    string,
@@ -96,7 +97,7 @@ DtEditorInvokeSpellDialog(
 	Widget widget)
 {
     DtEditorWidget pPriv = (DtEditorWidget) widget;
-    char fileName[L_tmpnam], com[L_tmpnam + 7], *string, newline[1];
+    char fileName[32], com[32 + 7], *string, newline[1];
     char *line;
     FILE *fp;           /* pipe to read words from */
     int len = 0;        /* length of line read in */
@@ -119,7 +120,8 @@ DtEditorInvokeSpellDialog(
        /* 
         * Write out to a tmp file, getting the name back
         */
-       (void)tmpnam(fileName);
+       strcpy(fileName, "/tmp/dtsrch_XXXXXX");
+       { int _tf = mkstemp(fileName); if (_tf >= 0) close(_tf); }
        if((fp = fopen(fileName, "w")) != (FILE *)NULL) 
        {
           /* 
