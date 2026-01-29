@@ -356,8 +356,7 @@ phrase(char *name, int token, int comma)
 		}
 	}
 	*cp2 = 0;
-	return (token ? --cp : equal(name, nbufp) ? name :
-	    nbufp == nbuf ? savestr(nbuf) : nbufp);
+	return (token ? --cp : equal(name, nbufp) ? name : savestr(nbufp));
 }
 
 
