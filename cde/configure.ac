@@ -550,11 +550,25 @@ AM_ICONV
 
 dnl figure out pam support
 dnl Right now this only works on linux and netbsd (9.2 tested)
+
+dnl PAM configuration directory - configurable for non-root installs
+AC_ARG_WITH([pam-dir],
+  AS_HELP_STRING([--with-pam-dir=DIR],
+    [directory for PAM configuration files (default: /etc/pam.d, or PREFIX/etc/pam.d if prefix is not /usr)]),
+  [PAM_CONFDIR="$withval"],
+  [if test "x$cde_prefix" = "x/usr" -o "x$cde_prefix" = "x/usr/local"; then
+     PAM_CONFDIR="/etc/pam.d"
+   else
+     PAM_CONFDIR="${cde_prefix}/etc/pam.d"
+   fi])
+AC_SUBST(PAM_CONFDIR)
+
 if test "$supports_pam" = "yes"
 then
         AC_CHECK_LIB(pam, pam_start,
              [SOURCE_CPP_DEFINES="${SOURCE_CPP_DEFINES} -DHAS_PAM_LIBRARY";
-	      PAMLIB="-lpam"])
+	      PAMLIB="-lpam";
+              AC_MSG_NOTICE([PAM configuration directory: $PAM_CONFDIR])])
         AC_SUBST(PAMLIB)
 else
         AC_CHECK_LIB(pam, NOTSUPPORTED)
