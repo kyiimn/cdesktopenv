@@ -82,6 +82,7 @@
 #include "X11/Xutil.h"
 #include <X11/StringDefs.h>
 #include <X11/keysymdef.h>
+#include <X11/XKBlib.h>
 #include <Xm/Form.h>
 #include <Xm/MessageB.h>
 #include <Xm/MwmUtil.h>
@@ -3735,7 +3736,7 @@ GetModeSwitchModifier(
     for (mapIndex = 3*pMap->max_keypermod; mapIndex < mapSize; mapIndex++) {
         /* look only at the first 4 columns of key map */
         for (keyCol = 0; keyCol < 4; keyCol++) {
-          keySym = XKeycodeToKeysym(dpy, pMap->modifiermap[mapIndex], keyCol);
+          keySym = XkbKeycodeToKeysym(dpy, pMap->modifiermap[mapIndex], 0, keyCol);
           if (keySym == XK_Mode_switch)
              modeSwitchModMask |= 1 << (mapIndex / pMap->max_keypermod);
         }
