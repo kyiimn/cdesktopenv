@@ -58,6 +58,7 @@
 
 #ifdef __TOOLTALK
 #include <Tt/tttk.h>
+#include <unistd.h>
 int ttMark;
 int tt_tmpfile_fd = -1;
 static int undeclared = 0;
@@ -521,7 +522,8 @@ if (tt_message_status(msg) == TT_WRN_START_MESSAGE) tt_message_reply(msg);
              }
              else
              {
-                (void) tmpnam(start_file);
+                strcpy(start_file, "/tmp/dticon_XXXXXX");
+                { int _tf = mkstemp(start_file); if (_tf >= 0) close(_tf); }
                 if( (buf) && (!strncmp((char *)buf, "/* XPM */", 9)) )
                 {
                    /* Format XPM */

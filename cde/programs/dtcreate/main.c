@@ -226,6 +226,7 @@ const char *af_tiny_icon_default = "/usr/dt/appconfig/icons/C/Dtdata.t";
  *---------------------------------------------------*/
 #ifndef DESIGN_TIME
 #include "UxXt.h"
+#include <unistd.h>
 #endif /* DESIGN_TIME */
 
 XtAppContext    UxAppContext;
@@ -873,7 +874,8 @@ Tt_callback_action IconEdit_tt_handler( Tt_message m, Tt_pattern p )
            if (pIconData->pmDirtyBit) {
               tmpIconFile = pIconData->pmFileName;
            } else {
-              tmpnam(pIconData->pmFileName);
+              strcpy(pIconData->pmFileName, "/tmp/dtcreate_pm_XXXXXX");
+              { int _tf = mkstemp(pIconData->pmFileName); if (_tf >= 0) close(_tf); }
               bIsNewFile = True;
               tmpIconFile = pIconData->pmFileName;
            }
@@ -881,7 +883,8 @@ Tt_callback_action IconEdit_tt_handler( Tt_message m, Tt_pattern p )
            if (pIconData->bmDirtyBit) {
               tmpIconFile = pIconData->bmFileName;
            } else {
-              tmpnam(pIconData->bmFileName);
+              strcpy(pIconData->bmFileName, "/tmp/dtcreate_bm_XXXXXX");
+              { int _tf = mkstemp(pIconData->bmFileName); if (_tf >= 0) close(_tf); }
               bIsNewFile = True;
               tmpIconFile = pIconData->bmFileName;
            }

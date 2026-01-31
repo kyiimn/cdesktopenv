@@ -506,7 +506,7 @@ int Client_Register(protocol_request_ptr prot)
   int free_netfile = 0;
   char *spc_prefix = "/.SPC_";
   char *spc_suffix;
-  char tmpnam_buf[L_tmpnam + 1];
+  char tmpnam_buf[32];
   size_t buffsize;
 
   print_protocol_request((XeString)"--> REGISTER", prot);
@@ -560,7 +560,8 @@ int Client_Register(protocol_request_ptr prot)
      * tmppath.  The protocol will fail when this occurs.  The fix is
      * to construct the tmpfile name.
      */
-    tmpnam(tmpnam_buf);
+    strcpy(tmpnam_buf, "/tmp/dtspcd_XXXXXX");
+    { int _tf = mkstemp(tmpnam_buf); if (_tf >= 0) close(_tf); }
     spc_suffix = basename(tmpnam_buf); /* Don't free result - not alloc'd! */
 
     /* Allocate space for tmppath, spc_prefix, and spc_suffix. */

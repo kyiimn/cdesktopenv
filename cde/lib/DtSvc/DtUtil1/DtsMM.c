@@ -569,14 +569,15 @@ _DtDtsMMCacheName(int override)
 	{
 	/* tempnam(3) is affected by the TMPDIR environment variable. */
 	/* This creates problems for rename() if "tmpfile" and "cacheFile" */
-	/* are on different file systems.  Use tmpnam(3) to create the */
+	/* are on different file systems.  Use mkstemp(3) to create the */
 	/* unique file name instead. */
-		char tmpnam_buf[L_tmpnam + 1];
+		char tmpnam_buf[32];
 
 		results = (char *)malloc(strlen(_DTDTSMMTEMPDIR) +
 					 strlen(_DTDTSMMTEMPFILE) +
-					 L_tmpnam + 3);
-		tmpnam(tmpnam_buf);
+					 32);
+		strcpy(tmpnam_buf, "/tmp/dtdts_XXXXXX");
+		{ int _tf = mkstemp(tmpnam_buf); if (_tf >= 0) close(_tf); }
 		sprintf(results, "%s/%s%s", _DTDTSMMTEMPDIR, _DTDTSMMTEMPFILE,
 			basename(tmpnam_buf));
 	}
