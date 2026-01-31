@@ -1202,7 +1202,7 @@ writeBase64(char * buf, const char * bp, const unsigned long len)
 	enc_char = ((ubp[block] & 0x3) << 4);
 	strncat(buf, &base64_chars[enc_char], 1);
 
-	strncat(buf,"==", 2);
+	strcat(buf, "==");
 	break;
 
       case 2:
@@ -1215,7 +1215,7 @@ writeBase64(char * buf, const char * bp, const unsigned long len)
 	enc_char = ((ubp[block + 1] & 0xf) << 2);
 	strncat(buf,&base64_chars[enc_char], 1);
 
-	strncat(buf,"=", 1);
+	strcat(buf, "=");
     }
 
 /*    crlf(buf); */
@@ -1533,9 +1533,9 @@ rfc1522cpy(char * buf, const char * value)
 				_tmp1_,
 				NULL,
 				&_tmp2_ );
-		strncat(buf,"=?", 2);
-		strncat(buf,_tmp2_, strlen(_tmp2_));
-		strncat(buf,"?q?", 3);
+		strcat(buf, "=?");
+		strcat(buf, _tmp2_);
+		strcat(buf, "?q?");
 
 		free(_tmp1_);
 		free(_tmp2_);
@@ -1544,13 +1544,13 @@ rfc1522cpy(char * buf, const char * value)
 	     * According to RFC1468, in the Header Field, we should use
 	     * B-encoding
 	     */
-		strncat(buf,"=?", 2);
-		strncat(buf,charset, strlen(charset));
-		strncat(buf,"?b?", 3);
+		strcat(buf, "=?");
+		strcat(buf, charset);
+		strcat(buf, "?b?");
 	    } else {
-		strncat(buf,"=?", 2);
-		strncat(buf,charset, strlen(charset));
-		strncat(buf,"?q?", 3);
+		strcat(buf, "=?");
+		strcat(buf, charset);
+		strcat(buf, "?q?");
 	    }
 
 	    /*
@@ -1580,7 +1580,7 @@ rfc1522cpy(char * buf, const char * value)
 	    } else
 		writeQPrint( tmp, cur, scan_c - cur, 0 );
 
-	    strncat(buf,tmp,strlen(tmp));
+	    strcat(buf, tmp);
 	    strcat(buf,"?=");
 	    cur = scan_c - 1;
 	}
