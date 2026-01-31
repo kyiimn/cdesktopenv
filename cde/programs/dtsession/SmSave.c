@@ -67,6 +67,7 @@
 #endif /* _SUN_OS */
 
 #include <X11/Intrinsic.h>
+#include <X11/XKBlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
 #include <X11/StringDefs.h>
@@ -1327,7 +1328,7 @@ QueryServerSettings( void )
 		return(-1);
 	    }
 	}
-	tmpMod = XKeycodeToKeysym(smGD.display, modMap->modifiermap[i], 0);
+	tmpMod = XkbKeycodeToKeysym(smGD.display, modMap->modifiermap[i], 0, 0);
 	sprintf(tmpChar,"%ld", tmpMod);
 	strcat(resSpec, tmpChar);
 	if(i != numLoops)
