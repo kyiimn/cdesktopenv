@@ -20,6 +20,7 @@ libTermPrim_la_SOURCES = TermPrim.c \
         TermPrimRenderMb.c \
         TermPrimRenderFont.c \
         TermPrimRenderFontSet.c \
+        TermPrimRenderXft.c \
         TermPrimRenderLineDraw.c \
         TermPrimRepType.c \
 	TermPrimScroll.c \

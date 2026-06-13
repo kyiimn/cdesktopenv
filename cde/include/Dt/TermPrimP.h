@@ -32,9 +32,36 @@
 #ifndef	_Dt_TermPrimP_h
 #define	_Dt_TermPrimP_h
 
+/*
+ * <Xm/Xm.h> (pulled in via <Xm/LabelP.h>) unconditionally defines
+ * USE_XFT 1 when no prior definition exists.  This conflicts with
+ * our configure-controlled USE_XFT macro.  We save Motif's value,
+ * undef it, then restore only when configure actually enabled Xft.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
 #include <Xm/LabelP.h>
 #include "TermPrim.h"
 #include "TermPrimData.h"
+
+/*
+ * Restore USE_XFT only when configure actually enabled it.
+ * cde_config.h does NOT define USE_XFT; the -DUSE_XFT flag from
+ * configure's SOURCE_CPP_DEFINES does.
+ */
+#ifdef _CDE_SAVED_USE_XFT
+#ifdef HAVE_XFT
+#define USE_XFT 1
+#endif
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#endif /* USE_XFT */
 
 /* include the other internal Term include files...
  */
@@ -137,6 +164,13 @@ typedef struct _DtTermPrimitivePart
 					 */
     Boolean haveFontSet;		/* true == we have a valid fontSet
 					 */
+#ifdef USE_XFT
+    XftDraw   *xftDraw;		/* Xft draw context for rendering	*/
+    XftColor   xftFg;		/* Xft foreground color			*/
+    XftColor   xftBg;		/* Xft background color			*/
+    XftFont   *xftFont;		/* Xft font for base font			*/
+    XftFont   *xftBoldFont;	/* Xft font for bold font			*/
+#endif /* USE_XFT */
     char *saveLines;			/* save lines or screens	*/
     short rows;				/* rows of displayed term win	*/
     short columns;			/* columns of term win & memory	*/
