@@ -32,15 +32,26 @@
 #define _DtFont_H
 
 #include <X11/Xlib.h>
-#include <Xm/Xm.h>
 
 /*
  * Motif 2.3+ defines USE_XFT in Xm.h. CDE needs to control this
- * macro itself based on configure --enable-xft, so undef it here.
- * When Xft is enabled, configure adds -DUSE_XFT to CPPFLAGS.
+ * macro itself based on configure --enable-xft, so we save the
+ * configure-driven state, include Xm.h, undef Motif's definition,
+ * then restore if configure enabled Xft.
  */
 #ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
+#include <Xm/Xm.h>
+
+#ifdef USE_XFT
 #undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
 #endif
 
 #ifdef __cplusplus

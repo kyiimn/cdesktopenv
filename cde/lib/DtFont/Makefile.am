@@ -2,7 +2,7 @@ MAINTAINERCLEANFILES = Makefile.in
 
 lib_LTLIBRARIES = libDtFont.la
 
-libDtFont_la_SOURCES = DtFont.c
+libDtFont_la_SOURCES = DtFont.c XftWrapper.c
 
 libDtFont_la_CPPFLAGS = -I./include -DMULTIBYTE -DNLS16 -I../include \
 	@DT_INCDIR@
