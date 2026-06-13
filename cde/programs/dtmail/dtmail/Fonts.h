@@ -30,12 +30,19 @@
 
 #ifndef FONTS_H
 #define FONTS_H
- 
+
+#ifdef USE_XFT
+typedef struct _XftFont XftFont;
+#endif
+
 typedef struct _FontType {
         XmFontType      cf_type;
         union {
                 XFontStruct     *cf_font;
                 XFontSet         cf_fontset;
+#ifdef USE_XFT
+                XftFont         *xft_font;
+#endif
         } f;
 } FontType;
 
