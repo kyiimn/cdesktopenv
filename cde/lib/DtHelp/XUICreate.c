@@ -58,6 +58,34 @@
 #include <Xm/XmPrivate.h>
 
 /*
+ * Motif's <Xm/Xm.h> unconditionally #define USE_XFT 1. Cancel it so
+ * configure's -DUSE_XFT (or its absence) is authoritative for this
+ * translation unit. The save/undef/restore pattern below mirrors
+ * Font.c and DisplayAreaP.h.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
+#include "DisplayAreaP.h"
+
+#ifdef _CDE_SAVED_USE_XFT
+#ifdef HAVE_XFT
+#define USE_XFT 1
+#endif
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include <X11/Xft.h>
+
+/* Forward declaration: defined in Font.c. The signature must match
+ * Font.c:__DtHelpFontXftGet exactly. */
+XftFont *__DtHelpFontXftGet(DtHelpDAFontInfo font_info, long font_index);
+#endif
+
+/*
  * Canvas Engine
  */
 #include "CanvasP.h"
@@ -531,6 +559,19 @@ HelpCreateDA(
 	if (n < 0)
 	    len += XmbTextEscapement(
 				__DtHelpFontSetGet(pDAS->font_info,n),"1",1);
+#ifdef USE_XFT
+	else if (n >= 10000)
+	  {
+	    XftFont *xftFont = __DtHelpFontXftGet(pDAS->font_info, n);
+	    if (xftFont != NULL)
+	      {
+		XGlyphInfo extents;
+		XftTextExtents8(dpy, xftFont,
+				(const FcChar8 *)"1", 1, &extents);
+		len += extents.xOff;
+	      }
+	  }
+#endif /* USE_XFT */
 	else
 	    len += XTextWidth(__DtHelpFontStructGet(pDAS->font_info, n),"1",1);
 

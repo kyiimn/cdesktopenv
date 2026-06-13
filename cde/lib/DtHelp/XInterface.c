@@ -76,6 +76,10 @@ extern int errno;
 #include "StringFuncsI.h"
 #include "XInterfaceI.h"
 
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#endif
+
 #include <X11/bitmaps/root_weave>
 
 #ifdef NLS16
@@ -746,6 +750,65 @@ MyDrawString (
  * opened for this string. Use the X11R5 I18N routines to render the
  * glyphs. Otherwise use the standard X11 drawing routines.
  */
+
+#ifdef USE_XFT
+    /*
+     * If the 'font_index' is >= 10000, it indicates an Xft font was
+     * opened for this string. Use the Xft anti-aliased rendering
+     * routines. For image-style rendering, XftDrawRect (background
+     * fill) must precede XftDrawString8 (foreground text) to match
+     * the semantics of XDrawImageString (Guardrail G8).
+     */
+    if (font_index >= 10000)
+      {
+	XftFont		*xftFont;
+	XftDraw		*xftDraw;
+	XftColor	 xftFg;
+	XftColor	 xftBg;
+	XGCValues	 gcVals;
+	Visual		*visual = DefaultVisual(dpy, DefaultScreen(dpy));
+	Colormap	 colormap = DefaultColormap(dpy, DefaultScreen(dpy));
+	int		 ascent;
+	XGlyphInfo	 extents;
+
+	xftFont = __DtHelpFontXftGet(font_info, font_index);
+	if (xftFont == NULL)
+	    return;
+
+	/*
+	 * Xft 8-bit entry point cannot render wchar_t strings. The
+	 * DtHelp canvas engine only produces multibyte strings for
+	 * Xft indices, so a wide-character request is a caller bug.
+	 */
+	if (wc)
+	    return;
+
+	xftDraw = XftDrawCreate(dpy, d, visual, colormap);
+	if (xftDraw == NULL)
+	    return;
+
+	XGetGCValues(dpy, gc, GCForeground | GCBackground, &gcVals);
+	(void) XftColorAllocPixel(dpy, visual, colormap,
+				gcVals.foreground, &xftFg);
+	(void) XftColorAllocPixel(dpy, visual, colormap,
+				gcVals.background, &xftBg);
+
+	if (image)
+	  {
+	    XftTextExtents8(dpy, xftFont, (const FcChar8 *) string,
+					length, &extents);
+	    ascent = xftFont->ascent;
+	    XftDrawRect(xftDraw, &xftBg, x, y - ascent,
+				extents.xOff, ascent + xftFont->descent);
+	  }
+
+	XftDrawString8(xftDraw, &xftFg, xftFont, x, y,
+				(const FcChar8 *) string, length);
+
+	XftDrawDestroy(xftDraw);
+	return;
+      }
+#endif /* USE_XFT */
 
     if (font_index < 0)
       {
