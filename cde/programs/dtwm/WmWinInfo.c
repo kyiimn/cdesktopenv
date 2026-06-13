@@ -35,6 +35,16 @@
  * Included Files:
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via WmGlobal.h),
+ * which clobbers configure's -DUSE_XFT. Capture the configure-driven
+ * value first, then restore it after the Motif includes.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 #include "WmICCC.h"
 #include "WmResNames.h"
@@ -45,6 +55,15 @@
 #include <Xm/Xm.h>
 #include <locale.h>
 #include "WmPanelP.h"
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
 
 #define makemult(a, b) ((b==1) ? (a) : (((int)((a) / (b))) * (b)) )
 
