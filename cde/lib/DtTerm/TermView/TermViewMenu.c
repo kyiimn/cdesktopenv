@@ -55,6 +55,25 @@
 #include "TermPrimSelect.h"
 #include "TermFunction.h"
 
+/*
+ * <Xm/Xm.h> (pulled in via TermHeader.h) unconditionally defines
+ * USE_XFT 1 when no prior definition exists.  This file does NOT
+ * include TermPrimP.h (which has its own save/undef/restore), so we
+ * need our own: cancel Motif's auto-define, then re-arm only when
+ * configure's HAVE_XFT flag is set.  Net effect: USE_XFT in this
+ * translation unit matches configure's intent, not Motif's default.
+ */
+#undef USE_XFT
+#if defined(HAVE_XFT) && HAVE_XFT
+#define USE_XFT 1
+#endif
+
+#ifdef USE_XFT
+#include "TermPrimP.h"		/* _DtTermPrimitivePart, struct termData */
+#include "TermPrimRenderXft.h"	/* _DtTermPrimRenderXftCreate, TermFont */
+#include <X11/Xft.h>
+#endif /* USE_XFT */
+
 static Widget currentWidget = (Widget ) 0;
 					/* widget for current menu
 					 * context
@@ -401,6 +420,147 @@ typedef struct _fontArrayType {
 static fontArrayType *fontArray = (fontArrayType *) 0;
 static short fontArrayCount = 0;
 
+#ifdef USE_XFT
+/*
+ * Fixed list of fontconfig patterns offered in the Font Size menu
+ * when Xft is enabled.  Each entry pairs a human-readable label with
+ * the pattern handed to XftFontOpenName().  "monospace" resolves to
+ * the user's configured monospace face via fontconfig, matching the
+ * default font used in TermPrim.c Initialize.
+ */
+typedef struct {
+    const char *label;
+    const char *pattern;
+} _DtTermViewXftFontEntry;
+
+static const _DtTermViewXftFontEntry _DtTermViewXftFontList[] = {
+    { "Tiny (8)",        "monospace:size=8"  },
+    { "Small (10)",      "monospace:size=10" },
+    { "Small (11)",      "monospace:size=11" },
+    { "Medium (12)",     "monospace:size=12" },
+    { "Medium (13)",     "monospace:size=13" },
+    { "Large (14)",      "monospace:size=14" },
+    { "Large (16)",      "monospace:size=16" },
+    { "Huge (18)",       "monospace:size=18" },
+    { "Huge (20)",       "monospace:size=20" },
+    { "Giant (24)",      "monospace:size=24" },
+};
+#define N_XFT_FONTS \
+    (int)(sizeof(_DtTermViewXftFontList) / sizeof(_DtTermViewXftFontList[0]))
+
+/*
+ * Apply the fontconfig pattern in fontArray[i].fontName to the child
+ * TermPrim widget of the supplied DtTermView.  Opens a new Xft font,
+ * builds an Xft-backed TermFont, swaps it in for tpd->termFont, and
+ * updates tw->term.xftFont / tw->term.xftBoldFont / geometry fields.
+ * Frees the previously open Xft fonts.  On any failure the previous
+ * state is left intact.
+ */
+static void
+applyXftFont
+(
+    DtTermViewWidget	  tv,
+    long		  i1
+)
+{
+    DtTermPrimitiveWidget prim;
+    const char		 *pattern;
+    const char		 *boldPattern;
+    XftFont		 *xftFont;
+    XftFont		 *xftBold;
+    size_t		  boldLen;
+    char		 *boldBuf;
+    TermFont		  xftTermFont;
+    TermFont		  xftBoldTermFont;
+
+    prim = (DtTermPrimitiveWidget) tv->termview.term;
+    if (!prim) {
+	return;
+    }
+
+    pattern = fontArray[i1].fontName;
+    boldLen = strlen(pattern) + strlen(":bold") + 1;
+    boldBuf = XtMalloc(boldLen);
+    (void) strcpy(boldBuf, pattern);
+    (void) strcat(boldBuf, ":bold");
+    boldPattern = boldBuf;
+
+    xftFont = XftFontOpenName(XtDisplay((Widget) prim),
+	    DefaultScreen(XtDisplay((Widget) prim)), pattern);
+    if (!xftFont) {
+	XtFree((char *) boldBuf);
+	return;
+    }
+
+    xftBold = XftFontOpenName(XtDisplay((Widget) prim),
+	    DefaultScreen(XtDisplay((Widget) prim)), boldPattern);
+    if (!xftBold) {
+	/* fall back: synthesize a bold weight from the base pattern */
+	FcPattern *boldPat = FcPatternDuplicate(xftFont->pattern);
+	if (boldPat) {
+	    FcPatternDel(boldPat, FC_WEIGHT);
+	    FcPatternAddInteger(boldPat, FC_WEIGHT, FC_WEIGHT_BOLD);
+	    xftBold = XftFontOpenPattern(XtDisplay((Widget) prim), boldPat);
+	    if (xftBold == NULL) {
+		FcPatternDestroy(boldPat);
+	    }
+	}
+    }
+    XtFree((char *) boldBuf);
+
+    xftTermFont = _DtTermPrimRenderXftCreate((Widget) prim, xftFont);
+    if (!xftTermFont) {
+	XftFontClose(XtDisplay((Widget) prim), xftFont);
+	if (xftBold) {
+	    XftFontClose(XtDisplay((Widget) prim), xftBold);
+	}
+	return;
+    }
+
+    xftBoldTermFont = (TermFont) 0;
+    if (xftBold) {
+	xftBoldTermFont =
+		_DtTermPrimRenderXftCreate((Widget) prim, xftBold);
+	if (!xftBoldTermFont) {
+	    XftFontClose(XtDisplay((Widget) prim), xftBold);
+	    xftBold = (XftFont *) 0;
+	}
+    }
+
+    /* swap TermFont on the termData side */
+    if (prim->term.tpd->termFont) {
+	(void) _DtTermPrimDestroyFont((Widget) prim,
+		prim->term.tpd->termFont);
+    }
+    prim->term.tpd->termFont = xftTermFont;
+
+    if (xftBoldTermFont) {
+	if (prim->term.tpd->boldTermFont) {
+	    (void) _DtTermPrimDestroyFont((Widget) prim,
+		    prim->term.tpd->boldTermFont);
+	}
+	prim->term.tpd->boldTermFont = xftBoldTermFont;
+    }
+
+    /* swap XftFonts on the widget instance side and refresh metrics */
+    if (prim->term.xftFont) {
+	XftFontClose(XtDisplay((Widget) prim), prim->term.xftFont);
+    }
+    prim->term.xftFont = xftFont;
+
+    if (xftBold) {
+	if (prim->term.xftBoldFont) {
+	    XftFontClose(XtDisplay((Widget) prim), prim->term.xftBoldFont);
+	}
+	prim->term.xftBoldFont = xftBold;
+    }
+
+    prim->term.widthInc  = xftFont->max_advance_width;
+    prim->term.heightInc = xftFont->ascent + xftFont->descent;
+    prim->term.ascent    = xftFont->ascent;
+}
+#endif /* USE_XFT */
+
 static void
 createFontMenu
 (
@@ -437,6 +597,22 @@ createFontMenu
     (void) XtSetArg(al[ac], XmNradioBehavior, True); ac++;
     submenu = createPulldown(menu, "Font Size", al, ac);
 
+#ifdef USE_XFT
+    /*
+     * Xft path: ignore the legacy XLFD userFontList and populate
+     * fontArray directly from the fontconfig pattern list.  No DPI
+     * conversion is required because each pattern already names a
+     * pixel size (e.g. "monospace:size=12").
+     */
+    fontArray = (fontArrayType *) XtMalloc(sizeof(fontArrayType) *
+	    N_XFT_FONTS);
+    for (i1 = 0; i1 < N_XFT_FONTS; i1++) {
+	fontArray[i1].labelName = XtNewString(_DtTermViewXftFontList[i1].label);
+	fontArray[i1].fontName  = XtNewString(_DtTermViewXftFontList[i1].pattern);
+	fontArray[i1].fontList  = (XmFontList) 0;
+    }
+    fontArrayCount = N_XFT_FONTS;
+#else /* !USE_XFT */
     /* find out how many newlines there are in the userFontList so
      * that we can build an array big enough to hold them...
      */
@@ -542,6 +718,7 @@ createFontMenu
 
     /* we have our list... */
     fontArrayCount = i1;
+#endif /* USE_XFT */
 
     /* clear out mnemonics string... */
     *mnemonics = '\0';
@@ -1459,6 +1636,21 @@ fontChangeCallback(Widget w, XtPointer client_data, XtPointer call_data)
 
     i1 = (long) client_data;
 
+#ifdef USE_XFT
+    /* Open the requested Xft font and wire it into the child TermPrim
+     * widget.  applyXftFont updates tw->term.xftFont, tpd->termFont and
+     * the geometry fields; on failure the previous font is preserved.
+     */
+    applyXftFont(tw, i1);
+
+    if (tw->termview.userFontName)
+        XtFree(tw->termview.userFontName);
+    tw->termview.userFontName = XtNewString(fontArray[i1].fontName);
+
+    tw->termview.currentFontToggleButtonIndex = i1;
+    _DtTermProcessUnlock();
+    return;
+#else /* !USE_XFT */
     /* generate the fontlist from the font... */
     from.size = strlen(fontArray[i1].fontName);
     from.addr = (XtPointer) fontArray[i1].fontName;
@@ -1484,6 +1676,7 @@ fontChangeCallback(Widget w, XtPointer client_data, XtPointer call_data)
     }
     tw->termview.currentFontToggleButtonIndex = i1;
     _DtTermProcessUnlock();
+#endif /* USE_XFT */
 }
 
 /*ARGSUSED*/
