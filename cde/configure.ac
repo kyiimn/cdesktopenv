@@ -477,6 +477,25 @@ dnl Xrender header
 AC_CHECK_HEADERS([X11/extensions/Xrender.h], [],
     [ disable_xrender="yes"], [#include <X11/Xlib.h>])
 
+dnl Locate freetype2 headers (ft2build.h) needed by <X11/Xft/Xft.h>.
+dnl Must run BEFORE Xft header check because AC_CHECK_HEADERS compiles
+dnl the header, and Xft.h transitively includes <ft2build.h>.
+dnl Done unconditionally; FREETYPE2_INCS expands to "" if not found.
+FREETYPE2_INCS=""
+if test "x$enable_xft" != "xno" ; then
+   for ft_dir in /usr/include/freetype2 \
+                 /usr/local/include/freetype2 \
+                 /usr/include/x86_64-linux-gnu/freetype2 \
+                 ${EXTRA_INCS}/freetype2 ; do
+       if test -f "$ft_dir/ft2build.h" ; then
+          FREETYPE2_INCS="-I$ft_dir"
+          CPPFLAGS="${CPPFLAGS} -I$ft_dir"
+          break
+       fi
+   done
+fi
+AC_SUBST(FREETYPE2_INCS)
+
 dnl Xft headers
 if test "x$enable_xft" != "xno" ; then
    AC_CHECK_HEADERS([X11/Xft/Xft.h], [],
@@ -592,28 +611,6 @@ fi
 AM_CONDITIONAL([HAVE_XFT], [test "x$enable_xft" = "xyes"])
 AC_SUBST(XFTLIB)
 AC_SUBST(FONTCONFIGLIB)
-dnl Locate freetype2 headers (ft2build.h) needed by <X11/Xft/Xft.h>.
-dnl Done unconditionally; FREETYPE2_INCS expands to "" if not found.
-FREETYPE2_INCS=""
-if test "x$enable_xft" = "xyes" ; then
-   AC_MSG_CHECKING([for freetype2 include path])
-   for ft_dir in /usr/include/freetype2 \
-                 /usr/local/include/freetype2 \
-                 /usr/include/x86_64-linux-gnu/freetype2 \
-                 ${EXTRA_INCS}/freetype2 ; do
-       if test -f "$ft_dir/ft2build.h" ; then
-          FREETYPE2_INCS="-I$ft_dir"
-          break
-       fi
-   done
-   if test -z "$FREETYPE2_INCS" ; then
-      AC_MSG_RESULT([not found])
-      AC_MSG_ERROR([freetype2 headers not found, required by --enable-xft])
-   else
-      AC_MSG_RESULT([$FREETYPE2_INCS])
-   fi
-fi
-AC_SUBST(FREETYPE2_INCS)
 AC_CHECK_LIB(Xau, XauReadAuth, [XTOOLLIB="-lXau ${XTOOLLIB}"], ,
                   [${EXTRA_INCS} ${EXTRA_LIBS}])
 AC_CHECK_LIB(Xpm, XpmLibraryVersion, [XTOOLLIB="-lXpm ${XTOOLLIB}"], ,
