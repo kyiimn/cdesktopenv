@@ -29,11 +29,24 @@
  */
 
 #include <X11/Xlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/AtomMgr.h>
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include "calendar.h"
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 #ifndef ABS
 #define ABS(x) (((x) > 0) ? (x) : (-(x)))
@@ -130,6 +143,10 @@ fontlist_to_font(
 
 	if (type_return == XmFONT_IS_FONTSET)
 		cal_font->f.cf_fontset = (XFontSet)font_data;
+#ifdef USE_XFT
+	else if (type_return == XmFONT_IS_XFT)
+		cal_font->f.xft_font = (XftFont *)font_data;
+#endif
 	else
 		cal_font->f.cf_font = (XFontStruct *)font_data;
 
@@ -252,6 +269,12 @@ load_app_font(
 		if (!XGetFontProperty(userfont->f.cf_font, pixel_atom, 
 							&pixel_size))
 			pixel_size = 12;
+#ifdef USE_XFT
+	} else if (userfont->cf_type == XmFONT_IS_XFT) {
+		pixel_size = userfont->f.xft_font->height;
+		if (pixel_size == 0)
+			pixel_size = 12;
+#endif
 	} else {
 		XFontStruct 	**font_struct_list;
 		char		**font_name_list;
@@ -344,6 +367,21 @@ CalTextExtents(
 		*y_return = overall.ascent;
 		*width_return = overall.width;
 		*height_return = overall.ascent + overall.descent;
+#ifdef USE_XFT
+	} else if (font->cf_type == XmFONT_IS_XFT) {
+		/*
+		 * XftTextExtents8 needs a Display* which CalTextExtents
+		 * does not receive. Use the XftFont's stored per-character
+		 * max_advance_width as an upper-bound estimate; the
+		 * variable-width case will be slightly off but this is
+		 * the best we can do without a display parameter.
+		 */
+		*x_return = 0;
+		*y_return = font->f.xft_font->ascent;
+		*width_return = font->f.xft_font->max_advance_width * nbytes;
+		*height_return = font->f.xft_font->ascent +
+				 font->f.xft_font->descent;
+#endif
 	} else {
 		XRectangle	ink,
 				logical;
@@ -376,6 +414,42 @@ CalDrawString(
 	if (font->cf_type == XmFONT_IS_FONT) {
 		XSetFont(dpy, gc, font->f.cf_font->fid);
 		XDrawString(dpy, draw, gc, x, y, string, length);
+#ifdef USE_XFT
+	} else if (font->cf_type == XmFONT_IS_XFT) {
+		XGCValues	values;
+		XftDraw		*xftdraw;
+		XftColor	 xftcolor;
+		unsigned long	pixel;
+		int		screen = DefaultScreen(dpy);
+
+		if (XGetGCValues(dpy, gc, GCForeground, &values)) {
+			pixel = values.foreground;
+		} else {
+			pixel = BlackPixel(dpy, screen);
+		}
+
+		xftdraw = XftDrawCreate(dpy, draw,
+					DefaultVisual(dpy, screen),
+					DefaultColormap(dpy, screen));
+		if (xftdraw != NULL) {
+			char name[12];
+			snprintf(name, sizeof(name), "#%06lx",
+				 pixel & 0xFFFFFFul);
+			if (XftColorAllocName(dpy,
+					DefaultVisual(dpy, screen),
+					DefaultColormap(dpy, screen),
+					name, &xftcolor)) {
+				XftDrawString8(xftdraw, &xftcolor,
+					font->f.xft_font, x, y,
+					(FcChar8 *)string, length);
+				XftColorFree(dpy,
+					DefaultVisual(dpy, screen),
+					DefaultColormap(dpy, screen),
+					&xftcolor);
+			}
+			XftDrawDestroy(xftdraw);
+		}
+#endif
 	} else {
 		XmbDrawString(dpy, draw, font->f.cf_fontset, gc, x, y, 
 							string, length);
@@ -406,6 +480,20 @@ CalFontExtents(
 		fse->max_logical_extent.height = 
 					 font->f.cf_font->ascent +
 					 font->f.cf_font->descent;
+#ifdef USE_XFT
+	} else if (font->cf_type == XmFONT_IS_XFT) {
+		fse->max_ink_extent.x = 0;
+		fse->max_ink_extent.y = - font->f.xft_font->ascent;
+		fse->max_ink_extent.width = font->f.xft_font->max_advance_width;
+		fse->max_ink_extent.height = font->f.xft_font->ascent +
+					     font->f.xft_font->descent;
+
+		fse->max_logical_extent.x = 0;
+		fse->max_logical_extent.y = - font->f.xft_font->ascent;
+		fse->max_logical_extent.width = font->f.xft_font->max_advance_width;
+		fse->max_logical_extent.height = font->f.xft_font->ascent +
+						 font->f.xft_font->descent;
+#endif
 	} else {
 		*fse = *XExtentsOfFontSet(font->f.cf_fontset);
 	}

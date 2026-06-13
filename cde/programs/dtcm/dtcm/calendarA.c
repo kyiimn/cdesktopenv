@@ -73,6 +73,9 @@ static  char sccsid[] = "@(#)calendarA.c 1.196 95/04/12 Copyr 1991 Sun Microsyst
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <X11/Xlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/ArrowBG.h>
 #include <Xm/DrawingA.h>
@@ -95,9 +98,19 @@ static  char sccsid[] = "@(#)calendarA.c 1.196 95/04/12 Copyr 1991 Sun Microsyst
 #include <Dt/EnvControlP.h>
 #include <Tt/tt_c.h>
 #include <LocaleXlate.h>	/* under DtHelp */
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include "calendar.h"
 #include "revision.h"
 #include "help.h"
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 #include "datefield.h"
 #include "props.h"
 #include "props_pu.h"
@@ -3328,19 +3341,37 @@ init_fonts(
 
 	if (!fontlist_to_font(cal->app_data->systemfontlist, &systemfont)) {
 		/* Couldn't convert the system fontlist to a font - bad news. */
+#ifdef USE_XFT
+		if (!(systemfont.f.xft_font =
+			XftFontOpenName(XtDisplay(cal->frame),
+					DefaultScreen(XtDisplay(cal->frame)),
+					"monospace:size=12")))
+			return False;
+		systemfont.cf_type = XmFONT_IS_XFT;
+#else
 		if (!(systemfont.f.cf_font = 
 			     XLoadQueryFont(XtDisplay(cal->frame), "variable")))
 			return False;
 		else
 			systemfont.cf_type = XmFONT_IS_FONT; 
+#endif
 	}
 	if (!fontlist_to_font(cal->app_data->userfontlist, &userfont)) {
 		/* Couldn't convert the user fontlist to a font - bad news. */
+#ifdef USE_XFT
+		if (!(userfont.f.xft_font =
+			XftFontOpenName(XtDisplay(cal->frame),
+					DefaultScreen(XtDisplay(cal->frame)),
+					"monospace:size=10")))
+			return False;
+		userfont.cf_type = XmFONT_IS_XFT;
+#else
 		if (!(userfont.f.cf_font = 
 			     XLoadQueryFont(XtDisplay(cal->frame), "fixed")))
 			return False;
 		else
 			userfont.cf_type = XmFONT_IS_FONT; 
+#endif
 	}
 
 	*cal->fonts->userfont =  userfont;

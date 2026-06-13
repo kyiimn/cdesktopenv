@@ -60,6 +60,9 @@
 #define _CDE_SAVED_USE_XFT 1
 #endif
 #include <Xm/Xm.h>
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
 #ifdef _CDE_SAVED_USE_XFT
 #define USE_XFT 1
 #undef _CDE_SAVED_USE_XFT
@@ -174,11 +177,18 @@ typedef struct {
 
 } View;
 
+#ifdef USE_XFT
+typedef struct _XftFont XftFont;
+#endif
+
 typedef struct _Cal_Font {
 	XmFontType	cf_type;
 	union {
 		XFontStruct	*cf_font;
 		XFontSet	 cf_fontset;
+#ifdef USE_XFT
+		XftFont		*xft_font;
+#endif
 	} f;
 } Cal_Font;
 

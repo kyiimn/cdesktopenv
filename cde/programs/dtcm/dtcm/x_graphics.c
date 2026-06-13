@@ -60,12 +60,25 @@
 #include <X11/extensions/Print.h>
 #endif /* PRINTING_SUPPORTED */
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/DialogS.h>
 #include <Xm/DrawingA.h>
 #if 0 && defined(PRINTING_SUPPORTED)
 #include <Xm/Print.h>
 #endif /* PRINTING_SUPPORTED */
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 // cm_18n.c
 void _converter_( void *from, unsigned long from_len,
@@ -1092,6 +1105,9 @@ cm_font_extents(CMGraphicsInfo *gInfo, CMFontInfo *fInfo, int *wd, int *ht)
       XmFontListEntry fontListEntry;
       XFontSet fontSet;
       XFontStruct *fontStruct;
+#ifdef USE_XFT
+      XftFont *xftFont;
+#endif
       XtPointer fontEntryFont;
       XmFontType fontType;
       XFontSetExtents *fontSetExtents;
@@ -1115,6 +1131,14 @@ cm_font_extents(CMGraphicsInfo *gInfo, CMFontInfo *fInfo, int *wd, int *ht)
 	  thisWd = fontSetExtents->max_logical_extent.width;
 	  thisHt = fontSetExtents->max_logical_extent.height;
 	}
+#ifdef USE_XFT
+	else if (fontType == XmFONT_IS_XFT)
+	{
+	  xftFont = (XftFont *)fontEntryFont;
+	  thisWd = xftFont->max_advance_width;
+	  thisHt = xftFont->ascent + xftFont->descent;
+	}
+#endif
 	else continue;
 
 	if (thisWd > maxWd)
