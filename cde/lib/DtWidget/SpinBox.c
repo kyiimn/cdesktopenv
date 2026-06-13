@@ -93,11 +93,19 @@ express or implied warranty.
  * marked Legacy: - 05/19/18 - C
  */
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Dt/DtMsgsP.h>
 #include <Xm/DrawP.h>
 #include <Xm/XmP.h>
 #include <Xm/RepType.h>
 #include "SpinBoxP.h"
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include "DtWidgetI.h"
 
 #include <Xm/XmPrivate.h>    /* _XmShellIsExclusive */

@@ -105,10 +105,18 @@ express or implied warranty.
 
 /* _NO_PROTO support no longer required: */
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Xm/XmP.h>		/* for fast subclassing in XmIsComboBox */
 #include <Xm/XmosP.h>		/* for INT_MAX */
 #include <Dt/DtMsgsP.h>
 #include "ComboBoxP.h"
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Xm/DrawP.h>
 #include <Xm/DisplayP.h>
 #include <Xm/List.h>
