@@ -4,6 +4,10 @@ bin_PROGRAMS = dthello
 
 dthello_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
 
+if HAVE_XFT
+dthello_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
+endif
+
 if SOLARIS
 dthello_LDADD += -lgen
 endif
@@ -13,6 +17,10 @@ dthello_LDADD += $(TIRPCLIB)
 endif
 
 dthello_SOURCES = dthello.c
+
+if HAVE_XFT
+dthello_CPPFLAGS = $(FREETYPE2_INCS)
+endif
 
 CPP_TARGETS = Dthello
 BUILT_SOURCES = $(CPP_TARGETS)

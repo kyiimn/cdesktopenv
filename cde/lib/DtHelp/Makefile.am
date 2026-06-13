@@ -13,7 +13,15 @@ libDtHelp_la_CFLAGS = -I./il -I./jpeg -I../DtSvc/DtUtil2 -DDTLIB \
 		      -DCDE_CONFIGURATION_TOP='"$(CDE_CONFIGURATION_TOP)"' \
 		      @DT_INCDIR@ @DTI_INCDIR@
 
+if HAVE_XFT
+libDtHelp_la_CFLAGS += $(FREETYPE2_INCS)
+endif
+
 libDtHelp_la_LIBADD = $(JPEGLIB) il/libil.la $(LTLIBICONV)
+
+if HAVE_XFT
+libDtHelp_la_LIBADD += $(XFTLIB) $(FONTCONFIGLIB)
+endif
 
 if SOLARIS
 libDtHelp_la_LIBADD += -lw -lgen

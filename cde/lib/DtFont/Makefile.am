@@ -7,6 +7,10 @@ libDtFont_la_SOURCES = DtFont.c XftWrapper.c
 libDtFont_la_CPPFLAGS = -I./include -DMULTIBYTE -DNLS16 -I../include \
 	@DT_INCDIR@
 
+if HAVE_XFT
+libDtFont_la_CPPFLAGS += $(FREETYPE2_INCS)
+endif
+
 # in order to try to keep lib versions the same across platforms, (2.1.0)
 if BSD
 libDtFont_la_LDFLAGS = -version-info 2:1:0

@@ -34,12 +34,20 @@ dtksh_CPPFLAGS = -I$(KSH93SRC)/include/ast -I$(KSH93SRC)/src/cmd/ksh93/include \
 		 '-DERROR_CONTEXT_T=Error_context_t' \
 		 -D_API_ast=20100309 -DBUILD_DTKSH
 
+if HAVE_XFT
+dtksh_CPPFLAGS += $(FREETYPE2_INCS)
+endif
+
 dtksh_LDADD = $(DTCLIENTLIBS) ksh93/src/cmd/ksh93/pmain.o $(XTOOLLIB) \
 	      libshell.a $(KSH93SRC)/lib/libcmd.a $(KSH93SRC)/lib/libast.a \
 	      $(KSH93SRC)/lib/libdll.a
 
 if SOLARIS
 dtksh_LDADD += -lsecdb -lsocket -lnsl
+endif
+
+if HAVE_XFT
+dtksh_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
 endif
 
 if AIX

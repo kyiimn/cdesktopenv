@@ -6,7 +6,15 @@ dtstyle_CPPFLAGS = -DCDE_CONFIGURATION_TOP=\"$(CDE_CONFIGURATION_TOP)\"	\
 	-DCDE_INSTALLATION_TOP=\"$(CDE_INSTALLATION_TOP)\" -I../dthelp	\
 	$(DT_INCDIR)
 
+if HAVE_XFT
+dtstyle_CPPFLAGS += $(FREETYPE2_INCS)
+endif
+
 dtstyle_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
+
+if HAVE_XFT
+dtstyle_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
+endif
 
 dtstyle_SOURCES = Main.c MainWin.c Font.c Audio.c Startup.c Mouse.c	\
 		  SaveRestore.c Backdrop.c Screen.c Keyboard.c		\

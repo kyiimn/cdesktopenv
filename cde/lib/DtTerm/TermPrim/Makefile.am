@@ -4,6 +4,10 @@ noinst_LTLIBRARIES = libTermPrim.la
 
 AM_CPPFLAGS = $(DT_INCDIR)
 
+if HAVE_XFT
+AM_CPPFLAGS += $(FREETYPE2_INCS)
+endif
+
 libTermPrim_la_SOURCES = TermPrim.c \
         TermPrimAction.c \
         TermPrimBuffer.c \
@@ -38,4 +42,8 @@ if SOLARIS
 libTermPrim_la_SOURCES += TermPrimGetPty-svr4.c
 else
 libTermPrim_la_SOURCES += TermPrimGetPty-pts.c
+endif
+
+if HAVE_XFT
+libTermPrim_la_LIBADD = $(XFTLIB) $(FONTCONFIGLIB)
 endif

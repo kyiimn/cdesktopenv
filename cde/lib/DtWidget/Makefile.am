@@ -6,6 +6,10 @@ lib_LTLIBRARIES = libDtWidget.la
 
 AM_CPPFLAGS = -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) $(DT_INCDIR)
 
+if HAVE_XFT
+AM_CPPFLAGS += $(FREETYPE2_INCS)
+endif
+
 libDtWidget_la_CFLAGS = -DI18N_MSG -DMULTIBYTE
 
 # in order to try to keep lib versions the same across platforms, (2.1.0)
@@ -18,6 +22,12 @@ endif
 if SOLARIS
 libDtWidget_la_CFLAGS += -DNO_REGCOMP
 libDtWidget_la_LIBADD = -lw -lintl
+else
+libDtWidget_la_LIBADD =
+endif
+
+if HAVE_XFT
+libDtWidget_la_LIBADD += $(XFTLIB) $(FONTCONFIGLIB)
 endif
 
 

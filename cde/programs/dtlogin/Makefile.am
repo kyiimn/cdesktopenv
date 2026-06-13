@@ -18,6 +18,10 @@ AM_CFLAGS = -DCDE_CONFIGURATION_TOP=\"$(CDE_CONFIGURATION_TOP)\" \
 	    -DXDMDIR=\"$(XDMDIR)\" \
 	    -DKORNSHELL=$(KSH) -DUNIXCONN -DTCPCONN -DXDMCP
 
+if HAVE_XFT
+AM_CFLAGS += $(FREETYPE2_INCS)
+endif
+
 dtlogin_SOURCES = access.c auth.c genauth.c daemon.c dm.c \
                   dpylist.c error.c file.c mitauth.c protodpy.c policy.c \
                   reset.c server.c session.c socket.c util.c \
@@ -54,6 +58,12 @@ dtlogin_LDADD = libresource.a $(DTCLIENTLIBS) $(XDMCPLIB) \
 dtgreet_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
 
 dtchooser_LDADD = $(DTCLIENTLIBS) $(XDMCPLIB) $(XTOOLLIB)
+
+if HAVE_XFT
+dtlogin_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
+dtgreet_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
+dtchooser_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
+endif
 
 
 if LINUX

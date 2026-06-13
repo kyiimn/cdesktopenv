@@ -5,6 +5,10 @@ bin_PROGRAMS = dtcm dtcm_delete dtcm_insert dtcm_lookup dtcm_editor
 AM_CFLAGS = $(DT_INCDIR) $(CSA_INCDIR) -I../../../lib/csa	\
 -I../libDtCmP
 
+if HAVE_XFT
+AM_CFLAGS += $(FREETYPE2_INCS)
+endif
+
 LDADD = ../libDtCmP/libDtCmP.a $(LIBCSA) $(DTCLIENTLIBS) $(XTOOLLIB)
 
 if FREEBSD
@@ -13,6 +17,10 @@ endif
 
 if NETBSD
 LDADD += -lcompat
+endif
+
+if HAVE_XFT
+LDADD += $(XFTLIB) $(FONTCONFIGLIB)
 endif
 
 dtcm_SOURCES = MonthPanel.c    RFCMIME.c       about.c \
