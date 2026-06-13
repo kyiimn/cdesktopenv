@@ -2450,6 +2450,22 @@ _DtHelpDAGetStrWidth (
 			__DtHelpFontSetGet(pDAS->font_info, font_index),
 				(wchar_t *) strInfo->string, strInfo->byte_len);
       }
+#ifdef USE_XFT
+    else if (font_index >= 10000)
+      {
+	XftFont *xftFont = __DtHelpFontXftGet(pDAS->font_info, font_index);
+	if (xftFont != NULL)
+	  {
+	    XGlyphInfo extents;
+	    XftTextExtents8(display, xftFont,
+			(const FcChar8 *) strInfo->string,
+			strInfo->byte_len, &extents);
+	    length = extents.xOff;
+	  }
+	else
+	    length = 0;
+      }
+#endif /* USE_XFT */
     else
         length = XTextWidth(__DtHelpFontStructGet(pDAS->font_info, font_index),
 				(char *) strInfo->string, strInfo->byte_len);
