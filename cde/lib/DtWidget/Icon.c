@@ -49,6 +49,11 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <X11/Xatom.h>
+
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Xm/XmP.h>
 #include <Xm/CacheP.h>
 #include <Xm/ManagerP.h>
@@ -62,6 +67,11 @@
 #include "DtSvcInternal.h"
 
 #include <Xm/XmPrivate.h>  /* Motif _XmEnterGadget and friends */
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 /*-------------------------------------------------------------
 **	Public Interface

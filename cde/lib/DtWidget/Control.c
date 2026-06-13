@@ -53,12 +53,22 @@
 #define X_INCLUDE_TIME_H
 #define XOS_USE_XT_LOCKING
 #include <X11/Xos_r.h>
+
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Xm/GadgetP.h>
 #include <Xm/DrawP.h>
 #include <Xm/XmP.h>
 #include <Dt/Control.h>
 #include <Dt/ControlP.h>
 #include <Xm/ManagerP.h>
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/MacrosP.h>
 #include <langinfo.h>
 #include "DtWidgetI.h"
