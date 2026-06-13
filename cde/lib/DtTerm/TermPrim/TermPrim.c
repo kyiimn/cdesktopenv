@@ -60,6 +60,9 @@ extern char * _DtTermPrimGetMessage( char *filename, int set, int n, char *s );
 #include "TermPrimPendingTextP.h"
 #include "TermPrimRenderFont.h"
 #include "TermPrimRenderFontSet.h"
+#ifdef USE_XFT
+#include "TermPrimRenderXft.h"
+#endif
 #include "TermPrimSelectP.h"
 #include "TermPrimSetUtmp.h"
 #include "TermPrimUtil.h"     
@@ -773,6 +776,22 @@ AdjustWindowUnits
 {
     DtTermPrimitiveWidget tw = (DtTermPrimitiveWidget) w;
 
+#ifdef USE_XFT
+    /* Xft-active widgets have no core fontSet/font; derive geometry
+     * from the Xft font and skip the core-font paths below (which would
+     * dereference NULL pointers).
+     */
+    if (tw->term.xftFont) {
+	tw->term.widthInc = tw->term.xftFont->max_advance_width;
+	tw->term.heightInc = tw->term.xftFont->ascent + tw->term.xftFont->descent;
+	tw->term.ascent = tw->term.xftFont->ascent;
+	tw->term.tpd->ascent = tw->term.ascent;
+	tw->term.tpd->cellWidth = tw->term.widthInc;
+	tw->term.tpd->cellHeight = tw->term.heightInc;
+	return;
+    }
+#endif /* USE_XFT */
+
     /* let's adjust the units by the base font size... */
     if (tw->term.fontSet) {
 	XFontSetExtents *fontSetExtents;
@@ -1038,6 +1057,16 @@ Initialize(Widget ref_w, Widget w, Arg *args, Cardinal *num_args)
     tpd->IMCursorRow = -1;
     tpd->IMCursorColumn = -1;
 
+    /* the Xft fields live in tw->term (DtTermPrimitivePart), not in tpd
+     * (struct termData).  The widget struct is zero-initialized by Xt,
+     * but be explicit so re-init paths don't leave them stale.
+     */
+#ifdef USE_XFT
+    tw->term.xftDraw = (XftDraw *) NULL;
+    tw->term.xftFont = (XftFont *) NULL;
+    tw->term.xftBoldFont = (XftFont *) NULL;
+#endif
+
     /* 
     ** Initialize the keyboard, straps, and modes...
     */
@@ -1085,6 +1114,40 @@ Initialize(Widget ref_w, Widget w, Arg *args, Cardinal *num_args)
 
     tpd->termFont = CreateRenderFont(w, tw->term.fontList,
 	    &tw->term.fontSet, &tw->term.font);
+
+#ifdef USE_XFT
+    /* Try to open an Xft font and replace the core-font TermFont with an
+     * Xft-backed one.  Xft uses fontconfig patterns (e.g. "monospace:size=12")
+     * and is the modern path for antialiased text.  On failure we keep the
+     * core-font TermFont created above.
+     */
+    {
+	XftFont *xftFont;
+
+	xftFont = XftFontOpenName(XtDisplay(w),
+		DefaultScreen(XtDisplay(w)), "monospace:size=12");
+	if (xftFont) {
+	    TermFont xftTermFont;
+
+	    xftTermFont = _DtTermPrimRenderXftCreate(w, xftFont);
+	    if (xftTermFont) {
+		(void) _DtTermPrimDestroyFont(w, tpd->termFont);
+		tpd->termFont = xftTermFont;
+		tw->term.xftFont = xftFont;
+		/* seed widthInc/heightInc/ascent from the Xft metrics so
+		 * the geometry calculations below produce sensible rows/
+		 * columns when tw->term.font/fontSet stay NULL.
+		 */
+		tw->term.widthInc = xftFont->max_advance_width;
+		tw->term.heightInc = xftFont->ascent + xftFont->descent;
+		tw->term.ascent = xftFont->ascent;
+	    } else {
+		/* factory failed -- discard the XftFont and keep core font */
+		XftFontClose(XtDisplay(w), xftFont);
+	    }
+	}
+    }
+#endif /* USE_XFT */
 
     if (tw->term.boldFontList) {
 	tpd->boldTermFont = CreateRenderFont(w, tw->term.boldFontList,
@@ -1240,6 +1303,50 @@ Initialize(Widget ref_w, Widget w, Arg *args, Cardinal *num_args)
 	    }
 	}
     }
+
+#ifdef USE_XFT
+    /* If we successfully opened a base Xft font, try to open a bold
+     * variant.  Xft resolves "monospace:size=12:bold" via fontconfig,
+     * which understands XLFD weight fields and the style shorthand.
+     * If that fails, synthesize a bold pattern from the base font.
+     */
+    if (tw->term.xftFont) {
+	XftFont *xftBold;
+	FcPattern *boldPattern;
+
+	xftBold = XftFontOpenName(XtDisplay(w),
+		DefaultScreen(XtDisplay(w)), "monospace:size=12:bold");
+
+	if (xftBold == NULL && tw->term.xftFont->pattern != NULL) {
+	    /* synthesize a bold weight from the base pattern */
+	    boldPattern = FcPatternDuplicate(tw->term.xftFont->pattern);
+	    if (boldPattern) {
+		FcPatternDel(boldPattern, FC_WEIGHT);
+		FcPatternAddInteger(boldPattern, FC_WEIGHT, FC_WEIGHT_BOLD);
+		xftBold = XftFontOpenPattern(XtDisplay(w), boldPattern);
+		/* XftFontOpenPattern takes ownership of the pattern on
+		 * success; on failure we must free it ourselves.
+		 */
+		if (xftBold == NULL) {
+		    FcPatternDestroy(boldPattern);
+		}
+	    }
+	}
+
+	if (xftBold) {
+	    TermFont xftBoldTermFont;
+
+	    xftBoldTermFont = _DtTermPrimRenderXftCreate(w, xftBold);
+	    if (xftBoldTermFont) {
+		(void) _DtTermPrimDestroyFont(w, tpd->boldTermFont);
+		tpd->boldTermFont = xftBoldTermFont;
+		tw->term.xftBoldFont = xftBold;
+	    } else {
+		XftFontClose(XtDisplay(w), xftBold);
+	    }
+	}
+    }
+#endif /* USE_XFT */
 
     /* save away our original fonts as defaults... */
     tpd->defaultTermFont = tpd->termFont;
@@ -2390,6 +2497,24 @@ Realize(Widget w, XtValueMask *p_valueMask, XSetWindowAttributes *attributes)
     (void) XtCreateWindow(w, InputOutput, CopyFromParent, valueMask,
 	    attributes);
 
+#ifdef USE_XFT
+    /* Bind an XftDraw to this widget's drawable.  On first realize we
+     * create the XftDraw; on re-realize (XftDrawChange) we rebind to the
+     * new window while keeping the cached color/extent state.
+     */
+    if (tw->term.xftFont) {
+	if (tw->term.xftDraw == (XftDraw *) NULL) {
+	    tw->term.xftDraw = XftDrawCreate(XtDisplay(w), XtWindow(w),
+		    DefaultVisual(XtDisplay(w),
+			    DefaultScreen(XtDisplay(w))),
+		    DefaultColormap(XtDisplay(w),
+			    DefaultScreen(XtDisplay(w))));
+	} else {
+	    XftDrawChange(tw->term.xftDraw, XtWindow(w));
+	}
+    }
+#endif /* USE_XFT */
+
     /*
      * register input method, and set callbacks for on the spot
      * support.
@@ -2751,6 +2876,31 @@ Destroy(Widget w)
 
         if (tw->term.tpd->capsLockKeyCodes)
                  (void) XtFree((char *)tw->term.tpd->capsLockKeyCodes) ;
+
+#ifdef USE_XFT
+	/* Tear down the Xft resources owned by the widget.  Order:
+	 *   1. xftDraw (the drawable-bound context we created in Realize)
+	 *   2. xftBoldFont and xftFont (XftFonts we opened in Initialize)
+	 *
+	 * The TermFont (tpd->termFont / tpd->boldTermFont) holds a lazy
+	 * XftDraw inside its TermXftFontRec, plus references the XftFont
+	 * we own above.  FontXftDestroyFunction destroys only the lazy
+	 * XftDraw and frees the wrapper -- it does NOT close the XftFont,
+	 * so we must do that ourselves.
+	 */
+	if (tw->term.xftDraw != (XftDraw *) NULL) {
+	    XftDrawDestroy(tw->term.xftDraw);
+	    tw->term.xftDraw = (XftDraw *) NULL;
+	}
+	if (tw->term.xftBoldFont != (XftFont *) NULL) {
+	    XftFontClose(XtDisplay(w), tw->term.xftBoldFont);
+	    tw->term.xftBoldFont = (XftFont *) NULL;
+	}
+	if (tw->term.xftFont != (XftFont *) NULL) {
+	    XftFontClose(XtDisplay(w), tw->term.xftFont);
+	    tw->term.xftFont = (XftFont *) NULL;
+	}
+#endif /* USE_XFT */
 
         (void) _DtTermPrimDestroyFont(w,tw->term.tpd->boldTermFont) ;
         (void) _DtTermPrimDestroyFont(w,tw->term.tpd->termFont) ;
