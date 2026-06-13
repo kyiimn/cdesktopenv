@@ -81,6 +81,9 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <X11/cursorfont.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Protocols.h>
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
@@ -90,6 +93,10 @@
 #include <Dt/Dt.h>
 #include <Dt/UserMsg.h>
 #include <Xm/DragC.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/Dnd.h>
 #include <Dt/Session.h>
 #include "externals.h"

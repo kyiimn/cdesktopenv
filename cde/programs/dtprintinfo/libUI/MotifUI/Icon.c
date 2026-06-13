@@ -27,7 +27,14 @@
 #include "IconP.h"
 
 #include <X11/Intrinsic.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/RepType.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 /* Copied from Xm/RegionI.h */
 extern XmRegion _XmRegionCreate( void ) ;

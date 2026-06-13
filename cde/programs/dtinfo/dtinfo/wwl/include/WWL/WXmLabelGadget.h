@@ -46,7 +46,14 @@
 #define WXmLabelGadget_h
 
 #include "WXmGadget.h"
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/LabelG.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 class WXmLabelGadget : public WXmGadget {
 public :

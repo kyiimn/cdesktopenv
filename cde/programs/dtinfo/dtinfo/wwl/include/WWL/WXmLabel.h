@@ -46,7 +46,14 @@
 #define WXmLabel_h
 
 #include "WXmPrimitive.h"
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Label.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 class WXmLabel : public WXmPrimitive {
 public :

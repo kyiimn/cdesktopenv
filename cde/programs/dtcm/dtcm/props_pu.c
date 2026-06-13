@@ -32,6 +32,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <sys/param.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/Form.h>
 #include <Xm/LabelG.h>
@@ -47,6 +50,10 @@
 #include <Xm/ToggleBG.h>
 #include <Xm/ComboBox.h>
 #include <Xm/SSpinB.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/HourGlass.h>
 #include <Dt/PrintOptionsP.h>
 #include <csa.h>

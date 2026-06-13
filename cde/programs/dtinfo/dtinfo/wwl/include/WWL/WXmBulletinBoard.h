@@ -46,7 +46,14 @@
 #define WXmBulletinBoard_h
 
 #include "WXmManager.h"
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/BulletinB.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 class WXmBulletinBoard : public WXmManager {
 public :

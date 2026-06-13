@@ -56,7 +56,14 @@
 #include <csa.h>
 #include <iso8601.h>
 #include <Dt/MsgCatP.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include "util.h"
 #include "timeops.h"
 #include "props.h"

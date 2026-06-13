@@ -55,7 +55,14 @@
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
 #include <X11/xpm.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/MenuShell.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <ab_private/obj.h>
 #include <ab_private/trav.h>
 #include "objxmP.h"
