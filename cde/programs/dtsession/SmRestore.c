@@ -77,7 +77,16 @@
 #include <X11/StringDefs.h>
 #include <X11/keysymdef.h>
 #include <X11/SM/SMlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+#undef USE_XFT
 #include <Xm/Xm.h>
+#undef USE_XFT
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 # include <stdarg.h>
 # define Va_start(a,b) va_start(a,b)

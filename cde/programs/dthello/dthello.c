@@ -69,9 +69,18 @@
 #include <X11/Intrinsic.h>
 #include <X11/StringDefs.h>
 #include <X11/Xutil.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+#undef USE_XFT
 #include <Xm/MwmUtil.h>
 #include <sys/signal.h>
 #include <Xm/Xm.h>
+#undef USE_XFT
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/GetDispRes.h>
 #include <Dt/HourGlass.h>
 #include <limits.h>
@@ -82,6 +91,11 @@
 
 #include <Dt/EnvControlP.h>
 #include "dthello.h"
+
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#include <fontconfig/fontconfig.h>
+#endif
 
 #ifndef NO_MESSAGE_CATALOG
 # define GETMESSAGE(set, number, string)    GetMessage(set, number, string)
@@ -102,6 +116,11 @@ struct globalStruct vhGD;
 int                 x_offset = 0;       /* for left-justifying text */
 int                 box_line_width = 0; /* for drawing a box */
 XFontSet            fontset;            /* Font descriptor for ILS */
+#ifdef USE_XFT
+XftFont            *xftfont;            /* Xft font for rendering */
+XftDraw            *xftDraw;            /* Xft draw handle */
+XftColor            xftFgColor;         /* Xft foreground color */
+#endif
 unsigned long       textHeight;         /* Font size parameters */
 unsigned long       fg, bg;             /* Pixel values */
 Boolean             colorSuccess = True; /* Success at allocating colors */
@@ -459,6 +478,31 @@ main (int argc, char **argv)
     /*
      * Load the font.
      */
+#ifdef USE_XFT
+    if ((xftfont = XftFontOpenName(dpy, XDefaultScreen(dpy), fontArg)) == NULL)
+    {
+	fprintf(stderr, (char *)
+	    GETMESSAGE (4, 6, "%1$s: display %2$s doesn't know font %3$s\n"),
+		argv[0], DisplayString(dpy), fontArg);
+
+        if ((xftfont = XftFontOpenName(dpy, XDefaultScreen(dpy), DEFAULT_FONT)) == NULL)
+        {
+            fprintf(stderr, (char *)
+            GETMESSAGE (4, 6, "%1$s: display %2$s doesn't know font %3$s\n"),
+                    argv[0], DisplayString(dpy), DEFAULT_FONT);
+        }
+
+        if ((xftfont == NULL) &&
+            (xftfont = XftFontOpenName(dpy, XDefaultScreen(dpy), FIXED_FONT)) == NULL)
+	{
+	    fprintf(stderr, (char *)
+	    GETMESSAGE (4, 6, "%1$s: display %2$s doesn't know font %3$s\n"),
+		    argv[0], DisplayString(dpy), FIXED_FONT);
+	    exit(1);
+	}
+    }
+    textHeight = xftfont->height;
+#else
     if ((fontset = XCreateFontSet(dpy, fontArg, &missing_clist, &missing_count,
                                   &def_str)) == NULL)
     {
@@ -486,6 +530,7 @@ main (int argc, char **argv)
     }
     extents = XExtentsOfFontSet(fontset);
     textHeight = extents->max_ink_extent.height;
+#endif
 
     /*
      * Print the copyright file by default if no other file
@@ -638,6 +683,15 @@ main (int argc, char **argv)
 	    gcv.foreground = fg;
 	    gcv.background = bg;
 	    gc = XCreateGC(dpy, welcome, (GCForeground | GCBackground), &gcv);
+#ifdef USE_XFT
+	    xftDraw = XftDrawCreate(dpy, welcome,
+			DefaultVisual(dpy, XDefaultScreen(dpy)),
+			DefaultColormap(dpy, XDefaultScreen(dpy)));
+	    XftColorAllocName(dpy,
+			DefaultVisual(dpy, XDefaultScreen(dpy)),
+			DefaultColormap(dpy, XDefaultScreen(dpy)),
+			fgArg, &xftFgColor);
+#endif
 	    XClearWindow(dpy, welcome);
 	    DrawBox();
 	    PaintText();
@@ -855,8 +909,17 @@ ReadInTextLines (FILE *fp, XFontSet fontset, unsigned int *pMaxWidth)
 #ifndef BLOCK_CENTER_FILES
         ppchText[numLines] = SkipWhitespace (ppchText[numLines]);
 #endif /* not BLOCK_CENTER_FILES */
+#ifdef USE_XFT
+	{
+	    XGlyphInfo extents;
+	    XftTextExtents8(dpy, xftfont, ppchText[numLines],
+			    strlen((char *)ppchText[numLines]), &extents);
+	    width = extents.xOff;
+	}
+#else
 	width = XmbTextEscapement(fontset, (char *)(ppchText[numLines]),
 			strlen((char *)ppchText[numLines]));
+#endif
 	if (width > *pMaxWidth)
 	{
 	    *pMaxWidth = width;
@@ -1091,7 +1154,6 @@ void
 PaintText( void )
 {
 	    int i, x, y;
-	    XFontSetExtents *extents;
 
 	    /* 
 	     * Paint the string onto the screen
@@ -1104,12 +1166,26 @@ PaintText( void )
 	       y = 0;
 	    }
 
+#ifdef USE_XFT
+	    y += xftfont->ascent;
+#else
 	    /* adjust origin by font metric */
+	    XFontSetExtents *extents;
 	    extents = XExtentsOfFontSet(fontset);
 	    y += -(extents->max_logical_extent.y);
+#endif
 
 	    x = box_line_width + x_offset;
 
+#ifdef USE_XFT
+	    for (i = 0; i < numLines; i++)
+	    {
+		XftDrawString8(xftDraw, &xftFgColor, xftfont, x, y,
+			(FcChar8 *)(ppchText[i]), strlen((char *)ppchText[i]));
+
+		y += textHeight;
+	    }
+#else
 	    for (i = 0; i < numLines; i++)
 	    {
 		/* draw the string */
@@ -1119,6 +1195,7 @@ PaintText( void )
 		/* move to next "line" */
 		y += textHeight;
 	    }
+#endif
 }
 void
 DrawBox( void )
