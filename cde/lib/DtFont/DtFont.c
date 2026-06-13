@@ -31,71 +31,6 @@
 #include <Dt/DtFont.h>
 #include <DtI/DtFontI.h>
 
-#ifdef USE_XFT
-
-/*
- * Xft implementations will be added in Task 5 (XftWrapper.c).
- * For now, return NULL/0 stubs so the library compiles.
- */
-
-DtFont
-DtFontCreate(Display *dpy, int screen, const char *pattern)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-    return NULL;
-}
-
-void
-DtFontDestroy(Display *dpy, DtFont font)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-}
-
-void
-DtFont_DrawString(Display *dpy, Drawable draw, GC gc, DtFont font,
-                   int x, int y, const char *str, int len)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-}
-
-void
-DtFont_DrawImageString(Display *dpy, Drawable draw, GC gc, DtFont font,
-                        int x, int y, const char *str, int len,
-                        unsigned long bg_pixel)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-}
-
-int
-DtFont_TextWidth(DtFont font, const char *str, int len)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-    return 0;
-}
-
-int
-DtFont_Ascent(DtFont font)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-    return 0;
-}
-
-int
-DtFont_Descent(DtFont font)
-{
-    /* Xft implementation in XftWrapper.c (Task 5) */
-    return 0;
-}
-
-XmFontList
-_DtFontCreateXmFontList(Display *dpy, const char *pattern)
-{
-    /* Xft implementation in XftWrapper.c (Task 15) */
-    return NULL;
-}
-
-#else /* !USE_XFT - fall back to core X11 font functions */
-
 /*
  * Core X11 font fallback implementations.
  * These wrap XFontStruct/XFontSet into the DtFont opaque type
@@ -219,5 +154,3 @@ _DtFontCreateXmFontList(Display *dpy, const char *pattern)
     XmFontList fl = XmFontListCreate(xfs, XmFONTLIST_DEFAULT_TAG);
     return fl;
 }
-
-#endif /* USE_XFT */
