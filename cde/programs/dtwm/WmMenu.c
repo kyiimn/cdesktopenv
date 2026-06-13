@@ -38,6 +38,20 @@
  * Included Files:
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via WmGlobal.h
+ * and the direct Xm.h include below), which clobbers configure's
+ * -DUSE_XFT. Capture the configure-driven value first, then restore
+ * it after the Motif includes. This file has no direct Xft rendering
+ * code, but the pattern keeps USE_XFT consistent with the rest of
+ * dtwm (WmResource.c, WmGraphics.c, WmPresence.c) for any future
+ * Xft-aware code added to the menu path.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 #include "WmCEvent.h"
 #include "WmResource.h"
@@ -59,6 +73,15 @@
 #include <Xm/RowColumnP.h>
 #include <Xm/Separator.h>
 #include <Xm/SeparatoG.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
 
 #define SHELL_NAME "menu"
 #define SEPARATOR_NAME "separator"

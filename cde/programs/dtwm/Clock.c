@@ -63,6 +63,19 @@ SOFTWARE.
 **	Include Files
 */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via
+ * <Xm/GadgetP.h> and <Xm/ManagerP.h> below, and <Xm/XmP.h> via
+ * ClockP.h), which clobbers configure's -DUSE_XFT. Capture the
+ * configure-driven value first, then restore it after the Motif
+ * includes so the Xft path remains gated by configure's flag,
+ * not by Motif's auto-define.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include <stdio.h>
 #include <sys/stat.h>
 #include <time.h>
@@ -71,6 +84,20 @@ SOFTWARE.
 #include <Xm/ManagerP.h>
 #include "ClockP.h"
 #include <Dt/Control.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
+/* Xft types for Xft-aware clock hand/background GC font setup */
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#endif
 
 
 /*-------------------------------------------------------------
@@ -1021,8 +1048,18 @@ else if (G_ClockHandGC (g))
 value_mask = GCForeground | GCFillStyle;
 
 if (XmeRenderTableGetDefaultFont (G_FontList (g), &font)) {
+#ifdef USE_XFT
+  /*
+   * For Xft fonts, XmeRenderTableGetDefaultFont returns an XftFont*,
+   * not an XFontStruct*. We cannot set GCFont on the GC for Xft
+   * fonts (no XFontStruct->fid), so skip the GCFont assignment and
+   * rely on XftDrawString8 to render with the XftFont at draw time.
+   * (The XftFont handle is stored in pAData->font by WmResource.c.)
+   */
+#else
   value_mask |= GCFont;
   values.font = font->fid;
+#endif
 }
 
 if (((G_PixmapForeground (g) == WhitePixelOfScreen (XtScreen (g))) &&

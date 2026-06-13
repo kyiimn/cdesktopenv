@@ -23,6 +23,18 @@
  * Floor, Boston, MA 02110-1301 USA
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via the
+ * <Xm/...> headers below and WmGlobal.h), which clobbers configure's
+ * -DUSE_XFT. Capture the configure-driven value first, then restore
+ * it after the Motif includes so the Xft path remains gated by
+ * configure's flag, not by Motif's auto-define.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include <Xm/DialogS.h>
 #include <Xm/Form.h>
 #include <Xm/Text.h>
@@ -40,6 +52,20 @@
 #include "WmProperty.h"
 #include "WmWinList.h"
 #include "WmWrkspace.h"
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
+/* Xft types for Xft-aware TEXT_HEIGHT() in InstantTitleSetPosition */
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#endif
 
 extern XtPointer _XmStringUngenerate(XmString, XmStringTag,
 				     XmTextType, XmTextType);
@@ -263,7 +289,18 @@ static void InstantTitleSetPosition(PtrInstantTitleData pITD) {
 	else
 	    font = pSD->clientAppearance.font;
 
+#ifdef USE_XFT
+	/*
+	 * For Xft fonts, pSD->...Appearance.font is an XftFont* (per
+	 * WmResource.c), not an XFontStruct*. TEXT_HEIGHT() expands to
+	 * ((pfs)->ascent + (pfs)->descent); XftFont has the same
+	 * field names, so a cast to XftFont* is safe.
+	 */
+	height += ((XftFont *)font)->ascent + ((XftFont *)font)->descent +
+		  (2 * pSD->frameBorderWidth);
+#else
 	height += TEXT_HEIGHT(font) + (2 * pSD->frameBorderWidth);
+#endif
     }
 
     GetSystemMenuPosition(pCD, &x, &y, height, context);
