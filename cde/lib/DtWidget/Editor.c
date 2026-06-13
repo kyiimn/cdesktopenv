@@ -83,6 +83,10 @@
 #include <X11/StringDefs.h>
 #include <X11/keysymdef.h>
 #include <X11/XKBlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Xm/Form.h>
 #include <Xm/MessageB.h>
 #include <Xm/MwmUtil.h>
@@ -92,6 +96,16 @@
 #include <Xm/PushBG.h>
 #include <Xm/ToggleBG.h>
 #include <Xm/RowColumn.h>
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+#include <X11/Xft.h>
+#endif
+#endif
 
 /* Need the following for _DtOkString */
 #include <Dt/DtP.h>
@@ -1862,14 +1876,28 @@ extractFontMetrics(
 		 */
                 use_font_set = False;
 
-                /* 
-                 * Save the first one in case no font set is found 
+                /*
+                 * Save the first one in case no font set is found
 		 */
                 font = (XFontStruct *)tmp_font;
                 use_font_set = False;
                 have_font_struct = True;
 
              }
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+             else if (type_return == XmFONT_IS_XFT) {
+                XftFont *xft_font = (XftFont *)tmp_font;
+                font_ascent = xft_font->ascent;
+                font_descent = xft_font->descent;
+                tmp_width = (unsigned long)xft_font->max_advance_width;
+                have_font_struct = True;
+                /* Don't need to set use_font_set since Xft metrics are
+                 * already in pixel units */
+                use_font_set = False;
+             }
+#endif /* HAVE_X11_XFT_XFT_H */
+#endif /* USE_XFT */
           }
 
        } while (next_entry != NULL);
