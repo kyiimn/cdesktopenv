@@ -64,6 +64,9 @@
 #include        <sys/stat.h>
 #include	<locale.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include	<Xm/Xm.h>
 #include	<X11/Shell.h>
 #include        <X11/cursorfont.h>
@@ -83,6 +86,10 @@
 #include	<Xm/SeparatoG.h>
 #include	<Xm/ToggleBG.h>
 #include	<Xm/CascadeBG.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include	<Dt/EnvControlP.h>
 #include	"vg.h"
 #include	"vgmsg.h"

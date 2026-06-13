@@ -83,9 +83,16 @@ in this Software without prior written authorization from the X Consortium.
 #include    <X11/Xatom.h>
 
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include    <Xm/Xm.h>
 #include    <Xm/DragC.h>
 #include    <Xm/List.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #define     CHOOSER
 

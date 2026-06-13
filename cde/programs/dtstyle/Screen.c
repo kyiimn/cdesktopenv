@@ -38,6 +38,9 @@
 /*$TOG: Screen.c /main/9 1997/07/14 17:44:42 samborn $*/
 
 #include <X11/Xlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/MwmUtil.h>
 
 #include <Xm/Xm.h>
@@ -54,6 +57,10 @@
 #include <Xm/ToggleBG.h>
 #include <Xm/VendorSEP.h>
 #include <Xm/Protocols.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include <stdio.h>
 #include <signal.h>

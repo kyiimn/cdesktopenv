@@ -65,6 +65,9 @@
 #include <grp.h>
 #include <pwd.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/XmP.h>
 #include <Xm/BulletinB.h>
 #include <Xm/CascadeBG.h>
@@ -82,6 +85,10 @@
 #include <Xm/VendorSEP.h>
 #include <Xm/MwmUtil.h>
 #include <Xm/Protocols.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include <Dt/Icon.h>
 #include <Dt/IconP.h>

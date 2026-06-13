@@ -54,6 +54,9 @@
  ****************************************************************************
  ************************************<+>*************************************/
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/DrawP.h>
@@ -77,6 +80,10 @@
 #endif
 #include <X11/keysymdef.h>
 #include <Xm/PrimitiveP.h>  /* For HighlightBorder & UnhighlightBorder */
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include "Encaps.h"
 #include "FileMgr.h"

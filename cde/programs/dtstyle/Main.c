@@ -65,9 +65,16 @@
 #include <X11/Xlib.h>
 #include <Xm/MwmUtil.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/MessageB.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include <Dt/Dt.h>
 #include <Dt/GetDispRes.h>

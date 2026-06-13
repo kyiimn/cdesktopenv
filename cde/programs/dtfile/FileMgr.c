@@ -109,6 +109,9 @@
 #include <sys/stat.h>
 #include <ctype.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/XmP.h>
 #include <Xm/CascadeB.h>
 #include <Xm/DrawingA.h>
@@ -148,6 +151,10 @@
 
 #include <Xm/DragIcon.h>
 #include <Xm/DragC.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/Dnd.h>
 
 #include <Tt/tttk.h>

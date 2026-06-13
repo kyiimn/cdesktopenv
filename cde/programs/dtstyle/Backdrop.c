@@ -57,6 +57,9 @@
 #include <X11/Xlib.h>
 #include <Xm/MwmUtil.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/DrawnB.h>
@@ -66,6 +69,10 @@
 #include <Xm/AtomMgr.h>
 #include <Xm/RowColumn.h>
 #include <Xm/ToggleBG.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include <Dt/DialogBox.h>
 

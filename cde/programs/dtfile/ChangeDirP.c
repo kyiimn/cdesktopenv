@@ -59,6 +59,9 @@
  ************************************<+>*************************************/
 
 #include <limits.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
 #include <Xm/DrawP.h>
@@ -67,6 +70,10 @@
 #include <Xm/PushBG.h>
 #include <Xm/DragDrop.h>
 #include <Xm/RowColumn.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <Dt/Icon.h>
 #include <Dt/IconP.h>
 #include <Dt/DtNlUtils.h>

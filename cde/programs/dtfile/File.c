@@ -152,6 +152,9 @@
 #include <fnmatch.h>
 
 #include <Xm/XmP.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/Xm.h>
 #include <Xm/BulletinB.h>
 #include <Xm/MwmUtil.h>
@@ -205,6 +208,10 @@
 #include <Tt/tttk.h>
 
 #include <Xm/XmPrivate.h> /* _XmIsEventUnique _XmSetInDragMode _XmRecordEvent */
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include "Encaps.h"
 #include "SharedProcs.h"

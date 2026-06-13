@@ -127,6 +127,9 @@
 
 #include <locale.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/XmP.h>
 #include <Xm/DrawingA.h>
 #include <Xm/DrawingAP.h>
@@ -148,6 +151,10 @@
 #include <X11/Shell.h>
 #include <X11/Xatom.h>
 #include <Xm/Protocols.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #ifdef HAVE_EDITRES
 #include <X11/Xmu/Editres.h>
 #endif

@@ -43,6 +43,9 @@
 /*+++++++++++++++++++++++++++++++++++++++*/
 
 #include <X11/Xlib.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include <Xm/MwmUtil.h>
 
 #include <Xm/Xm.h>
@@ -56,6 +59,10 @@
 #include <Xm/Text.h>
 #include <Xm/TextF.h>
 #include <Xm/VendorSEP.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include <Dt/DialogBox.h>
 #include <Dt/Icon.h>
