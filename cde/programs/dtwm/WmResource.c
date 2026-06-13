@@ -38,6 +38,16 @@
  * Included Files:
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via XmP.h and
+ * WmGlobal.h), which clobbers configure's -DUSE_XFT. Capture the
+ * configure-driven value first, then restore it after the Motif includes.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 #include "WmResNames.h"
 
@@ -49,6 +59,21 @@
 #include <Xm/XmP.h>
 #include <Xm/RowColumn.h>
 #include <Xm/ScreenP.h>		/* for XmGetXmScreen and screen.moveOpaque */
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
+/* DtFont abstraction for Xft-aware font list creation */
+#ifdef USE_XFT
+#include <Dt/DtFont.h>
+#include <DtI/DtFontI.h>
+#endif
 
 /*
  * include extern functions
@@ -4332,11 +4357,40 @@ MakeAppearanceResources (WmScreenData *pSD, AppearanceData *pAData, Boolean make
 #if defined(CSRG_BASED) || defined(__linux__)
 	/* HACK to try get _some_ font anyway (fontList seems to end
 	 * up as an empty list on some modern systems; investigate) */
+#ifdef USE_XFT
+	{
+	    /*
+	     * Xft path: build an XmFontList with XmFONT_IS_XFT entry,
+	     * then let XmeRenderTableGetDefaultFont extract the XftFont.
+	     * _DtFontCreateXmFontList returns an XmFontList that works
+	     * transparently with the same XmeRenderTableGetDefaultFont
+	     * call below, regardless of whether the entry is Xft or core.
+	     */
+	    XmFontList fallbackList = _DtFontCreateXmFontList(
+		wmGD.display, "monospace:size=12");
+	    if (fallbackList == NULL ||
+		!XmeRenderTableGetDefaultFont(fallbackList, &(pAData->font)))
+	    {
+		Warning("_DtFontCreateXmFontList() failed for fallback, "
+			"trying core fixed");
+		pAData->font = XLoadQueryFont(wmGD.display, "fixed");
+		if (pAData->font == NULL)
+		{
+		    ExitWM(WM_ERROR_EXIT_VALUE);
+		}
+	    }
+	    if (fallbackList != NULL)
+	    {
+		XmFontListFree(fallbackList);
+	    }
+	}
+#else
 	pAData->font = XLoadQueryFont(wmGD.display, "fixed");
 	if (pAData->font == NULL)
 	{
 	  ExitWM(WM_ERROR_EXIT_VALUE);
 	}
+#endif
 	/* try to get right title hight using XExtentsOfFontSet: on UTF-8
 	 * locales XmeRenderTableGetDefaultFont does not return anything
 	 * when font is a compound fontset*/
