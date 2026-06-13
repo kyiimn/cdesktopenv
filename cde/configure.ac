@@ -968,6 +968,7 @@ programs/localized/C/types/Makefile
 programs/localized/C/palettes/Makefile
 programs/localized/C/msg/Makefile
 programs/localized/C/appmanager/Makefile
+programs/localized/C/fonts.conf.d/Makefile
 programs/localized/de_DE.UTF-8/Makefile
 programs/localized/de_DE.UTF-8/app-defaults/Makefile
 programs/localized/de_DE.UTF-8/config/Makefile

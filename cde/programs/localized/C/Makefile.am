@@ -1,1 +1,1 @@
-SUBDIRS = app-defaults config types msg palettes backdrops appmanager
+SUBDIRS = app-defaults config types msg palettes backdrops appmanager fonts.conf.d
