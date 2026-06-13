@@ -44,9 +44,33 @@
 #include <Xm/Xm.h>
 
 /*
+ * Motif's <Xm/Xm.h> unconditionally #define USE_XFT 1. Cancel it so
+ * configure's -DUSE_XFT (or its absence) is authoritative for this
+ * translation unit. The save/undef/restore pattern below mirrors
+ * DisplayAreaP.h and XftWrapper.c.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
+#include "DisplayAreaP.h"
+
+#ifdef _CDE_SAVED_USE_XFT
+#ifdef HAVE_XFT
+#define USE_XFT 1
+#endif
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#include <fontconfig/fontconfig.h>
+#endif
+
+/*
  * private includes
  */
-#include "DisplayAreaP.h"
 #include "FontI.h"
 #include "Lock.h"
 
@@ -273,7 +297,11 @@ static	XrmBinding	FontBindings[_DtHelpFontQuarkNumber] =
 
 static	DtHelpDAFSMetrics  DefaultMetrics = { FALSE, { 0, 0 } };
 static	DtHelpDAFontInfo   DefFontInfo    = { NULL, NULL, NULL, NULL, NULL,
-					NULL, 0, NULL, 0, 0, 0, 0, 0};
+ 					NULL, 0, NULL, 0, 0, 0, 0, 0
+#ifdef USE_XFT
+ 					, NULL, 0, 0
+#endif /* USE_XFT */
+ 					};
 
 /******************************************************************************
  *
@@ -377,6 +405,70 @@ LoadFont (
     char	**missingFontSet = NULL;
     XFontStruct	*fontStruct = NULL;
     XFontSet     fontSet;
+
+#ifdef USE_XFT
+    /*
+     * Try Xft first when USE_XFT is enabled. Xft/fontconfig can resolve
+     * both fontconfig patterns ("monospace:size=12") and XLFD names
+     * ("-dt-application-..."). If the pattern opens via Xft, store the
+     * XftFont* with an index >= 10000 so dispatchers can distinguish it
+     * from XFontStruct (positive) and XFontSet (negative) indices.
+     */
+    {
+	XftFont   *xftFont = NULL;
+	FcPattern *pattern;
+
+	pattern = FcNameParse((const FcChar8 *)font_string);
+	if (pattern != NULL)
+	  {
+	    FcConfigSubstitute(NULL, pattern, FcMatchPattern);
+	    FcDefaultSubstitute(pattern);
+	    xftFont = XftFontOpenPattern(dpy, pattern);
+	    if (xftFont != NULL)
+	      {
+		/* Xft takes ownership of the pattern on success. */
+		if (font_info->xft_cnt >= font_info->max_xft)
+		  {
+		    font_info->max_xft += GROW_SIZE;
+		    if (font_info->xft_fonts != NULL)
+			font_info->xft_fonts = (XftFont **) XtRealloc(
+			    ((char *) font_info->xft_fonts),
+			    sizeof(XftFont *) * font_info->max_xft);
+		    else
+			font_info->xft_fonts = (XftFont **) XtMalloc(
+			    sizeof(XftFont *) * font_info->max_xft);
+		  }
+		font_info->xft_fonts[font_info->xft_cnt] = xftFont;
+		*ret_index = 10000 + font_info->xft_cnt;
+		font_info->xft_cnt++;
+		return True;
+	      }
+	    /* Xft did not take ownership; caller must destroy. */
+	    FcPatternDestroy(pattern);
+	  }
+
+	/* XftFontOpenName also handles XLFD names via fontconfig. */
+	xftFont = XftFontOpenName(dpy, DefaultScreen(dpy), font_string);
+	if (xftFont != NULL)
+	  {
+	    if (font_info->xft_cnt >= font_info->max_xft)
+	      {
+		font_info->max_xft += GROW_SIZE;
+		if (font_info->xft_fonts != NULL)
+		    font_info->xft_fonts = (XftFont **) XtRealloc(
+			((char *) font_info->xft_fonts),
+			sizeof(XftFont *) * font_info->max_xft);
+		else
+		    font_info->xft_fonts = (XftFont **) XtMalloc(
+			sizeof(XftFont *) * font_info->max_xft);
+	      }
+	    font_info->xft_fonts[font_info->xft_cnt] = xftFont;
+	    *ret_index = 10000 + font_info->xft_cnt;
+	    font_info->xft_cnt++;
+	    return True;
+	  }
+    }
+#endif /* USE_XFT */
 
     strPtr = font_string;
 
@@ -854,6 +946,11 @@ __DtHelpFontStructGet (
     DtHelpDAFontInfo	font_info,
     long	  font_index)
 {
+#ifdef USE_XFT
+    /* Xft fonts use index >= 10000; they are NOT XFontStructs. */
+    if (font_index >= 10000)
+	return NULL;
+#endif
 
     if (font_index > -1 && font_index < font_info.struct_cnt)
 	return font_info.font_structs[font_index];
@@ -876,6 +973,11 @@ __DtHelpFontSetGet (
     DtHelpDAFontInfo	font_info,
     long		 font_index)
 {
+#ifdef USE_XFT
+    /* Xft fonts use index >= 10000; they are NOT XFontSets. */
+    if (font_index >= 10000)
+	return NULL;
+#endif
 
     if (font_index < 0)
       {
@@ -887,6 +989,37 @@ __DtHelpFontSetGet (
 
     return NULL;
 }
+
+#ifdef USE_XFT
+/******************************************************************************
+ * Function:	XftFont *__DtHelpFontXftGet (DtHelpDAFontInfo font_info,
+ *                                          long font_index)
+ *
+ * Parameters:	font_info	Font info storage.
+ *		font_index	Index returned by LoadFont (>= 10000 for Xft).
+ *
+ * Return Value: The XftFont* for this index, or NULL if not an Xft index.
+ *
+ * Purpose:	Dispatch XftFont* lookups by index.
+ *
+ *****************************************************************************/
+XftFont *
+__DtHelpFontXftGet (
+    DtHelpDAFontInfo	font_info,
+    long		 font_index)
+{
+    int	xft_idx;
+
+    if (font_index < 10000 || font_info.xft_fonts == NULL)
+	return NULL;
+
+    xft_idx = font_index - 10000;
+    if (xft_idx >= font_info.xft_cnt)
+	return NULL;
+
+    return font_info.xft_fonts[xft_idx];
+}
+#endif /* USE_XFT */
 
 /******************************************************************************
  * Function:	long __DtHelpDefaultFontIndexGet ();
