@@ -47,7 +47,18 @@
 #define	_DtHelpDisplayAreaP_h
 
 #include <X11/X.h>
+
+/* USE_XFT is controlled by configure, not by Motif's Xm.h.
+ * XmP.h unconditionally #defines USE_XFT 1, which pollutes
+ * the namespace.  Always undef it after including XmP.h. */
 #include <Xm/XmP.h>
+#undef USE_XFT
+
+#ifdef HAVE_XFT
+#define USE_XFT 1
+#include <X11/Xft.h>
+#endif
+
 #include <Dt/CanvasP.h>
 #include <DtI/GraphicsP.h>
 #include <DtI/DisplayAreaI.h>
@@ -105,6 +116,12 @@ typedef	struct {
 	_DtHelpDAFontMetrics fm;
 } DtHelpDAFSMetrics;
 
+/*
+ * Font index convention:
+ *   index > 0        -> font_structs[index - 1]
+ *   index < 0        -> font_sets[-index - 1]
+ *   index >= 10000   -> xft_fonts[index - 10000]  (USE_XFT only)
+ */
 typedef	struct	_DtHelpDAfontInfo {
 	char		**exact_fonts;	/* the list of fonts specified by the
 					   toss element rather than hints.   */
@@ -122,6 +139,11 @@ typedef	struct	_DtHelpDAfontInfo {
 	int		struct_cnt;	/* the cur number of font_structs    */
 	int		set_cnt;	/* The cur number of font_sets	     */
 	long		def_idx;	/* The default index                 */
+#ifdef USE_XFT
+	XftFont		**xft_fonts;	/* Xft fonts for antialiased rendering */
+	int		 xft_cnt;	/* current number of Xft fonts        */
+	int		 max_xft;	/* max allocated Xft fonts             */
+#endif /* USE_XFT */
 } DtHelpDAFontInfo;
 
 /* 
