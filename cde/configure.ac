@@ -595,14 +595,19 @@ if test "x$enable_xft" != "xno" ; then
                            enable_xft="no"],
                          [${EXTRA_INCS} ${EXTRA_LIBS}])
 fi
+dnl Motif Xft support: XmFONT_IS_XFT enum value and XmFontListEntryCreate.
+dnl XmGetXftFont is a Motif 2.4+ API that doesn't exist in 2.3.x;
+dnl CDE uses XmFONT_IS_XFT + XmFontListEntryCreate instead.
 if test "x$enable_xft" != "xno" ; then
-   AC_CHECK_LIB(Xm, XmGetXftFont,
-                         [],
-                         [ if test "x$enable_xft" = "xyes" ; then
-                            AC_MSG_ERROR([Motif Xft support not found but --enable-xft was given])
-                           fi
-                           enable_xft="no"],
-                         [${XTOOLLIB} ${EXTRA_INCS} ${EXTRA_LIBS}])
+   AC_MSG_CHECKING([for Motif Xft support (XmFONT_IS_XFT)])
+   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([#include <Xm/Xm.h>],
+      [XmFontType t = XmFONT_IS_XFT; (void)t;])],
+      [AC_MSG_RESULT([yes])],
+      [AC_MSG_RESULT([no])
+       if test "x$enable_xft" = "xyes" ; then
+          AC_MSG_ERROR([Motif Xft support (XmFONT_IS_XFT) not found but --enable-xft was given])
+       fi
+       enable_xft="no"])
 fi
 if test "x$enable_xft" != "xno" ; then
    SOURCE_CPP_DEFINES="${SOURCE_CPP_DEFINES} -DUSE_XFT"
