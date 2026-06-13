@@ -252,6 +252,11 @@ AC_ARG_ENABLE([xrender],
         [disable_xrender="yes"], [disable_xrender=""]
 )
 
+dnl Xft usage
+AC_ARG_ENABLE([xft],
+        AS_HELP_STRING([--enable-xft], [Force enable Xft font rendering (default=auto)]),
+        [enable_xft=$enableval], [enable_xft=auto])
+
 dnl copied from xdm...
 
 AC_ARG_WITH(utmp_file,
@@ -472,6 +477,22 @@ dnl Xrender header
 AC_CHECK_HEADERS([X11/extensions/Xrender.h], [],
     [ disable_xrender="yes"], [#include <X11/Xlib.h>])
 
+dnl Xft headers
+if test "x$enable_xft" != "xno" ; then
+   AC_CHECK_HEADERS([X11/Xft/Xft.h], [],
+       [ if test "x$enable_xft" = "xyes" ; then
+            AC_MSG_ERROR([Xft headers not found but --enable-xft was given])
+         fi
+         enable_xft="no"], [#include <X11/Xlib.h>])
+fi
+if test "x$enable_xft" != "xno" ; then
+   AC_CHECK_HEADERS([fontconfig/fontconfig.h], [],
+       [ if test "x$enable_xft" = "xyes" ; then
+            AC_MSG_ERROR([fontconfig headers not found but --enable-xft was given])
+         fi
+         enable_xft="no"])
+fi
+
 dnl libraries
 AC_CHECK_LIB(m, cosf)
 AC_SEARCH_LIBS(dlopen, [dl dld], [], [])
@@ -535,6 +556,42 @@ if test "x$disable_xrender" != "xyes" ; then
                           SOURCE_CPP_DEFINES="${SOURCE_CPP_DEFINES} -DUSE_XRENDER"], ,
                          [${EXTRA_INCS} ${EXTRA_LIBS}])
 fi
+dnl Xft/fontconfig/Motif Xft library checks
+if test "x$enable_xft" != "xno" ; then
+   AC_CHECK_LIB(Xft, XftFontOpen,
+                         [XFTLIB="-lXft";
+                          XTOOLLIB="-lXft ${XTOOLLIB}"],
+                         [ if test "x$enable_xft" = "xyes" ; then
+                            AC_MSG_ERROR([libXft not found but --enable-xft was given])
+                           fi
+                           enable_xft="no"],
+                         [${EXTRA_INCS} ${EXTRA_LIBS}])
+fi
+if test "x$enable_xft" != "xno" ; then
+   AC_CHECK_LIB(fontconfig, FcInit,
+                         [FONTCONFIGLIB="-lfontconfig"],
+                         [ if test "x$enable_xft" = "xyes" ; then
+                            AC_MSG_ERROR([libfontconfig not found but --enable-xft was given])
+                           fi
+                           enable_xft="no"],
+                         [${EXTRA_INCS} ${EXTRA_LIBS}])
+fi
+if test "x$enable_xft" != "xno" ; then
+   AC_CHECK_LIB(Xm, XmGetXftFont,
+                         [],
+                         [ if test "x$enable_xft" = "xyes" ; then
+                            AC_MSG_ERROR([Motif Xft support not found but --enable-xft was given])
+                           fi
+                           enable_xft="no"],
+                         [${XTOOLLIB} ${EXTRA_INCS} ${EXTRA_LIBS}])
+fi
+if test "x$enable_xft" != "xno" ; then
+   SOURCE_CPP_DEFINES="${SOURCE_CPP_DEFINES} -DUSE_XFT"
+   enable_xft="yes"
+fi
+AM_CONDITIONAL([HAVE_XFT], [test "x$enable_xft" = "xyes"])
+AC_SUBST(XFTLIB)
+AC_SUBST(FONTCONFIGLIB)
 AC_CHECK_LIB(Xau, XauReadAuth, [XTOOLLIB="-lXau ${XTOOLLIB}"], ,
                   [${EXTRA_INCS} ${EXTRA_LIBS}])
 AC_CHECK_LIB(Xpm, XpmLibraryVersion, [XTOOLLIB="-lXpm ${XTOOLLIB}"], ,
@@ -627,6 +684,7 @@ util/tradcpp/Makefile
 lib/Makefile
 
 lib/DtXinerama/Makefile
+lib/DtFont/Makefile
 
 lib/tt/Makefile
 lib/tt/mini_isam/Makefile
