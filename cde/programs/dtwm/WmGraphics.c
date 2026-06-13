@@ -34,6 +34,18 @@
  * Included Files:
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via WmGlobal.h
+ * and the direct Xm.h include below), which clobbers configure's
+ * -DUSE_XFT. Capture the configure-driven value first, then restore
+ * it after the Motif includes so the Xft path remains gated by
+ * configure's flag, not by Motif's auto-define.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 
 #include <stdio.h>
@@ -43,6 +55,22 @@
 #include <X11/Intrinsic.h>
 #include <X11/X.h>
 #include <Xm/Xm.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
+/* Xft abstraction for Xft-aware text measurement/rendering */
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#include <Dt/DtFont.h>
+#include <DtI/DtFontI.h>
+#endif
 
 
 #define RLIST_EXTENSION_SIZE	10
@@ -874,17 +902,38 @@ void DrawStringInBox (Display *dpy, Window win, GC gc, XFontStruct *pfs, XRectan
     XGCValues gcv;
     int textWidth;
     int xCenter;
+    int xPos;
+    int yBaseline;
     XRectangle clipBox;
+    size_t strLen = strlen(str);
+#ifdef USE_XFT
+    XftFont *xftFont = (XftFont *) pfs;
+    XGlyphInfo extents;
+    XftDraw *xftDraw;
+    XftColor xftFg;
+    XftColor xftBg;
+    XGCValues gcvXft;
+    Visual *visual;
+    Colormap cmap;
+    int ascent;
+    int renderXft = 0;
+#endif
 
     /* compute text position */
-    textWidth = XTextWidth(pfs, str, strlen(str));
+#ifdef USE_XFT
+    XftTextExtents8(dpy, xftFont, (FcChar8 *) str, strLen, &extents);
+    textWidth = extents.xOff;
+#else
+    textWidth = XTextWidth(pfs, str, strLen);
+#endif
 
     if (textWidth < (int) pbox->width) {	/* center text if there's room */
 	xCenter = (int) pbox->x + ((int) pbox->width - textWidth) / 2 ;
-	WmDrawString(dpy, win, gc, xCenter, (pbox->y + pfs->ascent), 
-		    str, strlen(str));
+	xPos = xCenter;
     }
     else {				/* left justify & clip text */
+	xPos = (int) pbox->x;
+
 	clipBox.x = 0;			/* set up clip rectangle */
 	clipBox.y = 0;
 	clipBox.width = pbox->width;
@@ -892,14 +941,56 @@ void DrawStringInBox (Display *dpy, Window win, GC gc, XFontStruct *pfs, XRectan
 
 	XSetClipRectangles (dpy, gc, pbox->x, pbox->y,	/* put into gc */
 			    &clipBox, 1, Unsorted);
+    }
 
-	WmDrawString(dpy, win, gc, pbox->x, (pbox->y + pfs->ascent), 
-		    str, strlen(str));
+#ifdef USE_XFT
+    ascent = xftFont->ascent;
+    yBaseline = (int) pbox->y + ascent;
 
+    visual = DefaultVisual(dpy, DefaultScreen(dpy));
+    cmap = DefaultColormap(dpy, DefaultScreen(dpy));
+    xftDraw = XftDrawCreate(dpy, win, visual, cmap);
+    if (xftDraw != NULL)
+    {
+	(void) XGetGCValues(dpy, gc, GCForeground | GCBackground, &gcvXft);
+	if (XftColorAllocPixel(dpy, visual, cmap, gcvXft.foreground, &xftFg) &&
+	    XftColorAllocPixel(dpy, visual, cmap, gcvXft.background, &xftBg))
+	{
+	    /*
+	     * Guardrail G8: for "image string" semantics (cleanText),
+	     * the background rectangle MUST be filled before the
+	     * foreground glyphs.
+	     */
+	    if (ACTIVE_PSD->cleanText)
+	    {
+		XftDrawRect(xftDraw, &xftBg,
+			    xPos, yBaseline - ascent,
+			    (unsigned int) textWidth,
+			    (unsigned int)(ascent + xftFont->descent));
+	    }
+	    XftDrawString8(xftDraw, &xftFg, xftFont,
+			   xPos, yBaseline, (FcChar8 *) str, strLen);
+	    XftColorFree(dpy, visual, cmap, &xftBg);
+	    XftColorFree(dpy, visual, cmap, &xftFg);
+	    renderXft = 1;
+	}
+	XftDrawDestroy(xftDraw);
+    }
+    if (!renderXft)
+    {
+	WmDrawString(dpy, win, gc, xPos, yBaseline, str, strLen);
+    }
+#else
+    yBaseline = (int) pbox->y + pfs->ascent;
+    WmDrawString(dpy, win, gc, xPos, yBaseline, str, strLen);
+#endif
+
+    if (textWidth >= (int) pbox->width)
+    {
 	gcv.clip_x_origin = 0;		/* erase clip_mask from gc */
 	gcv.clip_y_origin = 0;
 	gcv.clip_mask = None;
-	XChangeGC (dpy, gc, 
+	XChangeGC (dpy, gc,
 		   GCClipXOrigin | GCClipYOrigin | GCClipMask, &gcv);
     }
 } /* END OF FUNCTION DrawStringInBox */
