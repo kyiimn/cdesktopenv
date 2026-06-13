@@ -46,6 +46,18 @@
 #include <setjmp.h>
 #include <string.h>
 #include <ctype.h>
+
+/*
+ * Motif's <Xm/Xm.h> (included below) unconditionally #define USE_XFT 1.
+ * Cancel it so configure's -DUSE_XFT (or its absence) is authoritative
+ * for this translation unit. The save/undef/restore pattern below
+ * mirrors the rest of CDE.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
 #include <Xm/Xm.h>
 #include <Xm/Protocols.h>
 #include <Dt/Service.h>
@@ -72,6 +84,18 @@
 #include "msgs.h"
 #include "xmcmds.h"
 #include <locale.h>
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 
 static void PendingDestroy( 
@@ -2437,12 +2461,16 @@ do_XTextWidth(
         int argc,
         char *argv[] )
 {
+#ifdef USE_XFT
+   XftFont *fn;
+#else
    XFontStruct *fn;
+#endif
    char *s;
    char buf[128];
    char * errmsg;
 
-   if (argc != 4) 
+   if (argc != 4)
    {
       errmsg = strdup(GETMESSAGE(
                       "Usage: XTextWidth variable fontName string"));
@@ -2459,7 +2487,16 @@ do_XTextWidth(
       return(1);
    }
    s = argv[3];
+#ifdef USE_XFT
+   {
+      XGlyphInfo extents;
+      XftTextExtents8(XtDisplay(Toplevel), fn, (FcChar8 *) s,
+                      (int) strlen(s), &extents);
+      sprintf(buf, "%ld", (long) extents.xOff);
+   }
+#else
    sprintf(buf, "%ld", (long)XTextWidth(fn, s, strlen(s)));
+#endif
    alt_env_set_var(argv[1], buf);
    return(0);
 }
@@ -2493,6 +2530,13 @@ invokeXDrawFunction(
    int returnVal = 0;
    Boolean unknownOption;
    Boolean userSpecifiedGC = False;
+#ifdef USE_XFT
+   XftFont *xftFont = NULL;
+   XftColor xftFg, xftBg;
+   Visual *xftVisual = NULL;
+   Colormap xftCmap = 0;
+   XGCValues gcvXft;
+#endif
    char * errmsg;
 
    if (argc < 3)
@@ -2690,21 +2734,33 @@ invokeXDrawFunction(
          if (cvtcolor(argv[4], &pix) == SUCCESS)
             XSetBackground(display, gc, pix);
       } 
-      else if (strcmp(argv[3], "-font") == 0) 
+      else if (strcmp(argv[3], "-font") == 0)
       {
          Font fn;
 
          if (cvtfont(display, argv[4], &fn) == SUCCESS)
+         {
+#ifndef USE_XFT
             XSetFont(display, gc, fn);
+#else
+            /* Resolve XftFont by font name; XSetFont is a no-op under Xft. */
+            XftFont *xf = XftFontOpenName(display,
+                                          DefaultScreen(display),
+                                          argv[4]);
+            if (xf != NULL)
+               xftFont = xf;
+            (void) fn;
+#endif
+         }
          else
          {
             errmsg = strdup(GetSharedMsg(DT_BAD_FONT));
-            printerrf(functionName, errmsg, argv[4], NULL, NULL, NULL, 
+            printerrf(functionName, errmsg, argv[4], NULL, NULL, NULL,
                       NULL, NULL, NULL, NULL);
             free(errmsg);
             returnVal = 1;
          }
-      } 
+      }
       else if (strcmp(argv[3], "-line_width") == 0) 
       {
          XGCValues v;
@@ -2889,15 +2945,76 @@ invokeXDrawFunction(
 
          if (text)
          {
+#ifdef USE_XFT
+            /*
+             * Guardrail G8: "image string" semantics require the
+             * background rectangle to be filled BEFORE the foreground
+             * glyphs. We lazily create the XftDraw/colors here, then
+             * tear them down after each string so per-call cost stays
+             * bounded (mirrors WmGraphics.c).
+             */
+            if (xftFont != NULL)
+            {
+               size_t slen = strlen(argv[i]);
+               XGlyphInfo ext;
+               int ascent = xftFont->ascent;
+               int textW;
+               XftDraw *xftDraw = NULL;
+
+               xftVisual = DefaultVisual(display, DefaultScreen(display));
+               xftCmap   = DefaultColormap(display, DefaultScreen(display));
+               xftDraw   = XftDrawCreate(display, drawable,
+                                         xftVisual, xftCmap);
+               if (xftDraw != NULL &&
+                   XGetGCValues(display, gc,
+                                GCForeground | GCBackground, &gcvXft) != 0 &&
+                   XftColorAllocPixel(display, xftVisual, xftCmap,
+                                      gcvXft.foreground, &xftFg))
+               {
+                  if (function == DRAW_IMAGE_STRING)
+                  {
+                     if (XftColorAllocPixel(display, xftVisual, xftCmap,
+                                            gcvXft.background, &xftBg))
+                     {
+                        XftTextExtents8(display, xftFont,
+                                        (FcChar8 *) argv[i],
+                                        (int) slen, &ext);
+                        textW = ext.xOff;
+                        XftDrawRect(xftDraw, &xftBg,
+                                    p[0],
+                                    p[1] - ascent,
+                                    (unsigned int) textW,
+                                    (unsigned int)(ascent +
+                                                   xftFont->descent));
+                        XftColorFree(display, xftVisual, xftCmap, &xftBg);
+                     }
+                  }
+                  XftDrawString8(xftDraw, &xftFg, xftFont,
+                                 p[0], p[1],
+                                 (FcChar8 *) argv[i], (int) slen);
+                  XftColorFree(display, xftVisual, xftCmap, &xftFg);
+                  XftDrawDestroy(xftDraw);
+               }
+               else if (xftDraw != NULL)
+               {
+                  XftDrawDestroy(xftDraw);
+               }
+            }
+            else
+            {
+#endif
             if(function == DRAW_IMAGE_STRING) {
-               XDrawImageString(display, drawable, gc, 
+               XDrawImageString(display, drawable, gc,
                     p[0], p[1], argv[i], strlen(argv[i]));
             } else if(function == DRAW_STRING) {
-               XDrawString(display, drawable, gc, 
+               XDrawString(display, drawable, gc,
                     p[0], p[1], argv[i], strlen(argv[i]));
             } else {
                // TODO Some error check
             }
+#ifdef USE_XFT
+            }
+#endif
             argc--;
             argv++;
          } 
@@ -2943,7 +3060,12 @@ invokeXDrawFunction(
    if ((gc != Standard_GC) && !userSpecifiedGC)
       XFreeGC(display, gc);
 
-   if (argc != 0) 
+#ifdef USE_XFT
+   if (xftFont != NULL)
+      XftFontClose(display, xftFont);
+#endif
+
+   if (argc != 0)
    {
       errmsg = strdup(GETMESSAGE(
                   "There were left over points which were ignored"));

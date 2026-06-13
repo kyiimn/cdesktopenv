@@ -45,6 +45,18 @@
 #include <setjmp.h>
 #include <string.h>
 #include <ctype.h>
+
+/*
+ * Motif's <Xm/Xm.h> (included below) unconditionally #define USE_XFT 1.
+ * Cancel it so configure's -DUSE_XFT (or its absence) is authoritative
+ * for this translation unit. The save/undef/restore pattern below
+ * mirrors the rest of CDE.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
 #include <Xm/Xm.h>
 #include <Xm/Protocols.h>
 #include "hash.h"
@@ -106,6 +118,17 @@
 #include <Dt/HelpQuickD.h>
 #include <Dt/Print.h>
 #include <Dt/PrintDlgMgrP.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#include "name.h"
 
 
 

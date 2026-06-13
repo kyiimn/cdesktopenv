@@ -30,13 +30,24 @@
 /*	The copyright notice above does not evidence any        */
 /*	actual or intended publication of such source code.     */
 
-#include	"name.h" 
-#include	"shell.h" 
+#include	"name.h"
+#include	"shell.h"
 #undef access
 #include <X11/Xauth.h>
 #include <X11/Intrinsic.h>
 #include <X11/Shell.h>
 #include <X11/StringDefs.h>
+
+/*
+ * Motif's <Xm/Xm.h> (transitively included by every <Xm/*.h> below)
+ * unconditionally #define USE_XFT 1. Cancel it so configure's -DUSE_XFT
+ * (or its absence) is authoritative for this translation unit. The
+ * save/undef/restore pattern below mirrors the rest of CDE.
+ */
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
 
 #include <Xm/ArrowB.h>
 #include <Xm/ArrowBG.h>
@@ -78,6 +89,15 @@
 #include <Dt/HelpDialog.h>
 #include <Dt/HelpQuickD.h>
 #include <Dt/Print.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 
 #include "dtksh.h"
 
