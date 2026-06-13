@@ -49,6 +49,10 @@
 #include <X11/keysym.h>
 #include <X11/XKBlib.h>
 #include <X11/Xatom.h>
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+#undef USE_XFT
 #include <Xm/XmP.h>
 #include <Xm/Xm.h>
 #include <Xm/DrawingA.h>
@@ -89,7 +93,16 @@ extern XmWidgetExtData _XmGetWidgetExtData(
 #include <X11/Shell.h>
 #include <X11/Xatom.h>
 #include <Xm/Protocols.h>
+#undef USE_XFT
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include <X11/keysymdef.h>
+
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 #include <Dt/Session.h>
 #include <Dt/Dt.h>
