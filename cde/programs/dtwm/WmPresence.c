@@ -29,6 +29,18 @@
  * Included Files:
  */
 
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via WmGlobal.h
+ * and the direct Xm.h include below), which clobbers configure's
+ * -DUSE_XFT. Capture the configure-driven value first, then restore
+ * it after the Motif includes so the Xft path remains gated by
+ * configure's flag, not by Motif's auto-define.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 #include "WmResNames.h"
 #include "WmHelp.h"
@@ -50,6 +62,20 @@
 #include <errno.h>
 #include <signal.h>
 #include <stdio.h>
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
+/* Xft types for XmFONT_IS_XFT in the font metrics extraction */
+#ifdef USE_XFT
+#include <X11/Xft.h>
+#endif
 
 /*
  * Function Declarations:
@@ -1219,6 +1245,12 @@ wspCharWidth(
 		pExtents = XExtentsOfFontSet ((XFontSet) pFont);
 		dTmpWidth = pExtents->max_logical_extent.width;
 		break;
+
+#ifdef USE_XFT
+	    case XmFONT_IS_XFT:
+		dTmpWidth = (Dimension)((XftFont *)pFont)->max_advance_width;
+		break;
+#endif
 
 	    default:
 		dTmpWidth = 0;
