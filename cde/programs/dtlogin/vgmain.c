@@ -65,7 +65,11 @@
 #include	<locale.h>
 #include	<netdb.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include	<Xm/Xm.h>
+#undef USE_XFT
 #include	<X11/Xfuncs.h>
 #include	<X11/Shell.h>
 #include        <X11/cursorfont.h>
@@ -88,6 +92,14 @@
 #include	"vg.h"
 #include	"vgmsg.h"
 #include 	<Dt/MenuButton.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include	<fontconfig/fontconfig.h>
+#endif
 
 
 #ifdef USE_XINERAMA
@@ -362,6 +374,11 @@ main( int argc, char **argv )
 #endif /* VG_TRACE */
 
     setlocale(LC_ALL, "");
+
+#ifdef USE_XFT
+    FcInit();
+#endif
+
     XtSetLanguageProc( NULL, NULL, NULL );
     langenv = getenv("LANG");
     

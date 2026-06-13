@@ -60,6 +60,9 @@
 #include	<sys/signal.h>
 #include	<sys/param.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
 #include	<Xm/Xm.h>
 #include	<Xm/MessageB.h>
 #include	<Xm/TextF.h>
@@ -68,6 +71,10 @@
 #include	<Xm/PushBG.h>
 #include	<Xm/ToggleBG.h>
 #include	<Xm/RowColumn.h>
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
 #include        <X11/Xlib.h>
 #include    <Dt/IconFile.h>
 #include    <Dt/Icon.h>
