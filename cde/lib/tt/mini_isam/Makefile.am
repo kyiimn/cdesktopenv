@@ -21,3 +21,5 @@ libisam_a_SOURCES = isaddindex.c isamaddindex.c isopen.c isamopen.c \
              isbtree3.c isindfreel.c isindexconv.c isbsearch.c isadd1key.c \
              iskeyconv.c isversion.c isrepair.c iswrrec.c isrename.c \
 	     isindexinfo.c isgarbage.c iscurpos.c
+
+noinst_HEADERS = isam.h isam_impl.h isam_prototypes.h
