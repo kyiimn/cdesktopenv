@@ -65,3 +65,23 @@ dtfile_error: dtfile_error.cpp
 dterror.ds: dterror.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(SCRIPTFLAGS) $<  > $@
+
+EXTRA_DIST = dtfile.config.cpp dtfile_error.cpp dterror.src
+
+noinst_HEADERS = ChangeDir.h \
+	Common.h \
+	Desktop.h \
+	DtSvcInternal.h \
+	Encaps.h \
+	FileMgr.h \
+	Filter.h \
+	Find.h \
+	Help.h \
+	IconicPath.h \
+	IconicPathP.h \
+	Main.h \
+	ModAttr.h \
+	MultiView.h \
+	Prefs.h \
+	SharedMsgs.h \
+	SharedProcs.h

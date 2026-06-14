@@ -1,5 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = 0010.dtpaths.src \
+	0030.dttmpdir.src
+
 SUBDIRS = libCliSrv dtsp dtappg
 
 BUILT_SOURCES = 0010.dtpaths 0030.dttmpdir

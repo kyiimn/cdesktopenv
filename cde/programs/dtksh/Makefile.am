@@ -85,3 +85,15 @@ clean-local:
 
 DtFuncs.dtsh:
 	$(CP) DtFuncs.sh DtFuncs.dtsh
+
+noinst_HEADERS = XtCvtrs.h \
+	dtkcmds.h \
+	dtkcvt.h \
+	dtksh.h \
+	extra.h \
+	msgs.h \
+	widget.h \
+	xmcmds.h \
+	xmcvt.h \
+	xmksh.h \
+	xmwidgets.h

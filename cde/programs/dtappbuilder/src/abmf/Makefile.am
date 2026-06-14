@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtcodegen.msg
+
 ABINCLUDES = ../include
 
 EXTRA_DEFINES =  -D_POSIX_SOURCE=1
@@ -62,3 +64,31 @@ dtcodegen_SOURCES = abmf.c                  args.c \
 
 dtcodegen.cat:: $(SOURCES.msg)
 	$(GENCAT) dtcodegen.cat $(SOURCES.msg)
+
+noinst_HEADERS = abmfP.h \
+	argsP.h \
+	cdefsP.h \
+	connectP.h \
+	create_declsP.h \
+	instancesP.h \
+	lib_func_stringsP.h \
+	make_fileP.h \
+	merge_cP.h \
+	motifdefsP.h \
+	msg_cvt.h \
+	msg_file.h \
+	msg_fileP.h \
+	obj_namesP.h \
+	parse_cP.h \
+	proj_c_fileP.h \
+	proj_header_fileP.h \
+	resource_fileP.h \
+	stubs_c_fileP.h \
+	template.h \
+	ui_c_fileP.h \
+	ui_header_fileP.h \
+	utilsP.h \
+	utils_c_fileP.h \
+	utils_header_fileP.h \
+	write_cP.h \
+	write_codeP.h

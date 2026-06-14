@@ -96,3 +96,13 @@ dtchooser_LDADD += -lgen -lresolv -lbsm -lcmd
 dtlogin_SOURCES += solaris.c
 endif
 
+noinst_HEADERS = Wrap.h \
+	dm.h \
+	pam_svc.h \
+	solaris.h \
+	sysauth.h \
+	vg.h \
+	vglogo.h \
+	vgmsg.h \
+	vgproto.h \
+	xdm_msg.h

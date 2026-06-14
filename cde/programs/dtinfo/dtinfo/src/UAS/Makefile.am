@@ -24,3 +24,8 @@ UAS.msg: $(UAS_MSGS)
 	cat $(UAS_MSGS) > $@
 
 CLEANFILES = UAS.msg
+
+noinst_HEADERS = UAS.h
+
+EXTRA_DIST = Test/StringPref.hh \
+	Test/UserPreference.hh

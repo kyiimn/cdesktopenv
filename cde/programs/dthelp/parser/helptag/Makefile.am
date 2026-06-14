@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = helptag.cpp
+
 bin_SCRIPTS = dthelptag
 
 dthelptag: helptag.cpp

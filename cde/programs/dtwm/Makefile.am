@@ -1,5 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Dtwm.defs.src \
+	sys.dtwmrc.src
+
 bin_PROGRAMS = dtwm dtfplist
 
 configdir = $(CDE_INSTALLATION_TOP)/config/C
@@ -59,3 +62,59 @@ sys.dtwmrc: sys.dtwmrc.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(SCRIPTFLAGS) $< > $@
 
+noinst_HEADERS = Button.h \
+	ButtonP.h \
+	Clock.h \
+	ClockP.h \
+	DataBaseLoad.h \
+	DtSvcInternal.h \
+	PanelS.h \
+	PanelSP.h \
+	Parse.h \
+	PopupMenu.h \
+	UI.h \
+	WmBackdrop.h \
+	WmCDInfo.h \
+	WmCDecor.h \
+	WmCEvent.h \
+	WmCPlace.h \
+	WmColormap.h \
+	WmError.h \
+	WmEvent.h \
+	WmEwmh.h \
+	WmFeedback.h \
+	WmFunction.h \
+	WmGlobal.h \
+	WmGraphics.h \
+	WmHelp.h \
+	WmIBitmap.h \
+	WmICCC.h \
+	WmIDecor.h \
+	WmIPC.h \
+	WmIPlace.h \
+	WmIconBox.h \
+	WmImage.h \
+	WmInitWs.h \
+	WmInstantTitle.h \
+	WmKeyFocus.h \
+	WmManage.h \
+	WmMenu.h \
+	WmMultiHead.h \
+	WmOL.h \
+	WmPanelP.h \
+	WmParse.h \
+	WmParseP.h \
+	WmPresence.h \
+	WmProperty.h \
+	WmProtocol.h \
+	WmResCvt.h \
+	WmResNames.h \
+	WmResParse.h \
+	WmResource.h \
+	WmSignal.h \
+	WmWinConf.h \
+	WmWinInfo.h \
+	WmWinList.h \
+	WmWinState.h \
+	WmWrkspace.h \
+	WmXSMP.h

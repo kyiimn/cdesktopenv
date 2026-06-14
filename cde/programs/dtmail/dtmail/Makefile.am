@@ -48,3 +48,50 @@ dtmail_SOURCES = AliasListUiItem.C               AlternatesListUiItem.C \
 # some systems
 install-exec-hook:
 	-(chgrp mail $(DESTDIR)$(bindir)/dtmail && chmod 2755 $(DESTDIR)$(bindir)/dtmail)
+
+noinst_HEADERS = AttachArea.h \
+	AttachCmds.h \
+	Attachment.h \
+	Dialog.h \
+	DialogShell.h \
+	DialogWindow.h \
+	Dmx.h \
+	DmxPrintJob.h \
+	DmxPrintOptions.h \
+	DmxPrintOutput.h \
+	DmxPrintSetup.h \
+	FindDialog.h \
+	Fonts.h \
+	Icon.h \
+	IndexedOptionMenu.h \
+	MailMsg.h \
+	MailRetrievalOptions.h \
+	NoOpCmd.h \
+	Node.h \
+	PasswordDialogManager.h \
+	RoamApp.h \
+	RoamCmds.h \
+	RoamMenuWindow.h \
+	SendMsgDialog.h \
+	ViewMsgDialog.h \
+	XmStrCollector.h \
+	XmTextEditor.h \
+	XtArgCollector.h \
+	dtb_utils.h \
+	options_ui.h \
+	ComposeCmds.hh \
+	DtEditor.hh \
+	DtMailDialogCallbackData.hh \
+	DtMailEditor.hh \
+	DtMailGenDialog.hh \
+	DtMailHelp.hh \
+	DtMailWDM.hh \
+	Editor.hh \
+	MailSession.hh \
+	MsgHndArray.hh \
+	MsgScrollingList.hh \
+	Notifier.hh \
+	RoamInterruptibleCmd.hh \
+	Sort.hh \
+	SortCmd.hh \
+	Undelete.hh

@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = TermLineData.data
+
 CLEANFILES = TermLineData.c
 
 noinst_LTLIBRARIES = libTerm.la
@@ -25,3 +27,16 @@ libTerm_la_SOURCES = \
         TermParseTable.c \
         TermVersion.c
 
+noinst_HEADERS = TermAction.h \
+	TermBuffer.h \
+	TermBufferP.h \
+	TermColor.h \
+	TermData.h \
+	TermEnhance.h \
+	TermFunction.h \
+	TermFunctionKey.h \
+	TermFunctionKeyP.h \
+	TermLineData.h \
+	TermParseTable.h \
+	TermParseTableP.h \
+	TermSendEsc.h

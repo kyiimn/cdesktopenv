@@ -21,3 +21,12 @@ CLEANFILES = $(BUILT_SOURCES)
 
 MMDB.msg:
 	cat $(MMDB_MSGS) > $@
+
+noinst_HEADERS = MMDB.hh \
+	MMDB_BookCase.hh \
+	MMDB_Common.hh \
+	MMDB_EmbeddedObject.hh \
+	MMDB_Factory.hh \
+	MMDB_Library.hh \
+	MMDB_Section.hh \
+	MMDB_StyleSheet.hh

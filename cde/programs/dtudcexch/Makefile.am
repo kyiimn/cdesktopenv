@@ -20,3 +20,5 @@ endif
 
 dtudcexch_SOURCES = udcexc.c udcexp.c udcimp.c getbdffn.c excutil.c \
                     selectx.c exportbdf.c importbdf.c
+
+noinst_HEADERS = excutil.h

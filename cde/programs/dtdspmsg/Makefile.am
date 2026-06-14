@@ -18,3 +18,4 @@ if SOLARIS
 dtdspmsg_LDADD += -lgen
 endif
 
+noinst_HEADERS = msgfac_msg.h

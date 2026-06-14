@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = treeres.src
+
 noinst_PROGRAMS = dfiles pmaker msgsets
 
 noinst_SCRIPTS = treeres

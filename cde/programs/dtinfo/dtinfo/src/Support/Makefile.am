@@ -14,3 +14,13 @@ libSupport_a_SOURCES = ../Prelude.h $(Support_SRCS)
 
 RANLIB = echo
 libSupport_a_AR = $(LD) -r -o
+
+noinst_HEADERS = Support.h \
+	InputNotifier.hh \
+	List_base.hh \
+	Pointer.hh \
+	Receiver.hh \
+	Sender.hh \
+	Stack.hh \
+	UtilityFunctions.hh \
+	xList.hh

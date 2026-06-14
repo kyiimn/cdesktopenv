@@ -1,3 +1,5 @@
+
+EXTRA_DIST = dtspcdenv.src
 MAITAINERCLEANFILES = Makefile.in
 
 bin_PROGRAMS = dtspcd
@@ -32,3 +34,4 @@ dtspcdenv: dtspcdenv.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(LOCAL_CPP_DEFINES) $< > $@
 
+noinst_HEADERS = spcd_event.h

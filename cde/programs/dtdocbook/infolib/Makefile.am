@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = OL_DataExpr.yy ContentType.ll ReplaceIdIdref.ll RemoteId.ll gr_type.ll
+
 include ../dtdocbook.am
 
 infolibdir = $(dtdocbooklibexecdir)/infolib
@@ -157,3 +159,51 @@ RemoteId.C: RemoteId.ll
 
 gr_type.C: gr_type.ll
 	$(LEX) $(AM_LFLAGS) -P graphics_task -o $@ $<
+
+noinst_HEADERS = AttributeData.h \
+	AttributeList.h \
+	AttributeRec.h \
+	AttributeStore.h \
+	AusText.h \
+	AusTextStorage.h \
+	BTCollectable.h \
+	BaseDataCollect.h \
+	BookCaseDB.h \
+	BookTasks.h \
+	ConcatTask.h \
+	Content.h \
+	ContentRec.h \
+	ContentType.h \
+	DataBase.h \
+	DataRepository.h \
+	DataTask.h \
+	Dispatch.h \
+	EntityList.h \
+	EntityScope.h \
+	ExprList.h \
+	Expression.h \
+	FirstOf.h \
+	FlexBuffer.h \
+	GenericId.h \
+	GraphicsTask.h \
+	Handler.h \
+	LcfTask.h \
+	Literal.h \
+	NodeData.h \
+	NodeTask.h \
+	OLAF.h \
+	OL_Data.h \
+	OL_DataExpr.tab.h \
+	SGMLDefn.h \
+	SGMLName.h \
+	SearchEng.h \
+	SearchPath.h \
+	SearchStorage.h \
+	Stack.h \
+	StringList.h \
+	StyleTask.h \
+	StyleValidate.h \
+	TOCTask.h \
+	TableTask.h \
+	Task.h \
+	Token.h

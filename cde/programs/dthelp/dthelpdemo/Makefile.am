@@ -8,3 +8,8 @@ dthelpdemo_CPPFLAGS = -DCDE_INSTALLATION_TOP=\"$(CDE_INSTALLATION_TOP)\" \
 dthelpdemo_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
 
 dthelpdemo_SOURCES = Main.c HourGlass.c HelpCache.c
+
+noinst_HEADERS = HelpCacheI.h \
+	HelpEntry.h \
+	HourGlassI.h \
+	Main.h

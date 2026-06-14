@@ -42,3 +42,12 @@ libABobj_a_SOURCES = obj.c \
 #test_notify_LDADD = ../libAButil/libAButil.a libABobj.a $(EXTRALIBS)
 
 #test_notify_SOURCES = test_notify.c
+
+noinst_HEADERS = gil.h \
+	objP.h \
+	obj_motifdefs.h \
+	obj_names_listP.h \
+	obj_notifyP.h \
+	obj_utils.h \
+	template.h \
+	travP.h

@@ -51,3 +51,44 @@ dtcm_editor_SOURCES = datefield.c     deskset.c       dssw.c \
 
 install-exec-hook:
 	$(INSTALL) -m 0755 -d $(DESTDIR)$(localstatedir)/spool/calendar
+
+noinst_HEADERS = MonthPanel.h \
+	MonthPanelP.h \
+	RFCMIME.h \
+	alarm.h \
+	blist.h \
+	browser.h \
+	calendar.h \
+	cm_i18n.h \
+	cmtt.h \
+	common.h \
+	datefield.h \
+	dayglance.h \
+	deskset.h \
+	dnd.h \
+	dssw.h \
+	editor.h \
+	fallback.h \
+	find.h \
+	format.h \
+	gettext.h \
+	goto.h \
+	group_editor.h \
+	help.h \
+	md5.h \
+	md5global.h \
+	misc.h \
+	monthglance.h \
+	print.h \
+	props_pu.h \
+	reminders.h \
+	revision.h \
+	rfp.h \
+	select.h \
+	session.h \
+	tempbr.h \
+	timezone.h \
+	todo.h \
+	weekglance.h \
+	x_graphics.h \
+	yearglance.h

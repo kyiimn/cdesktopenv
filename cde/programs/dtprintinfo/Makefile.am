@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtprintinfo.msg.src
+
 bin_PROGRAMS = dtprintinfo
 
 AM_CPPFLAGS = -I./UI -I./libUI -I./util -I./libUI/MotifUI -I./objects	\
@@ -74,3 +76,6 @@ dtprintinfo_cat.h: dtprintinfo.msg.src
 	$(RM) dtprintinfo_cat.h
 	$(AWK) -f msg.awk dtprintinfo.msg.src > dtprintinfo_cat.h
 
+noinst_HEADERS = dtprintinfo_cat.h \
+	dtprintinfo_msg.h \
+	dtprintinfomsg.h

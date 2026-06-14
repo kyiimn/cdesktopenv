@@ -34,3 +34,5 @@ libraima_la_SOURCES = alloc.c     cmtype.c   connect.c \
 		      recwrite.c  renfile.c  rwcurr.c    setdb.c \
 		      setmm.c     setmo.c     setmr.c    setom.c     setoo.c \
 		      setor.c     setrm.c     setro.c    startup.c
+
+noinst_HEADERS = dbswab.h

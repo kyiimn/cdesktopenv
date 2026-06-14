@@ -14,3 +14,6 @@ libOliasSearch_a_SOURCES = ../Prelude.h $(OliasSearch_SRCS)
 
 RANLIB = echo
 libOliasSearch_a_AR = $(LD) -r -o
+
+noinst_HEADERS = OliasSearch.h \
+	ResultID.hh

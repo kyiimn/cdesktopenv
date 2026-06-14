@@ -1,3 +1,7 @@
+
+EXTRA_DIST = Dtscreen.src \
+	lifeicon.bit \
+	xlogo.bit
 MAITAINERCLEANFILES = Makefile.in
 
 bin_PROGRAMS = dtscreen
@@ -20,3 +24,4 @@ Dtscreen: Dtscreen.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=#  $< > $@
 
+noinst_HEADERS = dtscreen.h

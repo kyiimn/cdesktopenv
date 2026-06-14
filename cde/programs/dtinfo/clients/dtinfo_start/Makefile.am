@@ -12,3 +12,5 @@ dtinfo_start.opnums: $(top_builddir)/programs/tttypes/dtinfo_start.opnums
 	$(LN_S) $? $@
 
 dtinfo_start_SOURCES = dtinfo_start.c
+
+noinst_HEADERS = dtinfo_start.h

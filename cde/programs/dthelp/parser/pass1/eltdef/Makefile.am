@@ -52,3 +52,13 @@ CDONE:  $(HELPUTILSRC)/context $(HELPTAGSRC)/delim.elt context.dat
 	$(HELPUTILSRC)/context
 	touch CDONE
 
+noinst_HEADERS = context.h \
+	delim.h \
+	entity2.h \
+	estring.h \
+	globdec.h \
+	globdef.h \
+	if.h \
+	pval.h \
+	signon.h \
+	signonx.h

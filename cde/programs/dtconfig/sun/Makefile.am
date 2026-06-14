@@ -1,5 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtconfig.src \
+	dtlogin.rc.src
+
 dist_bin_SCRIPTS = dtconfig
 
 configdir = $(CDE_INSTALLATION_TOP)/config

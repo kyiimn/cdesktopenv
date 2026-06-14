@@ -45,3 +45,8 @@ CLEANFILES = UNIXbindings
 UNIXbindings: UNIXbindings.cpp
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(AM_CPPFLAGS) $< > $@
+
+EXTRA_DIST = UNIXbindings.cpp
+
+noinst_HEADERS = DtSvcInternal.h \
+	DtWidgetI.h

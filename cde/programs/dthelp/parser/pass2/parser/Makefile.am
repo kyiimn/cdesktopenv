@@ -48,3 +48,5 @@ CDONE:  $(SDLUTILSRC)/context $(HTAG2SRC)/delim.par context.dat
 	$(SDLUTILSRC)/context
 	touch CDONE
 
+noinst_HEADERS = context.h \
+	delim.h

@@ -13,3 +13,17 @@ libWidgets_a_SOURCES = Pixmap.c Tree.c Panner.c Simple.c Porthole.c	\
 RANLIB = echo
 libWidgets_a_AR = $(LD) -r -o
 
+noinst_HEADERS = Pixmap.h \
+	PixmapP.h \
+	Restraint.h \
+	RestraintP.h \
+	TabButton.h \
+	TabButtonP.h \
+	WPixmap.h \
+	WRestraint.h \
+	WXawPanner.h \
+	WXawPorthole.h \
+	WXawSimple.h \
+	WXawTree.h \
+	WXmOpButton.h \
+	WXyzTab.h

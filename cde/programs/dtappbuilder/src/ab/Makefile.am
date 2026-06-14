@@ -1,5 +1,69 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Dtbuilder.src \
+	about_box.bil \
+	appfw.bil \
+	attch_ed.bil \
+	brws.bil \
+	button.bil \
+	cgen_env.bil \
+	cgen_props.bil \
+	cgen_win.bil \
+	choice.bil \
+	color_chooser.bil \
+	combobox.bil \
+	conn.bil \
+	cpanel.bil \
+	custdlg.bil \
+	dnd_ed.bil \
+	drawp.bil \
+	dtbuilder.bip \
+	dtbuilder.c.src \
+	dtbuilder.msg.src \
+	fchooser.bil \
+	group.bil \
+	help_ed.bil \
+	label.bil \
+	layout.bil \
+	list.bil \
+	mainwin.bil \
+	menu.bil \
+	menubar.bil \
+	message_ed.bil \
+	palette.bil \
+	panedwin_ed.bil \
+	proj.bil \
+	revolv.bil \
+	scale.bil \
+	sep.bil \
+	spinbox.bil \
+	termp.bil \
+	textf.bil \
+	textp.bil \
+	tooltalk.bil \
+	bitmaps/align_bottom.xbm \
+	bitmaps/align_grid.xbm \
+	bitmaps/align_hcenter.xbm \
+	bitmaps/align_labels.xbm \
+	bitmaps/align_left.xbm \
+	bitmaps/align_right.xbm \
+	bitmaps/align_top.xbm \
+	bitmaps/align_vcenter.xbm \
+	bitmaps/copy_cursor.xbm \
+	bitmaps/distribute_hcenter.xbm \
+	bitmaps/distribute_horizontal.xbm \
+	bitmaps/distribute_vcenter.xbm \
+	bitmaps/distribute_vertical.xbm \
+	bitmaps/ggp_as_is.xbm \
+	bitmaps/ggp_col.xbm \
+	bitmaps/ggp_row.xbm \
+	bitmaps/ggp_rowcol.xbm \
+	bitmaps/left_down_link.xbm \
+	bitmaps/left_up_link.xbm \
+	bitmaps/move_cursor.xbm \
+	bitmaps/right_down_link.xbm \
+	bitmaps/right_up_link.xbm
+
 .NOTPARALLEL:
 
 appdefaultsdir = $(CDE_INSTALLATION_TOP)/app-defaults/C
@@ -417,3 +481,46 @@ textf_ui.c textf_ui.h textf_stubs.c: $(PROJFILE).bip textf.bil
 textp_ui.c textp_ui.h textp_stubs.c: $(PROJFILE).bip textp.bil
 	$(DTCODEGEN) -changed -merge -p $(PROJFILE).bip textp.bil
 endif
+
+noinst_HEADERS = abobj_clipb.h \
+	about_box_ui.h \
+	appfw_ui.h \
+	attch_ed_ui.h \
+	brws_ui.h \
+	button_ui.h \
+	cgen_env_ui.h \
+	cgen_props_ui.h \
+	cgen_win_ui.h \
+	choice_ui.h \
+	color_chooser_ui.h \
+	combobox_ui.h \
+	conn_ui.h \
+	cpanel_ui.h \
+	custdlg_ui.h \
+	dnd_ed_ui.h \
+	drawp_ui.h \
+	dt_envcontrol.h \
+	dtb_utils.h \
+	dtbuilder.h \
+	fchooser_ui.h \
+	group_ui.h \
+	grp.h \
+	help_ed_ui.h \
+	label_ui.h \
+	list_ui.h \
+	mainwin_ui.h \
+	menu_ui.h \
+	menubar_ui.h \
+	message_ed_ui.h \
+	palette.h \
+	palette_ui.h \
+	panedwin_ed_ui.h \
+	proj_ui.h \
+	revolv_ui.h \
+	scale_ui.h \
+	sep_ui.h \
+	spinbox_ui.h \
+	template.h \
+	termp_ui.h \
+	textf_ui.h \
+	textp_ui.h

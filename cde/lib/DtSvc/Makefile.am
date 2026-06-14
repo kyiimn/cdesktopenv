@@ -177,3 +177,11 @@ if HAS_PAM_LIBRARY
 libDtSvc_la_SOURCES += DtUtil2/SvcPam.c
 libDtSvc_la_LIBADD = $(PAMLIB)
 endif
+
+EXTRA_DIST = include/DtSvcLock.h \
+	include/codelibs/dynarray.h \
+	include/codelibs/exception.h \
+	include/codelibs/mbstring.h \
+	include/codelibs/nl_hack.h \
+	include/codelibs/privbuf.h \
+	include/codelibs/stringx.h

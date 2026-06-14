@@ -16,3 +16,9 @@ libRFC_a_SOURCES = AliasExpand.C           MIMEBodyPart.C \
 		    RFCMailValues.C         RFCMessage.C \
 		    RFCTransport.C          SunV3.C \
 		    V3BodyPart.C
+
+noinst_HEADERS = AliasExpand.hh \
+	RFCFormat.hh \
+	RFCImpl.hh \
+	RFCMIME.hh \
+	SunV3.hh

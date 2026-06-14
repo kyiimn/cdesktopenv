@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = libAButil.msg
+
 ABINCLUDES = ../include
 
 EXTRA_DEFINES =  -D_POSIX_SOURCE=1
@@ -32,3 +34,7 @@ libAButil_a_SOURCES = abio.c          \
 #istr_test_CFLAGS = $(EXTRA_DEFINES) -I$(ABINCLUDES)
 
 #istr_test_SOURCES = istr_test.c
+
+noinst_HEADERS = istr_hash.h \
+	template.h \
+	utilP.h

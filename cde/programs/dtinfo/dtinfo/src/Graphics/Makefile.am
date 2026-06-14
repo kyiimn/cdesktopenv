@@ -14,3 +14,6 @@ libGraphics_a_SOURCES = ../Prelude.h $(Graphics_SRCS)
 
 RANLIB = echo
 libGraphics_a_AR = $(LD) -r -o
+
+noinst_HEADERS = Graphics.h \
+	PixmapGraphic.hh

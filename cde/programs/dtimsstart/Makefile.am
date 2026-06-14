@@ -2,6 +2,8 @@ xsessiondir = $(CDE_INSTALLATION_TOP)/config/Xsession.d
 
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = 0020.dtims.src
+
 bin_PROGRAMS = dtimsstart
 
 dist_xsession_SCRIPTS = 0020.dtims
@@ -31,3 +33,7 @@ LOCAL_CPP_DEFINES = -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) \
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(LOCAL_CPP_DEFINES) $< > $@
 
+noinst_HEADERS = xims.h \
+	ximserr.h \
+	ximsfunc.h \
+	ximspath.h

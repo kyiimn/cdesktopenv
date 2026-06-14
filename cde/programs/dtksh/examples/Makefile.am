@@ -1,5 +1,24 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = CallDataTest4.src \
+	CallbackTest2.src \
+	DtCursorTest2.src \
+	DtWsTest1.src \
+	EventHandlerTest.src \
+	ListBounds1.src \
+	ListItemPos1.src \
+	PopupTest.src \
+	SelBoxResTest.src \
+	SessionTest.src \
+	TextCutBuf1.src \
+	TextDisp1.src \
+	TextFXYPos1.src \
+	TransEventTest.src \
+	TransTest1.src \
+	WorkProcTest1.src \
+	XdrawTest.src \
+	crMovesText1.src
+
 noinst_SCRIPTS = CallbackTest2 CallDataTest4 crMovesText1 DtCursorTest2 \
 		 DtWsTest1 EventHandlerTest ListBounds1 ListItemPos1 PopupTest \
 		 SelBoxResTest SessionTest TextCutBuf1 TextDisp1 TextFXYPos1 \

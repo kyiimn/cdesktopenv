@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = parser.y
+
 bin_PROGRAMS = rpc.cmsd
 
 rpc_cmsd_CFLAGS = -I../../../lib/csa $(DT_INCDIR) $(CSA_INCDIR)
@@ -34,3 +36,29 @@ parser.c parser.h: parser.y
 	$(SED) -e "s/yy/yyy/g" -e "/# line/d" y.tab.c > parser.c
 	$(SED) -e 's/yy/yyy/g' y.tab.h >  parser.h
 
+noinst_HEADERS = access.h \
+	callback.h \
+	cmsattr.h \
+	cmscalendar.h \
+	cmsconvert.h \
+	cmsentry.h \
+	cmsmatch.h \
+	data.h \
+	delete.h \
+	garbage.h \
+	insert.h \
+	lexer.h \
+	list.h \
+	log.h \
+	lookup.h \
+	parser.h \
+	reminder.h \
+	repeat.h \
+	reutil.h \
+	rpcextras.h \
+	tree.h \
+	update.h \
+	utility.h \
+	v4ops.h \
+	v5ops.h \
+	y.tab.h

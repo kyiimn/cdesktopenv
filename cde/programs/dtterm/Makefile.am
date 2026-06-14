@@ -1,5 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Dtterm.ad.src \
+	mkfallbk \
+	terminfoChecklist \
+	terminfoCreate
+
 bin_PROGRAMS = dtterm
 
 dtterm_LDADD = $(LIBTERM) $(DTCLIENTLIBS) $(XTOOLLIB) 
@@ -53,3 +58,8 @@ if !HAS_UTEMPTER_LIBRARY
 	-chmod 4755 $(DESTDIR)$(bindir)/dtterm
 endif
 	@TIC@ dtterm.ti
+
+noinst_HEADERS = DtTermLogit.h \
+	DtTermMain.h \
+	DtTermServer.h \
+	DtTermSyntax.h

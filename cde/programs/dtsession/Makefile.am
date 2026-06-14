@@ -1,5 +1,12 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Dtsession.src \
+	dtloadresources.src \
+	dtsession.msg.src \
+	sys.font.src \
+	sys.resources.src \
+	sys.session.src
+
 bin_PROGRAMS = dtsession
 
 bin_SCRIPTS = dtsession_res
@@ -134,3 +141,31 @@ if !HAS_PAM_LIBRARY
 	-chmod 4755 $(DESTDIR)$(bindir)/dtsession
 endif
 
+noinst_HEADERS = OWsync.h \
+	Sm.h \
+	SmAuth.h \
+	SmCommun.h \
+	SmConMgmt.h \
+	SmDB.h \
+	SmError.h \
+	SmGlobals.h \
+	SmHelp.h \
+	SmHftRing.h \
+	SmLock.h \
+	SmMigResources.h \
+	SmProp.h \
+	SmProperty.h \
+	SmProtocol.h \
+	SmResource.h \
+	SmRestore.h \
+	SmSave.h \
+	SmScreen.h \
+	SmUI.h \
+	SmWatch.h \
+	SmWindow.h \
+	SmXSMP.h \
+	SmXdef.h \
+	SmXrm.h \
+	Srv.h \
+	SrvFile_io.h \
+	SrvPalette.h

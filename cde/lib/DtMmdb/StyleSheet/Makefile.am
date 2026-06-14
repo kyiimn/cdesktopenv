@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = defParser.yy defToken.ll style.yy tokenStyle.ll
+
 noinst_LTLIBRARIES = libStyleSheet.la
 
 libStyleSheet_la_CXXFLAGS = -DEXPAND_TEMPLATES -DCDE_NEXT -I..
@@ -53,3 +55,30 @@ style.C: style.yy
 
 tokenStyle.C: tokenStyle.ll
 	$(LEX) $(AM_LFLAGS) -P style -o $@ $<
+
+noinst_HEADERS = Attribute.h \
+	AttributeList.h \
+	BitVector.h \
+	Const.h \
+	Debug.h \
+	DocParser.h \
+	Element.h \
+	Expression.h \
+	Feature.h \
+	FeatureDefDictionary.h \
+	FeatureValue.h \
+	ParserConst.h \
+	PathQualifier.h \
+	PathTable.h \
+	Renderer.h \
+	RendererHCV.h \
+	Resolver.h \
+	ResolverStack.h \
+	SSPath.h \
+	StyleSheet.h \
+	StyleSheetExceptions.h \
+	SymTab.h \
+	Types.h \
+	VariableTable.h \
+	defParser.tab.h \
+	style.tab.h

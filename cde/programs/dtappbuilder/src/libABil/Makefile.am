@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = libABil.msg
+
 ABINCLUDES = ../include
 
 EXTRA_DEFINES =  -D_POSIX_SOURCE=1
@@ -33,3 +35,13 @@ libABil_a_SOURCES = bil_parse.y abuil_load.c	  	  abuil_print.c \
 #        ../libAButil/libAButil.a
 
 #bil_test_SOURCES = bil_test.c
+
+noinst_HEADERS = abuil_loadP.h \
+	bilP.h \
+	bil_loadattP.h \
+	bil_parse.h \
+	gilP.h \
+	gil_loadattP.h \
+	load.h \
+	loadP.h \
+	template.h

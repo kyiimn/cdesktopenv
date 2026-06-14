@@ -12,3 +12,20 @@ dtcreate_SOURCES = main.c AddFiletype.c Confirmed.c			\
         CreateActionAppShell.h OpenFile.h ca_aux.h dtcreate.h		\
         parser.h cmncbs.h ErrorDialog.h UxXt.h cmnrtns.h		\
         FileCharacteristics.h cmnutils.h fileio.h
+
+noinst_HEADERS = AddFiletype.h \
+	Confirmed.h \
+	CreateActionAppShell.h \
+	ErrorDialog.h \
+	FileCharacteristics.h \
+	OpenFile.h \
+	UxXt.h \
+	af_aux.h \
+	ca_aux.h \
+	cmncbs.h \
+	cmnrtns.h \
+	cmnutils.h \
+	dtcreate.h \
+	fileio.h \
+	icon_selection_dialog.h \
+	parser.h

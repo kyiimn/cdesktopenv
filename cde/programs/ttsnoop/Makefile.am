@@ -1,5 +1,29 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Ttsnoop.src \
+	apiTracer.bil \
+	apiTracer_stubs.C.src \
+	argChooser.bil \
+	argChooser_stubs.C.src \
+	callbackChooser.bil \
+	callbackChooser_stubs.C.src \
+	fileChooser.bil \
+	fileChooser_stubs.C.src \
+	messageProps.bil \
+	messageProps_stubs.C.src \
+	patternProps.bil \
+	patternProps_stubs.C.src \
+	sessionChooser.bil \
+	sessionChooser_stubs.C.src \
+	stringChooser.bil \
+	stringChooser_stubs.C.src \
+	ttChooser.bil \
+	ttChooser_stubs.C.src \
+	ttsnoop.C.src \
+	ttsnoop.bil \
+	ttsnoop.bip \
+	ttsnoop_stubs.C.src
+
 appdefaultsdir = $(CDE_INSTALLATION_TOP)/app-defaults/C
 
 dist_appdefaults_DATA = Ttsnoop
@@ -175,3 +199,20 @@ ttsnoop.C ttsnoop.h dtb_utils.c dtb_utils.h: ttsnoop.bip ttsnoop.C.src
 Ttsnoop: Ttsnoop.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(LOCAL_CPP_DEFINES) $< > $@
+
+noinst_HEADERS = DtTt.h \
+	apiTracer_ui.h \
+	argChooser_ui.h \
+	callbackChooser_ui.h \
+	closeBrace.h \
+	dtb_utils.h \
+	externC.h \
+	fileChooser_ui.h \
+	messageProps_ui.h \
+	patternProps_ui.h \
+	sessionChooser_ui.h \
+	stringChooser_ui.h \
+	ttChooser_ui.h \
+	tt_c++.h \
+	ttsnoop.h \
+	ttsnoop_ui.h

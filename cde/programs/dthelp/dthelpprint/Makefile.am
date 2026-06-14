@@ -15,3 +15,5 @@ endif
 
 dthelpprint_SOURCES = Main.c Initialize.c PrintUtil.c PrintTopics.c \
 		      PrintManStrFile.c
+
+noinst_HEADERS = HelpPrintI.h

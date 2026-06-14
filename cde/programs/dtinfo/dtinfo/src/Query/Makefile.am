@@ -19,3 +19,10 @@ CLEANFILES = $(BUILT_SOURCES)
 
 Query.msg:
 	cat $(Query_MSGS) > $@
+
+noinst_HEADERS = Query.h \
+	QueryEditor.hh \
+	QueryGroup.hh \
+	QueryGroupView.hh \
+	QueryTerm.hh \
+	QueryTermView.hh

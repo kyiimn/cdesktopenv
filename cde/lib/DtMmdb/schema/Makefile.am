@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = sheet.yy token.ll
+
 noinst_LTLIBRARIES = libschema.la
 
 libschema_la_CXXFLAGS = -I..
@@ -21,3 +23,14 @@ sheet.C: sheet.yy
 
 token.C: token.ll
 	$(LEX) $(AM_LFLAGS) -P schema -o $@ $<
+
+noinst_HEADERS = agent_desc.h \
+	container_desc.h \
+	desc.h \
+	hash_desc.h \
+	index_desc.h \
+	inv_desc.h \
+	object_dict.h \
+	sheet.tab.h \
+	store_desc.h \
+	stored_object_desc.h

@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Dthello.src
+
 bin_PROGRAMS = dthello
 
 dthello_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
@@ -29,3 +31,5 @@ CLEANFILES = $(CPP_TARGETS)
 Dthello: Dthello.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=#  $< > $@
+
+noinst_HEADERS = dthello.h

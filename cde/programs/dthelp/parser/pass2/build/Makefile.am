@@ -56,3 +56,8 @@ CDONE: $(SDLUTILSRC)/context $(HTAG2SRC)/delim.bld context.dat
 	$(SDLUTILSRC)/context sparse
 	touch CDONE
 
+noinst_HEADERS = arc.h \
+	context.h \
+	delim.h \
+	dtd.h \
+	entity.h

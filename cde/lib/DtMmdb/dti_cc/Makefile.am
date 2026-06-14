@@ -17,3 +17,16 @@ libdti_cc_la_SOURCES = CC_Dlist.C \
 		       cc_vvect.C \
 		       hdictinit.C \
 		       vectinit.C
+
+noinst_HEADERS = CC_Dlist.h \
+	CC_Listbase.h \
+	CC_Slist.h \
+	CC_Stack.h \
+	CC_String.h \
+	CC_Tokenizer.h \
+	cc_exceptions.h \
+	cc_hdict.h \
+	cc_povec.h \
+	cc_pvect.h \
+	cc_vvect.h \
+	types.h

@@ -35,3 +35,5 @@ libDtSearch_la_SOURCES = apndext.c	ausdopen.c	ausexit.c \
 			 ocf.c		opendblk.c	ophuf.c \
 			 readchar.c	strupr.c	userint.c \
 			 vedelete.c	vestatis.c	vstfunct.c
+
+noinst_HEADERS = boolyac.h

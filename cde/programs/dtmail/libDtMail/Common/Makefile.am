@@ -39,3 +39,14 @@ libCommon_a_SOURCES = APOPServer.C \
 		      Threads.C \
 		      md5.C \
 		      str_utils.C
+
+noinst_HEADERS = md5.h \
+	md5global.h \
+	BigMalloc.hh \
+	DlDynamicLib.hh \
+	DynamicLib.hh \
+	ImplConfigTable.hh \
+	NotDynamic.hh \
+	Process.hh \
+	SigChldImpl.hh \
+	VirtArray.hh

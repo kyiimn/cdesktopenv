@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtsession.src
+
 if HAS_PAM_LIBRARY
 CPP_TARGET = dtsession
 dist_pam_DATA = $(CPP_TARGET)

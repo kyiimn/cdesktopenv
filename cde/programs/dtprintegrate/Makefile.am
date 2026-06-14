@@ -1,5 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtlp.src \
+	dtlpsetup.src \
+	dtprintegrate.src
+
 bin_SCRIPTS = dtprintegrate dtlp dtlpsetup
 
 LOCAL_CPP_DEFINES = -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) \

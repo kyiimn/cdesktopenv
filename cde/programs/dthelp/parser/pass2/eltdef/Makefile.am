@@ -53,3 +53,13 @@ CDONE:  $(SDLUTILSRC)/context $(HTAG2SRC)/delim.elt context.dat
 	$(SDLUTILSRC)/context
 	touch CDONE
 
+noinst_HEADERS = context.h \
+	delim.h \
+	entity2.h \
+	estring.h \
+	globdec.h \
+	globdef.h \
+	if.h \
+	pval.h \
+	signon.h \
+	signonx.h

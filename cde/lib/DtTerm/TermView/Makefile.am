@@ -13,3 +13,10 @@ libTermView_la_SOURCES = TermView.c \
 			 TermViewMenu.c \
 			 TermViewGlobalDialog.c \
 			 TermViewTerminalDialog.c
+
+noinst_HEADERS = TermView.h \
+	TermViewGlobalDialog.h \
+	TermViewHelp.h \
+	TermViewMenu.h \
+	TermViewP.h \
+	TermViewTerminalDialog.h

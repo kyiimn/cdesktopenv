@@ -2,6 +2,10 @@ csadir = $(includedir)/csa
 
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = reparser.y EUSinclude namechange1.sed namechange2.sed \
+	agent.x agent.wrapbegin agent.wrapend cm.x cmcb.x \
+	rtable2.x rtable3.x rtable4.x
+
 lib_LTLIBRARIES = libcsa.la
 
 libcsa_la_CFLAGS = -DRFC_MIME -DLINE_COUNT -DV2 -DOW_I18N \
@@ -71,3 +75,40 @@ agent.h:
 	rpcgen -h agent.x | $(SED) -f namechange1.sed | $(SED) -f namechange2.sed >> agent.h
 	cat agent.wrapend >> agent.h
 
+noinst_HEADERS = agent.h \
+	agent_p.h \
+	ansi_c.h \
+	appt4.h \
+	attr.h \
+	calendar.h \
+	cm.h \
+	cmcb.h \
+	cmsdata.h \
+	cmxdr.h \
+	connection.h \
+	convert2-4.h \
+	convert3-4.h \
+	convert4-2.h \
+	convert4-3.h \
+	convert4-5.h \
+	convert5-4.h \
+	debug.h \
+	entry.h \
+	free.h \
+	hash.h \
+	iso8601.h \
+	laccess.h \
+	lutil.h \
+	match.h \
+	misc.h \
+	nametbl.h \
+	reparser.h \
+	rerule.h \
+	rpccalls.h \
+	rtable2.h \
+	rtable3.h \
+	rtable4.h \
+	table.h \
+	updateattrs.h \
+	xtclient.h \
+	y.tab.h

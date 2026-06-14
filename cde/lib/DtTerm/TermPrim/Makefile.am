@@ -47,3 +47,40 @@ endif
 if HAVE_XFT
 libTermPrim_la_LIBADD = $(XFTLIB) $(FONTCONFIGLIB)
 endif
+
+noinst_HEADERS = TermHeader.h \
+	TermPrimAction.h \
+	TermPrimBuffer.h \
+	TermPrimBufferP.h \
+	TermPrimCursor.h \
+	TermPrimData.h \
+	TermPrimDebug.h \
+	TermPrimFunction.h \
+	TermPrimGetPty.h \
+	TermPrimI.h \
+	TermPrimLineDraw.h \
+	TermPrimLineDrawP.h \
+	TermPrimLineFont.h \
+	TermPrimLineFontP.h \
+	TermPrimMessageCatI.h \
+	TermPrimOSDepI.h \
+	TermPrimParseTable.h \
+	TermPrimParser.h \
+	TermPrimParserP.h \
+	TermPrimPendingText.h \
+	TermPrimPendingTextP.h \
+	TermPrimRender.h \
+	TermPrimRenderFont.h \
+	TermPrimRenderFontSet.h \
+	TermPrimRenderLineDraw.h \
+	TermPrimRenderP.h \
+	TermPrimRenderXft.h \
+	TermPrimRepType.h \
+	TermPrimScroll.h \
+	TermPrimSelect.h \
+	TermPrimSelectP.h \
+	TermPrimSetPty.h \
+	TermPrimSetUtmp.h \
+	TermPrimSubproc.h \
+	TermPrimUtil.h \
+	TermPrimWMProtocols.h

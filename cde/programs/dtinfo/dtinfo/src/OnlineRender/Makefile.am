@@ -20,3 +20,9 @@ CLEANFILES = $(BUILT_SOURCES)
 
 OnlineRender.msg:
 	cat $(OnlineRender_MSGS) > $@
+
+noinst_HEADERS = OnlineRender.h \
+	CanvasRenderer.hh \
+	FontCache.hh \
+	SegClientData.hh \
+	TableDefn.hh

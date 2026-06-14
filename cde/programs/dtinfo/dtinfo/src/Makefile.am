@@ -70,3 +70,9 @@ dtinfo_LDADD = $(OLIASNORMALLIBS) $(LIBSEARCH) $(MMDB_LIBS) $(WWL_LIBS) \
 	$(DTCLIENTLIBS) $(XTOOLLIB) $(LMDBLIB)
 
 dtinfo_SOURCES = main.C Support/InputNotifier.C
+
+noinst_HEADERS = Prelude.h \
+	config.h \
+	debug.h \
+	olias_font.h \
+	Registration.hh

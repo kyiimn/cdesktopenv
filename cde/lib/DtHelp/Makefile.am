@@ -54,3 +54,53 @@ libDtHelp_la_LDFLAGS = -version-info 2:1:0
 else
 libDtHelp_la_LDFLAGS = -version-info 3:0:1
 endif
+
+noinst_HEADERS = AccessCCDFI.h \
+	AccessCCDFP.h \
+	AccessSDLI.h \
+	AccessSDLP.h \
+	AsciiSpcI.h \
+	CCDFUtilI.h \
+	CanvasError.h \
+	CanvasOsI.h \
+	CleanUpI.h \
+	CvStringI.h \
+	CvtToArrayP.h \
+	DestroyI.h \
+	FileListUtilsI.h \
+	FormatCCDFI.h \
+	FormatI.h \
+	FormatManI.h \
+	FormatSDLI.h \
+	FormatUtilI.h \
+	GenUtilsP.h \
+	GlobSearchI.h \
+	GlobSearchP.h \
+	GraphicsI.h \
+	HelpAccessI.h \
+	HelpDialogI.h \
+	HelpDialogImageI.h \
+	HelpErrorP.h \
+	HelpI.h \
+	HelpQuickDI.h \
+	HelpUtilI.h \
+	HelpXlate.h \
+	HistoryI.h \
+	HyperTextI.h \
+	LayoutUtilI.h \
+	LinkMgrI.h \
+	Lock.h \
+	MessagesP.h \
+	ObsoleteP.h \
+	PathAreaI.h \
+	PrintI.h \
+	ResizeI.h \
+	SDLI.h \
+	SelectionI.h \
+	StringFuncsI.h \
+	UtilSDLI.h \
+	VirtFuncsI.h \
+	VolSelectI.h \
+	XInterfaceI.h
+
+EXTRA_DIST = jpeg/cdjpeg.h

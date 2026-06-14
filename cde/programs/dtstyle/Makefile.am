@@ -1,5 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Backdrops.src \
+	Dtstyle.src \
+	Palettes.src
+
 bin_PROGRAMS = dtstyle
 
 dtstyle_CPPFLAGS = -DCDE_CONFIGURATION_TOP=\"$(CDE_CONFIGURATION_TOP)\"	\
@@ -50,4 +54,25 @@ Palettes: Palettes.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(LOCAL_CPP_DEFINES) $< > $@
 
-
+noinst_HEADERS = Audio.h \
+	Backdrop.h \
+	ColorEdit.h \
+	ColorFile.h \
+	ColorMain.h \
+	ColorPalette.h \
+	Dtwm.h \
+	Font.h \
+	Help.h \
+	I18nEnv.h \
+	I18nMain.h \
+	I18nUtil.h \
+	Keyboard.h \
+	Main.h \
+	MainWin.h \
+	Mouse.h \
+	OWsync.h \
+	Protocol.h \
+	Resource.h \
+	SaveRestore.h \
+	Screen.h \
+	Startup.h

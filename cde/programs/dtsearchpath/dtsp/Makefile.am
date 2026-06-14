@@ -15,3 +15,6 @@ dtsearchpath_SOURCES = AppSearchPath.C DbSearchPath.C			\
 		       InfoLibSearchPath.C ManSearchPath.C Options.C	\
 		       SearchPath.C dtsearchpath.C Options.h		\
 		       SearchPath.h
+
+noinst_HEADERS = Options.h \
+	SearchPath.h

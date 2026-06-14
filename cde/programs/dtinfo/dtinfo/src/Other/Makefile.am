@@ -17,5 +17,19 @@ libOther_a_AR = $(LD) -r -o
 BUILT_SOURCES = Other.msg
 CLEANFILES = $(BUILT_SOURCES)
 
+EXTRA_DIST = detached_bw.xbm \
+	detached_bw.xpm \
+	graphic_unavailable.xbm \
+	graphic_unavailable.xpm
+
 Other.msg:
 	cat $(Other_MSGS) > $@
+
+noinst_HEADERS = Other.h \
+	vroot.h \
+	AppPrintData.hh \
+	WindowSystem.hh \
+	WindowSystemMotif.hh \
+	XmStringLocalized.hh \
+	XpmLib.hh \
+	oid_t.hh

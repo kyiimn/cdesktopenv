@@ -15,3 +15,12 @@ libDtCmP_a_SOURCES = cm_tty.c cmfns.c dtfns.c props.c resource.c	\
 # for what seems like a more recent version...
 BUILT_SOURCES = getdate.c
 CLEANFILES = $(BUILT_SOURCES)
+
+noinst_HEADERS = cm_tty.h \
+	cmfns.h \
+	dtfns.h \
+	getdate.h \
+	props.h \
+	resource.h \
+	timeops.h \
+	util.h

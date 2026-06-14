@@ -55,3 +55,8 @@ CDONE: $(HELPUTILSRC)/context $(HELPTAGSRC)/delim.bld context.dat
 	$(HELPUTILSRC)/context sparse
 	touch CDONE
 
+noinst_HEADERS = arc.h \
+	context.h \
+	delim.h \
+	dtd.h \
+	entity.h

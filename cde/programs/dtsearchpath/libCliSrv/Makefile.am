@@ -11,3 +11,8 @@ endif
 
 libCliSrv_a_SOURCES = DirIterator.C Environ.C TTFile.C UnixEnv.C	\
 	cstring.C cstring.h DirIterator.h Environ.h TTFile.h
+
+noinst_HEADERS = DirIterator.h \
+	Environ.h \
+	TTFile.h \
+	cstring.h

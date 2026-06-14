@@ -14,3 +14,10 @@ libPreferences_a_SOURCES = ../Prelude.h $(Preferences_SRCS)
 
 RANLIB = echo
 libPreferences_a_AR = $(LD) -r -o
+
+noinst_HEADERS = Preferences.h \
+	BooleanPref.hh \
+	IntegerPref.hh \
+	StringPref.hh \
+	UserPreference.hh \
+	WindowGeometryPref.hh

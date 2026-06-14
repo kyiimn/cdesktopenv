@@ -16,3 +16,7 @@ dtpad_SOURCES = dtpad.c         editCB.c        fileCB.c \
 		optionsCB.c     printJob.c      printOutput.c \
 		printSetup.c    session.c       ttMsgSupport.c \
 		ttSaveSupport.c
+
+noinst_HEADERS = dtpad.h \
+	help.h \
+	messageParam.h

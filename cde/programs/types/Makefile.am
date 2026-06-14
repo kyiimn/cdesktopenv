@@ -1,5 +1,36 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = IconBrowse.dt.src \
+	autoStart.dt.src \
+	compat.dt.src \
+	datatypes.dt.src \
+	develop.dt.src \
+	dt.dt.src \
+	dt.softinit.src \
+	dtappman.dt.src \
+	dtfile.dt.src \
+	dthelp.dt.src \
+	dthelpprint.dt.src \
+	dthelptag.dt.src \
+	dtims.dt.src \
+	dtinfo.dt.src \
+	dtpad.dt.src \
+	dtscreen.dt.src \
+	dtwm.fp.src \
+	error.ds.src \
+	hp.dt.src \
+	ibm.dt.src \
+	laserrom.dt.src \
+	miscActions.dt.src \
+	miscImages.dt.src \
+	print.dt.src \
+	printerNN.dt.src \
+	sunOW.dt.src \
+	unsupported.dt.src \
+	user-prefs.dt.src \
+	uxstd.dt.src \
+	xclients.dt.src
+
 LOCAL_CPP_DEFINES = -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) \
 	-DCDE_CONFIGURATION_TOP=$(CDE_CONFIGURATION_TOP) -DKORNSHELL=$(KSH) \
 	-DDTKORNSHELL=$(CDE_INSTALLATION_TOP)/bin/dtksh

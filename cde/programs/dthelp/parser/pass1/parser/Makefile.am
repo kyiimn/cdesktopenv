@@ -48,3 +48,5 @@ CDONE:  $(HELPUTILSRC)/context $(HELPTAGSRC)/delim.par context.dat
 	$(HELPUTILSRC)/context
 	touch CDONE
 
+noinst_HEADERS = context.h \
+	delim.h

@@ -19,4 +19,5 @@ testcgm_CPPFLAGS = $(DTINFO_DEFINES) $(DTINFO_INCLUDES)	\
 testcgm_SOURCES = testcgm.c
 testcgm_LDADD = libcgm.a $(DTCLIENTLIBS) $(XTOOLLIB)
 
-
+noinst_HEADERS = cgm.h \
+	spec.h
