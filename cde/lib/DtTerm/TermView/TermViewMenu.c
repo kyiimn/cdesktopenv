@@ -71,7 +71,7 @@
 #ifdef USE_XFT
 #include "TermPrimP.h"		/* _DtTermPrimitivePart, struct termData */
 #include "TermPrimRenderXft.h"	/* _DtTermPrimRenderXftCreate, TermFont */
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif /* USE_XFT */
 
 static Widget currentWidget = (Widget ) 0;

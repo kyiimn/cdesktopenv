@@ -96,7 +96,7 @@ SOFTWARE.
 
 /* Xft types for Xft-aware clock hand/background GC font setup */
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 
 

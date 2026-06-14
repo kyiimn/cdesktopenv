@@ -71,7 +71,7 @@
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 
 /*
  * Per-XftFont lazy XftDraw cache.

@@ -42,6 +42,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* When USE_XFT is defined, XftWrapper.c provides all implementations. */
+#ifndef USE_XFT
+
 DtFont
 DtFontCreate(Display *dpy, int screen, const char *pattern)
 {
@@ -154,3 +157,5 @@ _DtFontCreateXmFontList(Display *dpy, const char *pattern)
     XmFontList fl = XmFontListCreate(xfs, XmFONTLIST_DEFAULT_TAG);
     return fl;
 }
+
+#endif /* !USE_XFT */

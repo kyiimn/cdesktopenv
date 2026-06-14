@@ -103,7 +103,7 @@
 #endif
 #ifdef USE_XFT
 #ifdef HAVE_X11_XFT_XFT_H
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 #endif
 

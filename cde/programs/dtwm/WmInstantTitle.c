@@ -64,7 +64,7 @@
 
 /* Xft types for Xft-aware TEXT_HEIGHT() in InstantTitleSetPosition */
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 
 extern XtPointer _XmStringUngenerate(XmString, XmStringTag,

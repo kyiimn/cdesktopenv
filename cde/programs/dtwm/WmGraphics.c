@@ -67,7 +67,7 @@
 
 /* Xft abstraction for Xft-aware text measurement/rendering */
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #include <Dt/DtFont.h>
 #include <DtI/DtFontI.h>
 #endif

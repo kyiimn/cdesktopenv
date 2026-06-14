@@ -74,7 +74,7 @@
 
 /* Xft types for XmFONT_IS_XFT in the font metrics extraction */
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 
 /*

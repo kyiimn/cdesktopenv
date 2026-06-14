@@ -56,7 +56,7 @@
 
 #ifdef HAVE_XFT
 #define USE_XFT 1
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 
 #include <Dt/CanvasP.h>

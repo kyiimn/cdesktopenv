@@ -78,7 +78,7 @@
 #endif
 
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 
 /* Forward declaration: defined in Font.c. The signature must match
  * Font.c:__DtHelpFontXftGet exactly. */

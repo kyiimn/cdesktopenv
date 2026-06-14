@@ -77,7 +77,7 @@ extern int errno;
 #include "XInterfaceI.h"
 
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif
 
 #include <X11/bitmaps/root_weave>

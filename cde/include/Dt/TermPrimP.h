@@ -60,7 +60,7 @@
 #endif
 
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #endif /* USE_XFT */
 
 /* include the other internal Term include files...

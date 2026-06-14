@@ -39,7 +39,7 @@
  * Xft is available. The .c file is wrapped in the same guard.
  */
 #if defined(USE_XFT) || defined(HAVE_XFT)
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 
 extern TermFont _DtTermPrimRenderXftCreate(
     Widget		  w,

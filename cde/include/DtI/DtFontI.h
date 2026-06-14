@@ -37,7 +37,7 @@
 
 /* USE_XFT is controlled by configure, not by Motif's Xm.h */
 #ifdef USE_XFT
-#include <X11/Xft.h>
+#include <X11/Xft/Xft.h>
 #include <fontconfig/fontconfig.h>
 #endif
 
