@@ -140,7 +140,20 @@ void main (int argc, char *argv [])
 
     if(lang != NULL) {
         setlocale(LC_ALL, lang);
-        /* LC_CTYPE need to be set to make "gencat" command work correctly */
+        /* LC_CTYPE needs to be set for CATOPEN/CATGETS to read the compiled
+         * catalog correctly; however, gencat must run with LC_ALL=C.utf8
+         * (not C) because .tmsg files contain UTF-8 multibyte characters
+         * (e.g. German ö ü ß) that glibc gencat rejects as "invalid
+         * character" under LC_CTYPE=C.  C.utf8 tells glibc to parse
+         * UTF-8 correctly and is guaranteed available on glibc >= 2.35.
+         * LC_ALL=C.utf8 is prepended to the gencat command in
+         * cat_open() to override ALL inherited locale variables
+         * (LANG, LC_*) — LC_CTYPE alone is insufficient because make
+         * exports LANG=de_DE.UTF-8 (a locale that may not exist on the
+         * system), and glibc falls back from the invalid LANG to C for
+         * categories beyond LC_CTYPE, causing gencat to reject UTF-8
+         * multibyte text.  LC_ALL has the highest priority in glibc
+         * locale resolution and overrides everything. */
         sprintf( envvar, "LC_CTYPE=%s", lang );
         putenv( envvar );
     } else
@@ -248,7 +261,7 @@ void cat_open (void)
 
     if(pfile != NULL)
     {
-        snprintf(line, PATH_MAX, "gencat %s %s", pFilename, pfile);
+        snprintf(line, PATH_MAX, "LC_ALL=C.utf8 gencat %s %s", pFilename, pfile);
         if ( system(line) != 0 )
 	{
            fatal("primary .tmsg file would not gencat\n",0,9);
@@ -259,7 +272,7 @@ void cat_open (void)
 
     if(dfile != NULL)
     {
-        snprintf(line, PATH_MAX, "gencat %s %s", dFilename, dfile);
+        snprintf(line, PATH_MAX, "LC_ALL=C.utf8 gencat %s %s", dFilename, dfile);
         if ( system(line) != 0 )
 	{
            fatal("default .tmsg file would not gencat\n",0,9);

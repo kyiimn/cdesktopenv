@@ -16,7 +16,7 @@ if HAVE_XFT
 AM_CPPFLAGS += $(FREETYPE2_INCS)
 endif
 
-dtwm_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
+dtwm_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB) $(top_builddir)/lib/DtFont/libDtFont.la
 dtfplist_LDADD = $(DTCLIENTLIBS) $(TIRPCLIB) $(XTOOLLIB)
 
 if HAVE_XFT

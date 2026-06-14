@@ -952,25 +952,32 @@ void DrawStringInBox (Display *dpy, Window win, GC gc, XFontStruct *pfs, XRectan
     xftDraw = XftDrawCreate(dpy, win, visual, cmap);
     if (xftDraw != NULL)
     {
+	char _xftClr[12];
 	(void) XGetGCValues(dpy, gc, GCForeground | GCBackground, &gcvXft);
-	if (XftColorAllocPixel(dpy, visual, cmap, gcvXft.foreground, &xftFg) &&
-	    XftColorAllocPixel(dpy, visual, cmap, gcvXft.background, &xftBg))
+	snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+		 gcvXft.foreground & 0xFFFFFFul);
+	if (XftColorAllocName(dpy, visual, cmap, _xftClr, &xftFg))
 	{
-	    /*
-	     * Guardrail G8: for "image string" semantics (cleanText),
-	     * the background rectangle MUST be filled before the
-	     * foreground glyphs.
-	     */
-	    if (ACTIVE_PSD->cleanText)
+	    snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+		     gcvXft.background & 0xFFFFFFul);
+	    if (XftColorAllocName(dpy, visual, cmap, _xftClr, &xftBg))
 	    {
-		XftDrawRect(xftDraw, &xftBg,
-			    xPos, yBaseline - ascent,
-			    (unsigned int) textWidth,
-			    (unsigned int)(ascent + xftFont->descent));
+		/*
+		 * Guardrail G8: for "image string" semantics (cleanText),
+		 * the background rectangle MUST be filled before the
+		 * foreground glyphs.
+		 */
+		if (ACTIVE_PSD->cleanText)
+		{
+		    XftDrawRect(xftDraw, &xftBg,
+				xPos, yBaseline - ascent,
+				(unsigned int) textWidth,
+				(unsigned int)(ascent + xftFont->descent));
+		}
+		XftDrawString8(xftDraw, &xftFg, xftFont,
+			       xPos, yBaseline, (FcChar8 *) str, strLen);
+		XftColorFree(dpy, visual, cmap, &xftBg);
 	    }
-	    XftDrawString8(xftDraw, &xftFg, xftFont,
-			   xPos, yBaseline, (FcChar8 *) str, strLen);
-	    XftColorFree(dpy, visual, cmap, &xftBg);
 	    XftColorFree(dpy, visual, cmap, &xftFg);
 	    renderXft = 1;
 	}

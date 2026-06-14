@@ -50,6 +50,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include <errno.h>
+#include <stdio.h>
 #include <X11/Xlib.h>
 
 #include <X11/Xos.h>
@@ -788,10 +789,17 @@ MyDrawString (
 	    return;
 
 	XGetGCValues(dpy, gc, GCForeground | GCBackground, &gcVals);
-	(void) XftColorAllocPixel(dpy, visual, colormap,
-				gcVals.foreground, &xftFg);
-	(void) XftColorAllocPixel(dpy, visual, colormap,
-				gcVals.background, &xftBg);
+	{
+	    char _xftClr[12];
+	    snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+		     gcVals.foreground & 0xFFFFFFul);
+	    (void) XftColorAllocName(dpy, visual, colormap,
+				     _xftClr, &xftFg);
+	    snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+		     gcVals.background & 0xFFFFFFul);
+	    (void) XftColorAllocName(dpy, visual, colormap,
+				     _xftClr, &xftBg);
+	}
 
 	if (image)
 	  {

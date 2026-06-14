@@ -2478,6 +2478,18 @@ do_XTextWidth(
       free(errmsg);
       return(1);
    }
+#ifdef USE_XFT
+   fn = XftFontOpenName(XtDisplay(Toplevel),
+                        DefaultScreen(XtDisplay(Toplevel)), argv[2]);
+   if (fn == NULL)
+   {
+      errmsg = strdup(GetSharedMsg(DT_BAD_FONT));
+      printerrf(argv[0], errmsg, argv[2], NULL,
+                NULL, NULL, NULL, NULL, NULL, NULL);
+      free(errmsg);
+      return(1);
+   }
+#else
    if (cvtfontstruct(argv[2], &fn) != SUCCESS)
    {
       errmsg = strdup(GetSharedMsg(DT_BAD_FONT));
@@ -2486,6 +2498,7 @@ do_XTextWidth(
       free(errmsg);
       return(1);
    }
+#endif
    s = argv[3];
 #ifdef USE_XFT
    {
@@ -2494,11 +2507,14 @@ do_XTextWidth(
                       (int) strlen(s), &extents);
       sprintf(buf, "%ld", (long) extents.xOff);
    }
+   alt_env_set_var(argv[1], buf);
+   XftFontClose(XtDisplay(Toplevel), fn);
+   return(0);
 #else
    sprintf(buf, "%ld", (long)XTextWidth(fn, s, strlen(s)));
-#endif
    alt_env_set_var(argv[1], buf);
    return(0);
+#endif
 }
 
 #define MAXDRAWARGS 6
@@ -2965,40 +2981,43 @@ invokeXDrawFunction(
                xftCmap   = DefaultColormap(display, DefaultScreen(display));
                xftDraw   = XftDrawCreate(display, drawable,
                                          xftVisual, xftCmap);
-               if (xftDraw != NULL &&
-                   XGetGCValues(display, gc,
-                                GCForeground | GCBackground, &gcvXft) != 0 &&
-                   XftColorAllocPixel(display, xftVisual, xftCmap,
-                                      gcvXft.foreground, &xftFg))
-               {
-                  if (function == DRAW_IMAGE_STRING)
-                  {
-                     if (XftColorAllocPixel(display, xftVisual, xftCmap,
-                                            gcvXft.background, &xftBg))
-                     {
-                        XftTextExtents8(display, xftFont,
-                                        (FcChar8 *) argv[i],
-                                        (int) slen, &ext);
-                        textW = ext.xOff;
-                        XftDrawRect(xftDraw, &xftBg,
-                                    p[0],
-                                    p[1] - ascent,
-                                    (unsigned int) textW,
-                                    (unsigned int)(ascent +
-                                                   xftFont->descent));
-                        XftColorFree(display, xftVisual, xftCmap, &xftBg);
-                     }
-                  }
-                  XftDrawString8(xftDraw, &xftFg, xftFont,
-                                 p[0], p[1],
-                                 (FcChar8 *) argv[i], (int) slen);
-                  XftColorFree(display, xftVisual, xftCmap, &xftFg);
-                  XftDrawDestroy(xftDraw);
-               }
-               else if (xftDraw != NULL)
-               {
-                  XftDrawDestroy(xftDraw);
-               }
+                if (xftDraw != NULL &&
+                    XGetGCValues(display, gc,
+                                 GCForeground | GCBackground, &gcvXft) != 0)
+                {
+                   char _xftClr[12];
+                   snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+                            gcvXft.foreground & 0xFFFFFFul);
+                   if (XftColorAllocName(display, xftVisual, xftCmap,
+                                          _xftClr, &xftFg))
+                   {
+                      if (function == DRAW_IMAGE_STRING)
+                      {
+                         snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+                                  gcvXft.background & 0xFFFFFFul);
+                         if (XftColorAllocName(display, xftVisual, xftCmap,
+                                               _xftClr, &xftBg))
+                         {
+                            XftTextExtents8(display, xftFont,
+                                            (FcChar8 *) argv[i],
+                                            (int) slen, &ext);
+                            textW = ext.xOff;
+                            XftDrawRect(xftDraw, &xftBg,
+                                        p[0],
+                                        p[1] - ascent,
+                                        (unsigned int) textW,
+                                        (unsigned int)(ascent +
+                                                       xftFont->descent));
+                            XftColorFree(display, xftVisual, xftCmap, &xftBg);
+                         }
+                      }
+                      XftDrawString8(xftDraw, &xftFg, xftFont,
+                                     p[0], p[1],
+                                     (FcChar8 *) argv[i], (int) slen);
+                      XftColorFree(display, xftVisual, xftCmap, &xftFg);
+                   }
+                   XftDrawDestroy(xftDraw);
+                }
             }
             else
             {
