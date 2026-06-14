@@ -717,10 +717,8 @@ int Putc(
 		return c;
 	    }
 	    else {
-		i = 0;
 		fprintf(stderr,
 		    "An invalid multi-byte character was found in the input.\n");
-		return EOF;
 	    }
 	}
 
