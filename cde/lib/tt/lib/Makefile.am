@@ -1,6 +1,6 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-SUBDIRS = api db mp util tttk
+SUBDIRS = api db dm mp util tttk
 
 lib_LTLIBRARIES = libtt.la
 
@@ -27,3 +27,4 @@ else
 libtt_la_LDFLAGS = -version-info 3:0:1
 endif
 
+noinst_HEADERS = tt_const.h tt_options.h

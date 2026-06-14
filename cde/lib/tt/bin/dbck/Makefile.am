@@ -15,3 +15,5 @@ ttdbck_SOURCES = binkey.C        binkey_utils.C  common.C \
 		 options.C       options_tt.C    prop.C \
 		 prop_utils.C    spec.C          spec_repair.C \
 		 spec_utils.C    ttdbck.C
+
+noinst_HEADERS = binkey.h dbck.h options.h options_tt.h prop.h spec.h ttdbck.h

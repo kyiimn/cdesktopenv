@@ -11,3 +11,5 @@ tttrace_LDADD += -lintl -lsocket -lnsl
 endif
 
 tttrace_SOURCES = tttrace.C tttrace_objs.C
+
+noinst_HEADERS = tttrace_objs.h

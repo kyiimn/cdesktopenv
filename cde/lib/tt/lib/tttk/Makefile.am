@@ -10,3 +10,5 @@ libtttk_la_CXXFLAGS = $(TT_VERSION_DEFINE) -I../ -I../../lib
 libtttk_la_SOURCES = ttdesktop.C     ttdtfile.C      ttdtprocid.C \
 	             ttmedia.C       tttk.C          tttk2free.C \
 		     tttkmessage.C   tttkpattern.C   tttkutils.C
+
+noinst_HEADERS = eclipse.h ttdesktop.h ttdtprocid.h tttk2free.h tttkmessage.h tttkpattern.h tttkutils.h

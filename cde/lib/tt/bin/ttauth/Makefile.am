@@ -19,3 +19,5 @@ ttauth_LDADD += $(XTOOLLIB)
 endif
 
 ttauth_SOURCES = ttauth.c process.c
+
+noinst_HEADERS = ttauth.h

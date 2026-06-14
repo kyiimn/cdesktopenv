@@ -20,3 +20,5 @@ ttrm_SOURCES = ttrm.C remover.C
 ttcp_SOURCES = ttcp.C copier.C
 
 ttrmdir_SOURCES = ttrm.C remover.C
+
+noinst_HEADERS = copier.h mover.h rcopier.h remover.h

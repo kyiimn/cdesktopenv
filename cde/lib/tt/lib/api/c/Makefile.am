@@ -14,3 +14,5 @@ libapi_la_SOURCES = api_api.C           api_auth.C \
         api_session_prop.C  api_spec.C          api_spec_map_ref.C \
         api_storage.C       api_typecb.C        api_typecb_utils.C \
         api_utils.C         api_xdr.C
+
+noinst_HEADERS = api_api.h api_auth.h api_error.h api_filemap.h api_handle.h api_mp.h api_objid_spec.h api_spec_map_ref.h api_storage.h api_typecb.h api_typecb_utils.h api_xdr.h

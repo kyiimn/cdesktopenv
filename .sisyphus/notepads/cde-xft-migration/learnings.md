@@ -76,3 +76,11 @@ After both fixes (LC_ALL in sdl-docs.am + instant mblen fix):
 - `make dist` completes successfully, creating `cde-2.5.3.tar.gz` (73MB)
 - All locale help files build: de_DE.UTF-8, en_US.UTF-8, es_ES.UTF-8, fr_FR.UTF-8, it_IT.UTF-8, ja_JP.UTF-8
 - Zero errors, zero "cannot stat" messages
+
+## noinst_HEADERS fix for lib/tt Makefile.am files (2026-06-14)
+
+- **Problem**: `make dist` tarballs were missing `.h` header files under `cde/lib/tt/`, causing "fatal error: No such file or directory" when building from tarball.
+- **Root cause**: Automake does NOT automatically include `.h` files in dist tarballs. They must be explicitly listed in `noinst_HEADERS` (internal headers) or `pkginclude_HEADERS` (installed headers). The `*_SOURCES` variable only causes automake to include `.c` files.
+- **Fix**: Added `noinst_HEADERS = <header list>` to 15 Makefile.am files under `cde/lib/tt/`. The `mini_isam/Makefile.am` already had it (fixed in commit `bba89d011`).
+- **Verification**: After adding noinst_HEADERS and running `automake`, the `DIST_COMMON` line in generated `Makefile.in` includes `$(noinst_HEADERS)`, ensuring headers ship in the tarball. Confirmed 245 `.h` files in tarball.
+- **automake invocation**: Must use paths relative to the directory containing `Makefile.am`, e.g. `automake lib/tt/bin/dbck/Makefile` from the `cde/` directory. Using `cde/lib/tt/...` paths fails.

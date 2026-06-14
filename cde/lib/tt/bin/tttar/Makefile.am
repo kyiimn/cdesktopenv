@@ -21,3 +21,5 @@ tttar_SOURCES = tttar.C \
 		tttar_spec.C \
 		tttar_file_utils.C \
 		tttar_string_map.C
+
+noinst_HEADERS = archiver.h tttar_api.h tttar_file.h tttar_file_utils.h tttar_spec.h tttar_spec_map.h tttar_string_map.h tttar_utils.h

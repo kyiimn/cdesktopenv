@@ -20,3 +20,5 @@ libdb_la_SOURCES = db_server_clnt.C           db_server_xdr.C \
         tt_db_rpc_routines.C                  tt_old_db.C \
 	tt_old_db_message_info.C              tt_old_db_message_info_utils.C \
         tt_old_db_partition_map_ref.C         tt_old_db_utils.C
+
+noinst_HEADERS = db_server.h tt_client_isam.h tt_client_isam_file.h tt_client_isam_file_utils.h tt_client_isam_key_descriptor.h tt_client_isam_key_descriptor_utils.h tt_client_isam_record.h tt_client_isam_record_utils.h tt_db_access.h tt_db_access_utils.h tt_db_client.h tt_db_client_consts.h tt_db_client_utils.h tt_db_create_objid.h tt_db_file.h tt_db_file_utils.h tt_db_hostname_global_map_ref.h tt_db_hostname_redirection_map.h tt_db_key.h tt_db_key_utils.h tt_db_network_path.h tt_db_object.h tt_db_object_utils.h tt_db_objid_to_key.h tt_db_property.h tt_db_property_utils.h tt_db_results.h tt_db_rpc_message_routines.h tt_db_rpc_routines.h tt_old_db.h tt_old_db_consts.h tt_old_db_message_info.h tt_old_db_message_info_utils.h tt_old_db_partition_map_ref.h tt_old_db_results.h tt_old_db_utils.h
