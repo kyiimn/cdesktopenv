@@ -24,3 +24,12 @@ noinst_HEADERS = Support.h \
 	Stack.hh \
 	UtilityFunctions.hh \
 	xList.hh
+
+EXTRA_DIST = \
+	InputNotifier.d \
+	Pointer.d \
+	Receiver.d \
+	Sender.d \
+	Stack.d \
+	Support.d \
+	xList.d

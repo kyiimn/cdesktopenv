@@ -1,4 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtksh.msg
+
+dist-hook:
+	cp -r $(top_srcdir)/programs/dtksh/ksh93 $(distdir)/ || true
+
 
 CLEANFILES = init.c DtFuncs.dtsh
 

@@ -75,3 +75,37 @@ noinst_HEADERS = Agents.h \
 	UrlAgent.hh \
 	UrlAgentMotif.hh \
 	create_macros.hh
+
+EXTRA_DIST = \
+	AddLibraryAgent.d \
+	Agent.d \
+	Agents.d \
+	AnchorCanvas.d \
+	BookTab.d \
+	BookmarkEdit.d \
+	Dialog.d \
+	GraphicAgent.d \
+	HelpAgent.d \
+	IcccmAgent.d \
+	LibraryAgent.d \
+	ListView.d \
+	MapAgent.d \
+	MarkCanvas.d \
+	MarkChooser.d \
+	MarkIcon.d \
+	MarkListView.d \
+	MessageAgent.d \
+	NodeHistoryAgent.d \
+	NodeListAgent.d \
+	NodePrintAgent.d \
+	NodeWindowAgent.d \
+	OutlineListView.d \
+	PrefAgent.d \
+	PrintPanelAgent.d \
+	ScopeMenu.d \
+	SearchHistoryListView.d \
+	SearchQueryAgent.d \
+	SearchResultsAgent.d \
+	SearchScopeAgent.d \
+	SearchScopeList.d \
+	UrlAgent.d

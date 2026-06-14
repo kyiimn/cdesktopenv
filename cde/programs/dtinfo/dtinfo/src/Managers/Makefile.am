@@ -54,3 +54,33 @@ noinst_HEADERS = Managers.h \
 	UrlMgr.hh \
 	WString.hh \
 	WorkspaceMgr.hh
+
+EXTRA_DIST = \
+	ClientEventMgr.d \
+	DatabaseMgr.d \
+	EnvMgr.d \
+	GlobalHistoryMgr.d \
+	GraphicsMgr.d \
+	HistoryList.d \
+	InputMgrX.d \
+	LibraryMgr.d \
+	LocalHistoryMgr.d \
+	Managers.d \
+	MapMgr.d \
+	MarkListMgr.d \
+	MarkMgr.d \
+	MessageMgr.d \
+	NodeDict.d \
+	NodeListMgr.d \
+	NodeMgr.d \
+	PrefMgr.d \
+	PrintMgr.d \
+	SearchMgr.d \
+	SearchResultsMgr.d \
+	SearchScopeMgr.d \
+	ServiceMgr.d \
+	SessionMgr.d \
+	StyleSheetMgr.d \
+	TtIpcMgr.d \
+	UrlMgr.d \
+	WorkspaceMgr.d

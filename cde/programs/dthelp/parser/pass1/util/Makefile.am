@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = entout.c scanutil.c
+
 noinst_LIBRARIES = libutil.a
 
 AM_CPPFLAGS = -DPASS1 -I../../include/util

@@ -1,5 +1,6 @@
 
-EXTRA_DIST = dtspcdenv.src
+EXTRA_DIST = dtspcdenv.src \
+	dtspcdenv
 MAITAINERCLEANFILES = Makefile.in
 
 bin_PROGRAMS = dtspcd

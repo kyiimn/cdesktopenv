@@ -1,6 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = dtprintinfo.msg.src
+EXTRA_DIST = dtprintinfo.msg.src \
+	sym2num \
+	msg.awk
 
 bin_PROGRAMS = dtprintinfo
 

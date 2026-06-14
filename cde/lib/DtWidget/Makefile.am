@@ -46,7 +46,7 @@ UNIXbindings: UNIXbindings.cpp
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(AM_CPPFLAGS) $< > $@
 
-EXTRA_DIST = UNIXbindings.cpp
-
+EXTRA_DIST = 	UNIXbindings.cpp \
+	DtWidget.msg
 noinst_HEADERS = DtSvcInternal.h \
 	DtWidgetI.h

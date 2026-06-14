@@ -29,7 +29,82 @@ EXTRA_DIST = IconBrowse.dt.src \
 	unsupported.dt.src \
 	user-prefs.dt.src \
 	uxstd.dt.src \
-	xclients.dt.src
+	xclients.dt.src \
+	DisplayImage.dt \
+	DisplayPDF.dt \
+	DisplayPS.dt \
+	DisplayVideo.dt \
+	Education.dt \
+	Games.dt \
+	Graphics.dt \
+	Internet.dt \
+	Media_Tools.dt \
+	Office.dt \
+	System.dt \
+	TeX.dt \
+	acroread.dt \
+	action \
+	actions.ddf \
+	actions.fs \
+	amarok.dt \
+	brasero.dt \
+	caja.dt \
+	chromium.dt \
+	dreamchess.dt \
+	dtbuilder.dt \
+	dtcm.dt \
+	dtmail.dt \
+	eboard.dt \
+	emacs.dt \
+	engrampa.dt \
+	file-roller.dt \
+	firefox.dt \
+	firestarter.dt \
+	fontforge.dt \
+	gcompris.dt \
+	geogebra.dt \
+	gimp.dt \
+	gv.dt \
+	inkscape.dt \
+	k3b.dt \
+	k9copy.dt \
+	kile.dt \
+	ktuberling.dt \
+	lbreakout2.dt \
+	libreoffice-base.dt \
+	libreoffice-calc.dt \
+	libreoffice-draw.dt \
+	libreoffice-impress.dt \
+	libreoffice-main.dt \
+	libreoffice-math.dt \
+	libreoffice-writer.dt \
+	mgv.dt \
+	nedit.dt \
+	nxclient.dt \
+	okular.dt \
+	pavucontrol.dt \
+	pgadmin.dt \
+	powermanga.dt \
+	pychess.dt \
+	rhythmbox.dt \
+	rosegarden.dt \
+	skype.dt \
+	sound-juicer.dt \
+	stellarium.dt \
+	supertux.dt \
+	synaptic.dt \
+	thunderbird.dt \
+	tuxpaint.dt \
+	videoTypes.dt \
+	virtualbox.dt \
+	vlc.dt \
+	wicd.dt \
+	xboard.dt \
+	xdvi.dt \
+	xine.dt \
+	xournal.dt \
+	xpdf.dt \
+	xv.dt
 
 LOCAL_CPP_DEFINES = -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) \
 	-DCDE_CONFIGURATION_TOP=$(CDE_CONFIGURATION_TOP) -DKORNSHELL=$(KSH) \

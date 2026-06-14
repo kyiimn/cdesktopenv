@@ -11,3 +11,5 @@ dthelpview_SOURCES = Main.c ManPage.c Util.c
 noinst_HEADERS = Main.h \
 	ManPageI.h \
 	UtilI.h
+
+EXTRA_DIST = Dthelpview

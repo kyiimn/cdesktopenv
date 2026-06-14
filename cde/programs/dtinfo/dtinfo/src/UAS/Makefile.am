@@ -28,4 +28,5 @@ CLEANFILES = UAS.msg
 noinst_HEADERS = UAS.h
 
 EXTRA_DIST = Test/StringPref.hh \
-	Test/UserPreference.hh
+	Test/UserPreference.hh \
+	UAS.d

@@ -1,8 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = Dtwm.defs.src \
-	sys.dtwmrc.src
-
+EXTRA_DIST = 	Dtwm.defs.src sys.dtwmrc.src \
+	dtwm.msg
 bin_PROGRAMS = dtwm dtfplist
 
 configdir = $(CDE_INSTALLATION_TOP)/config/C

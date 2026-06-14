@@ -1,4 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dthelpprint.msg \
+	dthelpprint.sh
+
 
 bin_PROGRAMS = dthelpprint
 bin_SCRIPTS =  dthelpprint.sh

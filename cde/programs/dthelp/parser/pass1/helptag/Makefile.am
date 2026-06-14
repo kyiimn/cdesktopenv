@@ -5,6 +5,8 @@ MAINTAINERCLEANFILES = Makefile.in
 # design - not surprising since it dates to 1989.
 .NOTPARALLEL:
 
+EXTRA_DIST = delim.bld delim.elt delim.par help.if hptag.dtd htag.tss
+
 HELPTAG       = ..
 HELPTAGSRC    = $(HELPTAG)/helptag
 HELPPARSERSRC = $(HELPTAG)/parser

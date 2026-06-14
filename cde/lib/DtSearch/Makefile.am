@@ -1,4 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtsearch.msg \
+	tiny.c
+
 
 SUBDIRS = raima
 

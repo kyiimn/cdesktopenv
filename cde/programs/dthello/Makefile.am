@@ -1,7 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = Dthello.src
-
+EXTRA_DIST = 	Dthello.src \
+	dthello.msg \
+	Dthello
 bin_PROGRAMS = dthello
 
 dthello_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)

@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	libdtcm.msg
+
 
 noinst_LIBRARIES = libDtCmP.a
 

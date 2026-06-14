@@ -7,6 +7,8 @@ FILES= bomb bomb16 bomb16m bomb32 bomb32m bombm browse.xbm		\
 	marks_ins.xbm pinin.xbm pinmid.xbm pinout.xbm quit.xbm		\
 	search.xbm search_ins.xbm semilocked.xbm unlocked.xbm
 
+EXTRA_DIST = $(FILES)
+
 # The last dir level for install is for language, default C
 
 cdir =  $(CDE_INSTALLATION_TOP)/appconfig/icons/C

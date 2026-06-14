@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Palettes.tmsg
+
 include ../../templates/C.am
 include ../../templates/palettes.am
 

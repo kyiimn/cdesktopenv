@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtcopy.msg
+
 
 bin_PROGRAMS = dtfile_copy
 

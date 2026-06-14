@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	DtPrint.msg
+
 
 lib_LTLIBRARIES = libDtPrint.la
 

@@ -17,3 +17,7 @@ libOliasSearch_a_AR = $(LD) -r -o
 
 noinst_HEADERS = OliasSearch.h \
 	ResultID.hh
+
+EXTRA_DIST = \
+	OliasSearch.d \
+	ResultID.d

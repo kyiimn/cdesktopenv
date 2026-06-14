@@ -944,6 +944,8 @@ programs/dtopen/Makefile
 programs/dtdocbook/Makefile
 programs/dtdocbook/dtdocbook2man
 programs/dtdocbook/dtdocbook2sdl
+programs/dtudcfonted/Makefile
+programs/dtudcexch/Makefile
 programs/dtdocbook/doc_utils/Makefile
 programs/dtdocbook/dtsr/Makefile
 programs/dtdocbook/infolib/Makefile
@@ -1070,6 +1072,19 @@ doc/ja_JP.UTF-8/help/common/Desktop.hf
 doc/ja_JP.UTF-8/help/common/DesktopIntro.hf
 
 include/Makefile
+
+imports/Makefile
+imports/motif/Makefile
+imports/motif/doc/Makefile
+imports/motif/doc/C/Makefile
+imports/motif/doc/C/guides/Makefile
+imports/motif/localized/Makefile
+imports/motif/localized/C/Makefile
+imports/motif/localized/de_DE.UTF-8/Makefile
+imports/motif/localized/es_ES.UTF-8/Makefile
+imports/motif/localized/fr_FR.UTF-8/Makefile
+imports/motif/localized/it_IT.UTF-8/Makefile
+imports/motif/localized/ja_JP.dt-eucJP/Makefile
 
 copyright
 doc/common/help/HELPEnt.sgm

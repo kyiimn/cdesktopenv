@@ -1,7 +1,9 @@
 
 EXTRA_DIST = Dtscreen.src \
 	lifeicon.bit \
-	xlogo.bit
+	xlogo.bit \
+	dtscreen.msg \
+	Dtscreen
 MAITAINERCLEANFILES = Makefile.in
 
 bin_PROGRAMS = dtscreen
@@ -19,9 +21,3 @@ dtscreen_SOURCES = blank.c dtscreen.c flame.c hopalong.c hsbramp.c	\
 CPP_TARGETS = Dtscreen
 BUILT_SOURCES = $(CPP_TARGETS)
 CLEANFILES = $(CPP_TARGETS)
-
-Dtscreen: Dtscreen.src
-	$(RM) $@
-	$(GENCPP) -P -DXCOMM=#  $< > $@
-
-noinst_HEADERS = dtscreen.h

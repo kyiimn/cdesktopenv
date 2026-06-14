@@ -26,3 +26,11 @@ noinst_HEADERS = Query.h \
 	QueryGroupView.hh \
 	QueryTerm.hh \
 	QueryTermView.hh
+
+EXTRA_DIST = \
+	Query.d \
+	QueryEditor.d \
+	QueryGroup.d \
+	QueryGroupView.d \
+	QueryTerm.d \
+	QueryTermView.d

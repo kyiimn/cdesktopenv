@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtinfo_start.msg
+
 
 startinstdir = $(CDE_INSTALLATION_TOP)/infolib/etc
 startinst_PROGRAMS = dtinfo_start

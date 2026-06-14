@@ -66,8 +66,9 @@ dterror.ds: dterror.src
 	$(RM) $@
 	$(GENCPP) -P -DXCOMM=# $(SCRIPTFLAGS) $<  > $@
 
-EXTRA_DIST = dtfile.config.cpp dtfile_error.cpp dterror.src
-
+EXTRA_DIST = 	dtfile.config.cpp dtfile_error.cpp dterror.src \
+	dtfile.msg \
+	Dtfile
 noinst_HEADERS = ChangeDir.h \
 	Common.h \
 	Desktop.h \

@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = context.dat
+
 bin_PROGRAMS = dthelp_ctag1
 
 # Due to the wierd interdepencencies between helptag and parser,

@@ -1,5 +1,26 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = \
+	dtcm.ptype \
+	dtcm.ptype.deps \
+	dtdbcache.ptype \
+	dtdbcache.ptype.deps \
+	dtfile.ptype \
+	dtfile.ptype.deps \
+	dticon.ptype \
+	dticon.ptype.deps \
+	dtinfo.ptype \
+	dtinfo.ptype.deps \
+	dtinfo_start.opnums \
+	dtinfo_start.ptype \
+	dtinfo_start.ptype.deps \
+	dtmail.ptype \
+	dtmail.ptype.deps \
+	dtpad.ptype \
+	dtpad.ptype.deps \
+	dtterm.ptype \
+	dtterm.ptype.deps
+
 # We need to ensure that the jobs here are run in sequence to build up
 # the types.xdr file.
 .NOTPARALLEL:

@@ -6,18 +6,29 @@ EXTRA_DIST = 0060.dtsysenv.src \
 	Xfailsafe.src \
 	Xreset.src \
 	Xresources.src \
+	Xresources \
 	Xservers.src \
 	Xsession.src \
 	Xsetup.src \
 	Xstartup.src \
 	_common.ksh.src \
 	current.session.src \
+	current.session \
 	display.current.session.src \
+	display.current.session \
 	display.home.session.src \
+	display.home.session \
 	dtlogin.src \
 	dtlslocale.src \
 	dtprofile.src \
-	home.session.src
+	home.session.src \
+	home.session \
+	0060.dtsysenv \
+	Dtlogin \
+	Xaccess \
+	Xconfig \
+	Xconfig.con \
+	dtlogin
 
 AM_CPPFLAGS = -DCDE_CONFIGURATION_TOP=$(CDE_CONFIGURATION_TOP) \
             -DCDE_INSTALLATION_TOP=$(CDE_INSTALLATION_TOP) \

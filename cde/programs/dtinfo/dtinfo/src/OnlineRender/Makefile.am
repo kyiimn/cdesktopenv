@@ -26,3 +26,6 @@ noinst_HEADERS = OnlineRender.h \
 	FontCache.hh \
 	SegClientData.hh \
 	TableDefn.hh
+
+EXTRA_DIST = \
+	OnlineRender.d

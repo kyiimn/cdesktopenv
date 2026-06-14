@@ -1,5 +1,14 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Xresources.tmsg \
+	Xresources.ow.tmsg \
+	_common.session.tmsg \
+	dtfile.config.tmsg \
+	sys.dtwmrc.tmsg \
+	sys.font.tmsg \
+	sys.resources.tmsg \
+	sys.session.tmsg
+
 include ../../templates/C.am
 include ../../templates/config.am
 

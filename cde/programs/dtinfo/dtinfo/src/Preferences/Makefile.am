@@ -21,3 +21,11 @@ noinst_HEADERS = Preferences.h \
 	StringPref.hh \
 	UserPreference.hh \
 	WindowGeometryPref.hh
+
+EXTRA_DIST = \
+	BooleanPref.d \
+	IntegerPref.d \
+	Preferences.d \
+	StringPref.d \
+	UserPreference.d \
+	WindowGeometryPref.d

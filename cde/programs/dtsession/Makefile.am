@@ -5,7 +5,10 @@ EXTRA_DIST = Dtsession.src \
 	dtsession.msg.src \
 	sys.font.src \
 	sys.resources.src \
-	sys.session.src
+	sys.session.src \
+	sys.font \
+	sys.resources \
+	sys.session
 
 bin_PROGRAMS = dtsession
 

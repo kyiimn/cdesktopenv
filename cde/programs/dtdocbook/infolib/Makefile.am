@@ -1,6 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = OL_DataExpr.yy ContentType.ll ReplaceIdIdref.ll RemoteId.ll gr_type.ll
+EXTRA_DIST = OL_DataExpr.yy ContentType.ll ReplaceIdIdref.ll RemoteId.ll gr_type.ll \
+	ChangeCaseTitle DeInstallBase Librarian
 
 include ../dtdocbook.am
 

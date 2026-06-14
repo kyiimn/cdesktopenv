@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = entout.c scanutil.c
+
 .NOTPARALLEL:
 
 noinst_LIBRARIES = libutil.a

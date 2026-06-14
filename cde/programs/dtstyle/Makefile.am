@@ -1,9 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = Backdrops.src \
-	Dtstyle.src \
-	Palettes.src
-
+EXTRA_DIST = 	Backdrops.src Dtstyle.src Palettes.src \
+	dtstyle.msg \
+	Backdrops \
+	Dtstyle \
+	Palettes
 bin_PROGRAMS = dtstyle
 
 dtstyle_CPPFLAGS = -DCDE_CONFIGURATION_TOP=\"$(CDE_CONFIGURATION_TOP)\"	\

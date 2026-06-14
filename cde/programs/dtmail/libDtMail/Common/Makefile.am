@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	libDtMail.msg
+
 
 noinst_LIBRARIES = libCommon.a
 

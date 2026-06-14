@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = Backdrops.tmsg
+
 include ../../templates/C.am
 include ../../templates/backdrops.am
 

@@ -1,24 +1,10 @@
-bin_PROGRAMS = dtudcexch
+MAINTAINERCLEANFILES = Makefile.in
 
-FONTEDT_PATH1 = ../dtudcfonted
+EXTRA_DIST = dtudcexch.msg
 
-dtudcexch_CFLAGS = -I$(FONTEDT_PATH1) -I$(FONTEDT_PATH1)/include \
-		   -I$(FONTEDT_PATH1)/libfal -I$(FONTEDT_PATH1)/dtgpftobdf \
-		   -DFONTC='"'$(BDFTOPCF)'"'
+# dtudcexch depends on dtudcfonted internal libraries (liboakfuty.a, libfal.a)
+# which are not built by the autotools system, so this program cannot be compiled.
+# Distribute source files only.
 
-dtudcexch_LDADD = $(LIBSVC) $(LIBTT) $(XTOOLLIB) ${X_LIBS} \
-                $(FONTEDT_PATH1)/libfuty/liboakfuty.a \
-                $(FONTEDT_PATH1)/libfal/libfal.a
-
-if SOLARIS
-dtudcexch_LDADD += -lgen
-endif
-
-if FREEBSD
-dtudcexch_LDADD += -liconv
-endif
-
-dtudcexch_SOURCES = udcexc.c udcexp.c udcimp.c getbdffn.c excutil.c \
-                    selectx.c exportbdf.c importbdf.c
-
-noinst_HEADERS = excutil.h
+EXTRA_DIST += udcexc.c udcexp.c udcimp.c getbdffn.c excutil.c \
+              selectx.c exportbdf.c importbdf.c excutil.h

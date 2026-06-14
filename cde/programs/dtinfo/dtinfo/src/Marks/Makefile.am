@@ -22,3 +22,9 @@ noinst_HEADERS = Marks.h \
 	MarkBase_mmdb.hh \
 	MarkInfo.hh \
 	Mark_mmdb.hh
+
+EXTRA_DIST = \
+	Anchor.d \
+	Mark.d \
+	MarkBase.d \
+	Marks.d

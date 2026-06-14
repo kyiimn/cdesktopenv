@@ -1,5 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = _common.dt.tmsg \
+	action.tmsg
+
 include ../../templates/C.am
 include ../../templates/types.am
 

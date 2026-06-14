@@ -103,4 +103,6 @@ noinst_HEADERS = AccessCCDFI.h \
 	VolSelectI.h \
 	XInterfaceI.h
 
-EXTRA_DIST = jpeg/cdjpeg.h
+EXTRA_DIST = 	jpeg/cdjpeg.h \
+	DtHelp.msg \
+	fmt_tbl.msg

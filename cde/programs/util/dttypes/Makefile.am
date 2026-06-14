@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dttypes.msg
+
 
 bin_PROGRAMS = dttypes
 

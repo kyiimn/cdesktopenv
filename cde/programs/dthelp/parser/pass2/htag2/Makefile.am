@@ -5,6 +5,8 @@ MAINTAINERCLEANFILES = Makefile.in
 # design - not surprising since it dates to 1989.
 .NOTPARALLEL:
 
+EXTRA_DIST = delim.bld delim.elt delim.par sdl.dtd sdl.if
+
 HTAG2       = ..
 HTAG2SRC    = $(HTAG2)/htag2
 SDLPARSERSRC = $(HTAG2)/parser

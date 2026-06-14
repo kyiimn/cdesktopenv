@@ -18,6 +18,8 @@ dtsr_DATA = \
 	    ita.stp \
 	    jpn.knj
 
+EXTRA_DIST = $(dtsr_DATA)
+
 noinst_PROGRAMS = mkdbd
 
 dtsearch = ../../../lib/DtSearch

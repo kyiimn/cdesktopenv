@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtact.msg
+
 
 bin_PROGRAMS = dtaction
 

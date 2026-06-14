@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = dtinfo.bdf
+
 fontaliasesconfdir = $(sysconfdir)/$(PACKAGE_TARNAME)/fontaliases
 fontaliasesdatadir = $(pkgdatadir)/fontaliases
 

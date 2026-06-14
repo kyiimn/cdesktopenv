@@ -1,4 +1,14 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtcm.msg \
+	drag_xbm \
+	drag_mask_xbm \
+	icon_pixmap_xbm \
+	contract_xbm \
+	expand_xbm \
+	postup_xbm \
+	Dtcm.ad
+
 
 bin_PROGRAMS = dtcm dtcm_delete dtcm_insert dtcm_lookup dtcm_editor
 

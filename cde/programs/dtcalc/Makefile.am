@@ -1,4 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtcalc.msg \
+	Dtcalc
+
 
 bin_PROGRAMS = dtcalc
 

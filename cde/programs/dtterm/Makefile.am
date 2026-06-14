@@ -1,10 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = Dtterm.ad.src \
-	mkfallbk \
-	terminfoChecklist \
-	terminfoCreate
-
+EXTRA_DIST = 	Dtterm.ad.src mkfallbk terminfoChecklist terminfoCreate \
+	dtterm.msg \
+	DtTermFallBackResources.c.src \
+	dtterm.ti
 bin_PROGRAMS = dtterm
 
 dtterm_LDADD = $(LIBTERM) $(DTCLIENTLIBS) $(XTOOLLIB) 

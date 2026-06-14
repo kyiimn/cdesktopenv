@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dtpdm.msg
+
 
 bin_PROGRAMS = dtpdm
 

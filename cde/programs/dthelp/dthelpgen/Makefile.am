@@ -1,4 +1,8 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	dthelpgen.msg \
+	dthelpgen.dtsh
+
 
 bin_PROGRAMS = dthelpgen
 

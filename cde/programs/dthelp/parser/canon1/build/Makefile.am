@@ -2,6 +2,8 @@ MAINTAINERCLEANFILES = Makefile.in
 
 .NOTPARALLEL:
 
+EXTRA_DIST = context.dat
+
 noinst_PROGRAMS = build
 
 HELPTAG       = ..

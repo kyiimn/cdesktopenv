@@ -17,3 +17,7 @@ libGraphics_a_AR = $(LD) -r -o
 
 noinst_HEADERS = Graphics.h \
 	PixmapGraphic.hh
+
+EXTRA_DIST = \
+	Graphics.d \
+	PixmapGraphic.d

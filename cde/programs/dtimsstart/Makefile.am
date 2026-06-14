@@ -2,8 +2,9 @@ xsessiondir = $(CDE_INSTALLATION_TOP)/config/Xsession.d
 
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = 0020.dtims.src
-
+EXTRA_DIST = 	0020.dtims.src \
+	dtimsstart.msg \
+	Dtimsstart
 bin_PROGRAMS = dtimsstart
 
 dist_xsession_SCRIPTS = 0020.dtims

@@ -1,3 +1,6 @@
+EXTRA_DIST = \
+	dtlogin.msg
+
 SUBDIRS = config
 
 bin_PROGRAMS = dtlogin dtgreet dtchooser

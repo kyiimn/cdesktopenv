@@ -1,5 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+EXTRA_DIST = context.dat
+
 .NOTPARALLEL:
 
 noinst_PROGRAMS = build

@@ -6,7 +6,7 @@ SUBDIRS = backdrops icons dsdm dtmail dtpad dtfile dtwm dtlogin		\
         dtappbuilder palettes dtappintegrate dtprintegrate dtconfig	\
         dtcreate dtprintinfo fontaliases dtdspmsg ttsnoop dtimsstart	\
         dtpdm dtsr dtpdmd dtinfo types tttypes util dtopen localized	\
-        dthelp dtdocbook
+        dthelp dtdocbook dtudcfonted dtudcexch
 
 install-data-hook:
 	-if [ $(CDE_INSTALLATION_TOP)/bin != $(bindir) ];then \

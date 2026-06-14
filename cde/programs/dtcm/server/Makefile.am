@@ -1,6 +1,10 @@
 MAINTAINERCLEANFILES = Makefile.in
 
-EXTRA_DIST = parser.y
+EXTRA_DIST = parser.y \
+	cm_tbl.i \
+	rtable2_tbl.i \
+	rtable3_tbl.i \
+	rtable4_tbl.i
 
 bin_PROGRAMS = rpc.cmsd
 

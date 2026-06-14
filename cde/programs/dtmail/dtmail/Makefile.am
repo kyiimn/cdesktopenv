@@ -1,4 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	DtMail.msg \
+	dtmailopts.msg \
+	Dtmail
+
 
 bin_PROGRAMS = dtmail
 

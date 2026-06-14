@@ -1,4 +1,7 @@
 MAINTAINERCLEANFILES = Makefile.in
+EXTRA_DIST = \
+	MotifApp.msg
+
 
 noinst_LIBRARIES = libMotifApp.a
 
