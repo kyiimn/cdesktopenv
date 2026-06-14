@@ -1,5 +1,5 @@
 $ "$XConsortium: dthello.msg /main/3 1995/11/08 14:06:18 rswiston $";
-"
+$ *
 $ *************************************<+>*************************************
 $ *****************************************************************************
 $ **
@@ -81,5 +81,5 @@ $    DO NOT LOCALIZE THESE MESSAGES
 $    These messages are used for the version information.
 $quote "
 1 "@(#)version_goes_here"
-2 "\n@(#)_DtMessage 目錄來源 $XConsortium: dthello.msg /main/3 1995/11/08 14:06:18 rswiston $:
+2 "\n@(#)_DtMessage 目錄來源 $XConsortium: dthello.msg /main/3 1995/11/08 14:06:18 rswiston $"
 
