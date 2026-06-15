@@ -29,4 +29,5 @@ $ Dtcreate*FC_StartByteTextField.columns = 6 for single-byte
 $                                          3 for multi-byte
 2 3
 $ fontList for AND Label
-3 -adobe-times-bold-r-normal--25-180-100-100-p-132-iso8859-1
+$ Was: 3 -adobe-times-bold-r-normal--25-180-100-100-p-132-iso8859-1
+3 Serif:bold-25

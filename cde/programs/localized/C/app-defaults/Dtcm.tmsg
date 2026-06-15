@@ -246,21 +246,25 @@ $
 $ 
 $ Messages 60 - 63 are font lists.
 $ 
-$ Message 60 - XmMonthPanel*fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 60 - XmMonthPanel*fontList
+$ Was: 60 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+60 Monospace-10
 $ 
-60 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-$ Message 61 - canvas*XmPushButton.fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-61 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 61 - canvas*XmPushButton.fontList
+$ Was: 61 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+61 Monospace-10
 $ 
 $ Message 62 - Font list to use to render date in the icon.
+$ Was: 62 -dt-application-bold-r-normal-sans-*-180-*-*-p-*-*-*
+
+62 Sans:bold-18
 $ 
-62 -dt-application-bold-r-normal-sans-*-180-*-*-p-*-*-*:
-$ 
-$ Message 63 - labelForm*fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-63 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 63 - labelForm*fontList
+$ Was: 63 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+63 Monospace-10
 $ 
 $ Message 64 - applicationFontFamily:
 $ Font family to use for Dtcm's views: ``application'' for C locale
@@ -368,115 +372,115 @@ $ See COSE cvmc 4702
 
 $ Messages 122 - 157 are fonts used for printing.
 $ Day View fonts: 122-125
-$ Dtcm*dvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-122 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*dvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-123 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*dvpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-124 -dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-
-$ Dtcm*dvpTimeFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-125 -dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
+$ Was: Dtcm*dvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+122 Serif:bold-16
+$ 
+$ Was: Dtcm*dvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+123 Serif:bold-9
+$ 
+$ Was: Dtcm*dvpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*
+124 Sans-10
+$ 
+$ Was: Dtcm*dvpTimeFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*
+125 Serif:bold-10
 
 $ Week View fonts: 126-130
-$ Dtcm*wvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-126 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*wvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-127 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*wvpApptFont:-dt-application-medium-r-normal-sans-0-90-0-0-p-0-*-*:
-128 -dt-application-medium-r-normal-sans-0-90-0-0-p-0-*-*:
-
-$ Dtcm*wvpDayFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-129 -dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-
-$ Dtcm*wvpBoxFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-130 -dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
+$ Was: Dtcm*wvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+126 Serif:bold-16
+$ 
+$ Was: Dtcm*wvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+127 Serif:bold-9
+$ 
+$ Was: Dtcm*wvpApptFont:-dt-application-medium-r-normal-sans-0-90-0-0-p-0-*-*
+128 Sans-9
+$ 
+$ Was: Dtcm*wvpDayFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*
+129 Serif:bold-12
+$ 
+$ Was: Dtcm*wvpBoxFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*
+130 Serif:bold-12
 
 $ Month View fonts: 131-138
-$ Dtcm*mvpTitleFont:-dt-application-bold-r-normal-serif-0-300-0-0-p-0-*-*:
-131 -dt-application-bold-r-normal-serif-0-300-0-0-p-0-*-*:
-
-$ Dtcm*mvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-132 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*mvpApptFont:-dt-application-medium-r-normal-sans-0-80-0-0-p-0-*-*:
-133 -dt-application-medium-r-normal-sans-0-80-0-0-p-0-*-*:
-
-$ Dtcm*mvpDayFont:-dt-application-bold-r-normal-serif-0-140-0-0-p-0-*-*:
-134 -dt-application-bold-r-normal-serif-0-140-0-0-p-0-*-*:
-
-$ Dtcm*mvpDateFont:-dt-application-bold-r-normal-serif-0-200-0-0-p-0-*-*:
-135 -dt-application-bold-r-normal-serif-0-200-0-0-p-0-*-*:
-
-$ Dtcm*mvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-136 -dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-
-$ Dtcm*mvpTinyDayFont:-dt-application-medium-r-normal-serif-0-70-0-0-m-0-*-*:
-137 -dt-application-medium-r-normal-serif-0-70-0-0-m-0-*-*:
-
-$ Dtcm*mvpTinyDateFont:-dt-application-bold-r-normal-serif-0-70-0-0-p-0-*-*:
-138 -dt-application-bold-r-normal-serif-0-70-0-0-p-0-*-*:
+$ Was: Dtcm*mvpTitleFont:-dt-application-bold-r-normal-serif-0-300-0-0-p-0-*-*
+131 Serif:bold-30
+$ 
+$ Was: Dtcm*mvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+132 Serif:bold-9
+$ 
+$ Was: Dtcm*mvpApptFont:-dt-application-medium-r-normal-sans-0-80-0-0-p-0-*-*
+133 Sans-8
+$ 
+$ Was: Dtcm*mvpDayFont:-dt-application-bold-r-normal-serif-0-140-0-0-p-0-*-*
+134 Serif:bold-14
+$ 
+$ Was: Dtcm*mvpDateFont:-dt-application-bold-r-normal-serif-0-200-0-0-p-0-*-*
+135 Serif:bold-20
+$ 
+$ Was: Dtcm*mvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*
+136 Serif:bold-10
+$ 
+$ Was: Dtcm*mvpTinyDayFont:-dt-application-medium-r-normal-serif-0-70-0-0-m-0-*-*
+137 Monospace-7
+$ 
+$ Was: Dtcm*mvpTinyDateFont:-dt-application-bold-r-normal-serif-0-70-0-0-p-0-*-*
+138 Serif:bold-7
 
 $ Year View fonts: 139-143
-$ Dtcm*yvpTitleFont:-dt-application-bold-r-normal-serif-0-[80 0 0 40]-0-0-p-0-*-*:
-139 -dt-application-bold-r-normal-serif-0-[80 0 0 40]-0-0-p-0-*-*:
-
-$ Dtcm*yvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-140 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*yvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-141 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*yvpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-142 -dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-
-$ Dtcm*yvpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-143 -dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
+$ Was: Dtcm*yvpTitleFont:-dt-application-bold-r-normal-serif-0-[80 0 0 40]-0-0-p-0-*-*
+139 Serif:bold-8
+$ 
+$ Was: Dtcm*yvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+140 Serif:bold-9
+$ 
+$ Was: Dtcm*yvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+141 Serif:bold-16
+$ 
+$ Was: Dtcm*yvpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*
+142 Monospace-12
+$ 
+$ Was: Dtcm*yvpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*
+143 Serif:bold-12
 
 $ Appt List View fonts: 144-150
-$ Dtcm*avpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-144 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*avpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-145 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*avpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-146 -dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-
-$ Dtcm*avpItemFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-147 -dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-
-$ Dtcm*avpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-148 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*avpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-149 -dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-
-$ Dtcm*avpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-150 -dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
+$ Was: Dtcm*avpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+144 Serif:bold-16
+$ 
+$ Was: Dtcm*avpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+145 Serif:bold-9
+$ 
+$ Was: Dtcm*avpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*
+146 Sans-10
+$ 
+$ Was: Dtcm*avpItemFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*
+147 Serif:bold-10
+$ 
+$ Was: Dtcm*avpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+148 Serif:bold-16
+$ 
+$ Was: Dtcm*avpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*
+149 Monospace-12
+$ 
+$ Was: Dtcm*avpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*
+150 Serif:bold-12
 
 $ To Do List View fonts: 151-157
-$ Dtcm*tvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-151 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*tvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-152 -dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*:
-
-$ Dtcm*tvpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-153 -dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*:
-
-$ Dtcm*tvpItemFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-154 -dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*:
-
-$ Dtcm*tvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-155 -dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*:
-
-$ Dtcm*tvpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-156 -dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*:
-
-$ Dtcm*tvpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
-157 -dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*:
+$ Was: Dtcm*tvpTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+151 Serif:bold-16
+$ 
+$ Was: Dtcm*tvpHeaderFont:-dt-application-bold-r-normal-serif-0-90-0-0-p-0-*-*
+152 Serif:bold-9
+$ 
+$ Was: Dtcm*tvpApptFont:-dt-application-medium-r-normal-sans-0-100-0-0-p-0-*-*
+153 Sans-10
+$ 
+$ Was: Dtcm*tvpItemFont:-dt-application-bold-r-normal-serif-0-100-0-0-p-0-*-*
+154 Serif:bold-10
+$ 
+$ Was: Dtcm*tvpTinyTitleFont:-dt-application-bold-r-normal-serif-0-160-0-0-p-0-*-*
+155 Serif:bold-16
+$ 
+$ Was: Dtcm*tvpTinyDayFont:-dt-application-medium-r-normal-serif-0-120-0-0-m-0-*-*
+156 Monospace-12
+$ 
+$ Was: Dtcm*tvpTinyDateFont:-dt-application-bold-r-normal-serif-0-120-0-0-p-0-*-*
+157 Serif:bold-12

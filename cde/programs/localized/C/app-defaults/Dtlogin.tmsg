@@ -31,11 +31,14 @@ $ These are not messages, but locale dependent values.
 $ ----------------------------------------------------------------------------
 $ 
 $ Dtlogin*labelFont
-1 -*-swiss 742-medium-r-normal-*-140-*-p-110-*
+$ Was: 1 -*-swiss 742-medium-r-normal-*-140-*-p-110-*
+1 Sans-14
 $ Dtlogin*textFont
-2 -*-prestige-medium-r-normal-*-128-72-*
+$ Was: 2 -*-prestige-medium-r-normal-*-128-72-*
+2 Monospace-13
 $ Dtlogin*greeting.fontList
-3 -*-*schoolbook-medium-i-normal--18-*
+$ Was: 3 -*-*schoolbook-medium-i-normal--18-*
+3 Serif:italic-18
 $ 
 $ login_text.columns = 20 for single-byte
 $                      10 for multi-byte

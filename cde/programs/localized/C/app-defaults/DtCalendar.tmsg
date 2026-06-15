@@ -246,21 +246,25 @@ $
 $ 
 $ Messages 60 - 63 are font lists.
 $ 
-$ Message 60 - XmMonthPanel*fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 60 - XmMonthPanel*fontList
+$ Was: 60 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+60 Monospace-10
 $ 
-60 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-$ Message 61 - canvas*XmPushButton.fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-61 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 61 - canvas*XmPushButton.fontList
+$ Was: 61 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+61 Monospace-10
 $ 
 $ Message 62 - Font list to use to render date in the icon.
+$ Was: 62 -dt-application-bold-r-normal-sans-*-180-*-*-p-*-*-*
+
+62 Sans:bold-18
 $ 
-62 -dt-application-bold-r-normal-sans-*-180-*-*-p-*-*-*:
-$ 
-$ Message 63 - labelForm*fontList: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
-$ 
-63 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Message 63 - labelForm*fontList
+$ Was: 63 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+
+63 Monospace-10
 $ 
 $ Message 64 - applicationFontFamily:
 $ Font family to use for DtCalendar's views: ``application'' for C locale

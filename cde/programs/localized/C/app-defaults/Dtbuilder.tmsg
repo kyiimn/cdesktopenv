@@ -71,11 +71,13 @@ $ ! App Builder resource settings
 $ !
 $	Message	1
 $		(Dtbuilder*dtb_palette_ab_palette_main_mainwin*palette_cpanel*fontList:)
-1 -adobe-helvetica-bold-r-normal--12-*-*-*-*-*-*-*:
+$ Was: 1 -adobe-helvetica-bold-r-normal--12-*-*-*-*-*-*-*:
+1 Sans:bold-12
 $ 
 $	Message	2
 $		(Dtbuilder*dtb_palette_ab_palette_main_mainwin*palette_footer*fontList:)
-2 -adobe-helvetica-bold-r-normal--12-*-*-*-*-*-*-*:
+$ Was: 2 -adobe-helvetica-bold-r-normal--12-*-*-*-*-*-*-*:
+2 Sans:bold-12
 $ 
 $ 
 $ ! Resource list for AppBuilder module palette

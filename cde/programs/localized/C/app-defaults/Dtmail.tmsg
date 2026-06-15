@@ -330,9 +330,11 @@ $  for the printing output.  Message 36 is used by the headers and footers.
 $  Message 37 is used by the text portion.
 $ 
 $ "NEW-"
-105 -dt-application-bold-r-normal-serif-0-120-0-0-m-0-*-*
+$ Was: 105 -dt-application-bold-r-normal-serif-0-120-0-0-m-0-*-*
+105 Monospace:bold-12
 $ "NEW-"
-106 -dt-application-medium-r-normal-serif-0-100-0-0-m-0-*-*
+$ Was: 106 -dt-application-medium-r-normal-serif-0-100-0-0-m-0-*-*
+106 Monospace-10
 
 $ 
 $ Message 107 is used to override the *Font resource place in the

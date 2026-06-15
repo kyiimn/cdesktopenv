@@ -87,13 +87,17 @@ $ These are not messages, but locale dependent values.
 $ ----------------------------------------------------------------------------
 $ 
 $ Dtwm*FrontPanel*highResFontList
-17 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 17 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*
+17 Sans-14
 $ Dtwm*FrontPanel*mediumResFontList
-18 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 18 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+18 Sans-12
 $ Dtwm*FrontPanel*lowResFontList
-19 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 19 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+19 Sans-10
 $ Dtwm*icon*fontList
-20 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 20 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+20 Sans-12
 
 $ Dtwm*instantTitleDialogShell.title
 21 Rename

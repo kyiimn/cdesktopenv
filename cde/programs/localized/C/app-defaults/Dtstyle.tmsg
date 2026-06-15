@@ -55,21 +55,23 @@ $
 $ NumFonts
 3 7
 $ Set of SystemFont
-4 Dtstyle*SystemFont1: -dt-interface system-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont2: -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont3: -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont4: -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont5: -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont6: -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*SystemFont7: -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 4 Dtstyle*SystemFont1..7 with -dt-interface system-medium-r-normal-{xxs..xxl}* XLFD patterns
+4 Dtstyle*SystemFont1: Sans-8\n\
+Dtstyle*SystemFont2: Sans-10\n\
+Dtstyle*SystemFont3: Sans-12\n\
+Dtstyle*SystemFont4: Sans-14\n\
+Dtstyle*SystemFont5: Sans-18\n\
+Dtstyle*SystemFont6: Sans-20\n\
+Dtstyle*SystemFont7: Sans-24
 $ Set of UserFont
-5 Dtstyle*UserFont1: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont2: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont3: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont4: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont5: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont6: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*UserFont7: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 5 Dtstyle*UserFont1..7 with -dt-interface user-medium-r-normal-{xxs..xxl}* XLFD patterns
+5 Dtstyle*UserFont1: Monospace-8\n\
+Dtstyle*UserFont2: Monospace-10\n\
+Dtstyle*UserFont3: Monospace-12\n\
+Dtstyle*UserFont4: Monospace-14\n\
+Dtstyle*UserFont5: Monospace-18\n\
+Dtstyle*UserFont6: Monospace-20\n\
+Dtstyle*UserFont7: Monospace-24
 
 $ ----------------------------------------------------------------------------
 $ Do not translate message 6.
@@ -85,41 +87,45 @@ $ FontFamily0 identifier
 $ FontFamily0Label
 9 System
 $ Set of FontFamily0SystemFont
-10 Dtstyle*FontFamily0SystemFont0: -dt-interface system-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont1: -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont2: -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont3: -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont4: -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont5: -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0SystemFont6: -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 10 Dtstyle*FontFamily0SystemFont0..6 with -dt-interface system-medium-r-normal-{xxs..xxl}* XLFD patterns
+10 Dtstyle*FontFamily0SystemFont0: Sans-8\n\
+Dtstyle*FontFamily0SystemFont1: Sans-10\n\
+Dtstyle*FontFamily0SystemFont2: Sans-12\n\
+Dtstyle*FontFamily0SystemFont3: Sans-14\n\
+Dtstyle*FontFamily0SystemFont4: Sans-18\n\
+Dtstyle*FontFamily0SystemFont5: Sans-20\n\
+Dtstyle*FontFamily0SystemFont6: Sans-24
 $ Set of FontFamily0UserFont
-11 Dtstyle*FontFamily0UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily0UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 11 Dtstyle*FontFamily0UserFont0..6 with -dt-interface user-medium-r-normal-{xxs..xxl}* XLFD patterns
+11 Dtstyle*FontFamily0UserFont0: Monospace-8\n\
+Dtstyle*FontFamily0UserFont1: Monospace-10\n\
+Dtstyle*FontFamily0UserFont2: Monospace-12\n\
+Dtstyle*FontFamily0UserFont3: Monospace-14\n\
+Dtstyle*FontFamily0UserFont4: Monospace-18\n\
+Dtstyle*FontFamily0UserFont5: Monospace-20\n\
+Dtstyle*FontFamily0UserFont6: Monospace-24
 $ FontFamily1 identifier
 12 user
 $ FontFamily1Label
 13 User
 $ Set of FontFamily1SystemFont
-14 Dtstyle*FontFamily1SystemFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1SystemFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 14 Dtstyle*FontFamily1SystemFont0..6 with -dt-interface user-medium-r-normal-{xxs..xxl}* XLFD patterns
+14 Dtstyle*FontFamily1SystemFont0: Monospace-8\n\
+Dtstyle*FontFamily1SystemFont1: Monospace-10\n\
+Dtstyle*FontFamily1SystemFont2: Monospace-12\n\
+Dtstyle*FontFamily1SystemFont3: Monospace-14\n\
+Dtstyle*FontFamily1SystemFont4: Monospace-18\n\
+Dtstyle*FontFamily1SystemFont5: Monospace-20\n\
+Dtstyle*FontFamily1SystemFont6: Monospace-24
 $ Set of FontFamily1UserFont
-15 Dtstyle*FontFamily1UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
-Dtstyle*FontFamily1UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 15 Dtstyle*FontFamily1UserFont0..6 with -dt-interface user-medium-r-normal-{xxs..xxl}* XLFD patterns
+15 Dtstyle*FontFamily1UserFont0: Monospace-8\n\
+Dtstyle*FontFamily1UserFont1: Monospace-10\n\
+Dtstyle*FontFamily1UserFont2: Monospace-12\n\
+Dtstyle*FontFamily1UserFont3: Monospace-14\n\
+Dtstyle*FontFamily1UserFont4: Monospace-18\n\
+Dtstyle*FontFamily1UserFont5: Monospace-20\n\
+Dtstyle*FontFamily1UserFont6: Monospace-24
 
 $ \
 $ ----------------------------------------------------------------------------\

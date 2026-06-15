@@ -64,4 +64,5 @@ $
 $ *XmFileSelectionBox*XmLabelGadget.fontList     
 $ This is not a message, but locale dependent values. See sys.font.tmsg...
 $ 
-9 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 9 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+9 Sans-12

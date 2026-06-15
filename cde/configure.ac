@@ -611,6 +611,7 @@ if test "x$enable_xft" != "xno" ; then
 fi
 if test "x$enable_xft" != "xno" ; then
    SOURCE_CPP_DEFINES="${SOURCE_CPP_DEFINES} -DUSE_XFT"
+   AC_DEFINE([USE_XFT], [1], [Define to 1 to enable Xft/fontconfig font rendering])
    enable_xft="yes"
 fi
 AM_CONDITIONAL([HAVE_XFT], [test "x$enable_xft" = "xyes"])

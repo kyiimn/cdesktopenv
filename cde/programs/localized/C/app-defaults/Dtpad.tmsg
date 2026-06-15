@@ -101,6 +101,8 @@ $  for the printing output.  Message 36 is used by the headers and footers.
 $  Message 37 is used by the text portion.
 $ 
 $ "NEW-"
-36 -dt-application-bold-r-normal-serif-0-120-0-0-m-0-*-*
+$ Was: 36 -dt-application-bold-r-normal-serif-0-120-0-0-m-0-*-*
+36 Monospace:bold-12
 $ "NEW-"
-37 -dt-application-medium-r-normal-serif-0-100-0-0-m-0-*-*
+$ Was: 37 -dt-application-medium-r-normal-serif-0-100-0-0-m-0-*-*
+37 Monospace-10

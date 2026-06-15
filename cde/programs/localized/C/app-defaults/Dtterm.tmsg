@@ -31,10 +31,11 @@ $ offered to the user via the style manager (dtstyle).  They are the
 $ seven interface fonts that are defined for this locale and should
 $ be specified as XmFontLists containing XFontSets.
 $ 
-1 -dt-interface user-medium-r-normal-xxs*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-xs*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-s*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-m*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-l*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-xl*-*-*-*-*-m-*:\\n\\\n\
--dt-interface user-medium-r-normal-xxl*-*-*-*-*-m-*:
+$ Was: 1 -dt-interface user-medium-r-normal-xxs* through xxl* (7 font sizes)
+1 Monospace-8\\n\\\n\
+Monospace-10\\n\\\n\
+Monospace-12\\n\\\n\
+Monospace-14\\n\\\n\
+Monospace-18\\n\\\n\
+Monospace-20\\n\\\n\
+Monospace-24

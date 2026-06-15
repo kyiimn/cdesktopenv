@@ -2690,7 +2690,8 @@ $
 $ 12057 - Translate the following X Logical Font Description so the
 $         font used by the digital xclock will be localized.
 $ 
-12057 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-iso8859-1
+$ Was: 12057 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-iso8859-1
+12057 Sans-18
 $ 
 $ **************************************************************************
 $ **************************************************************************

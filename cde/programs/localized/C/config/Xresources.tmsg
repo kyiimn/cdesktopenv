@@ -31,11 +31,14 @@ $ These are not messages, but locale dependent values.
 $ ----------------------------------------------------------------------------
 $ 
 $ Dtlogin*labelFont
-1 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:
+$ Was: 1 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*
+1 Sans-18
 $ Dtlogin*textFont
-2 -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:
+$ Was: 2 -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*
+2 Monospace-18
 $ Dtlogin*greeting.fontList
-3 -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:
+$ Was: 3 -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*
+3 Sans-24
 $ 
 $ login_text.columns = 20 for single-byte
 $                      10 for multi-byte
@@ -45,19 +48,24 @@ $ passwd_text.columns = 20 for single-byte
 $                       10 for multi-byte
 5 20
 $ Dtchooser*fontList
-6 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:
+$ Was: 6 -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*
+6 Sans-18
 $ 6 is not used anymore...
 
 $ Dtchooser font for list and list header 
 $ - needs to be a mono-spaced font
-7 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 7 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+7 Monospace-12
 
 $ Dtlogin*labelFont (low resolution displays)
-8 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 8 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+8 Sans-12
 $ Dtlogin*textFont (low resolution displays)
-9 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 9 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+9 Monospace-12
 $ Dtlogin*greeting.fontList (low resolution displays)
-10 -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*:
+$ Was: 10 -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*
+10 Sans-20
 
 $ ----------------------------------------------------------------------------
 $ Login screen language list translations for AIX (IBM)

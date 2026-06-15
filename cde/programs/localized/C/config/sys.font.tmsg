@@ -32,50 +32,74 @@ $ These are not messages, but locale dependent values.
 $ ----------------------------------------------------------------------------
 $ 
 $ *FontList
-1 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 1 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*
+1 Sans-14
 $ *XmText*FontList
-2 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 2 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+2 Monospace-14
 $ *XmTextField*FontList
-3 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 3 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+3 Monospace-14
 $ *systemFont
-4 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 4 -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*
+4 Sans-14
 $ *userFont
-5 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 5 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+5 Monospace-14
 $ *DtEditor*textFontList
-6 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:
+$ Was: 6 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+6 Monospace-14
 $ *Font
-7 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+$ Was: 7 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+7 Monospace-14
 $ *FontSet
-8 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+$ Was: 8 -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*
+8 Monospace-14
 $ *FontList
-9 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 9 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+9 Sans-12
 $ *XmText*FontList
-10 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 10 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+10 Monospace-12
 $ *XmTextField*FontList
-11 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 11 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+11 Monospace-12
 $ *systemFont
-12 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 12 -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*
+12 Sans-12
 $ *userFont
-13 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 13 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+13 Monospace-12
 $ *DtEditor*textFontList
-14 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:
+$ Was: 14 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+14 Monospace-12
 $ *Font
-15 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+$ Was: 15 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+15 Monospace-12
 $ *FontSet
-16 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+$ Was: 16 -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*
+16 Monospace-12
 $ *FontList
-17 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 17 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+17 Sans-10
 $ *XmText*FontList
-18 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 18 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+18 Monospace-10
 $ *XmTextField*FontList
-19 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 19 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+19 Monospace-10
 $ *systemFont
-20 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 20 -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+20 Sans-10
 $ *userFont
-21 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 21 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+21 Monospace-10
 $ *DtEditor*textFontList
-22 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:
+$ Was: 22 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+22 Monospace-10
 $ *Font
-23 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+$ Was: 23 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+23 Monospace-10
 $ *FontSet
-24 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+$ Was: 24 -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*
+24 Monospace-10

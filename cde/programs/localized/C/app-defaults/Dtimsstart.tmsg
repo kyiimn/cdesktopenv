@@ -24,7 +24,8 @@ $ *****************************************************************************
 $ ----------------------------------------------------------------------------
 $ 
 $ font list
-1 -dt-interface user-medium-r-normal-m*-*-*-*-*-m-*:
+$ Was: font list 1 -dt-interface user-medium-r-normal-m*-*-*-*-*-m-*:
+1 Monospace-14
 $ 
 $ title bar title
 2 dtimsstart
