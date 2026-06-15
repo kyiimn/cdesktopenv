@@ -152,7 +152,9 @@ dtxdg2appmgr_write_group_dt(const gchar *group_name,
                              GError **error)
 {
     gchar *group_xdg;
+    gchar *attrs_name;
     gchar *criteria_name;
+    gchar *icon_name;
     gchar *file_path;
     FILE *fp;
 
@@ -160,14 +162,18 @@ dtxdg2appmgr_write_group_dt(const gchar *group_name,
     g_return_val_if_fail(dt_output_dir != NULL, FALSE);
 
     group_xdg = g_strdup(group_name);
-    criteria_name = g_strdup_printf("%sCriteria1", group_xdg);
+    attrs_name = g_strdup_printf("%sAppgroup", group_xdg);
+    criteria_name = g_strdup_printf("%sAppgroupCriteria1", group_xdg);
+    icon_name = g_strdup_printf("%sGroup", group_xdg);
 
     if (g_mkdir_with_parents(dt_output_dir, 0755) != 0) {
         g_set_error(error, G_FILE_ERROR, g_file_error_from_errno(errno),
                     "Failed to create directory '%s': %s",
                     dt_output_dir, g_strerror(errno));
         g_free(group_xdg);
+        g_free(attrs_name);
         g_free(criteria_name);
+        g_free(icon_name);
         return FALSE;
     }
 
@@ -185,21 +191,23 @@ dtxdg2appmgr_write_group_dt(const gchar *group_name,
                     file_path, g_strerror(errno));
         g_free(file_path);
         g_free(group_xdg);
+        g_free(attrs_name);
         g_free(criteria_name);
+        g_free(icon_name);
         return FALSE;
     }
 
-    fprintf(fp, "DATA_ATTRIBUTES %s\n", group_xdg);
+    fprintf(fp, "DATA_ATTRIBUTES %s\n", attrs_name);
     fprintf(fp, "{\n");
     fprintf(fp, "\tACTIONS\t\tOpenInPlace,OpenNewView\n");
     fprintf(fp, "\tLABEL\t\t%s\n", group_name);
-    fprintf(fp, "\tICON\t\tDtapps\n");
-    fprintf(fp, "\tDESCRIPTION\t%s Applications (XDG)\n", group_name);
+    fprintf(fp, "\tICON\t\t%s\n", icon_name);
+    fprintf(fp, "\tDESCRIPTION\t%s Applications.\n", group_name);
     fprintf(fp, "}\n\n");
 
     fprintf(fp, "DATA_CRITERIA %s\n", criteria_name);
     fprintf(fp, "{\n");
-    fprintf(fp, "\tDATA_ATTRIBUTES_NAME\t%s\n", group_xdg);
+    fprintf(fp, "\tDATA_ATTRIBUTES_NAME\t%s\n", attrs_name);
     fprintf(fp, "\tLABEL\t\t\t%s\n", group_name);
     fprintf(fp, "\tMODE\t\t\td\n");
     fprintf(fp, "\tPATH_PATTERN\t\t*/appmanager/*/%s\n", group_xdg);
@@ -207,14 +215,23 @@ dtxdg2appmgr_write_group_dt(const gchar *group_name,
 
     fprintf(fp, "ACTION Open\n");
     fprintf(fp, "{\n");
-    fprintf(fp, "\tARG_TYPE\t%s\n", group_xdg);
+    fprintf(fp, "\tARG_TYPE\t%s\n", attrs_name);
     fprintf(fp, "\tTYPE\t\tMAP\n");
     fprintf(fp, "\tMAP_ACTION\tOpenAppGroup\n");
+    fprintf(fp, "}\n\n");
+
+    fprintf(fp, "ACTION Print\n");
+    fprintf(fp, "{\n");
+    fprintf(fp, "\tARG_TYPE\t%s\n", attrs_name);
+    fprintf(fp, "\tTYPE\t\tMAP\n");
+    fprintf(fp, "\tMAP_ACTION\tPrintAppGroup\n");
     fprintf(fp, "}\n");
 
     fclose(fp);
     g_free(file_path);
     g_free(group_xdg);
+    g_free(attrs_name);
     g_free(criteria_name);
+    g_free(icon_name);
     return TRUE;
 }

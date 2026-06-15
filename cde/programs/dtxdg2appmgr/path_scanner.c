@@ -77,42 +77,63 @@ dtxdg2appmgr_xdg_get_data_dirs(void)
     return result;
 }
 
-GSList *
-dtxdg2appmgr_xdg_scan_applications(gchar **data_dirs)
+/*
+ * Recursively scan a directory for .desktop files.
+ * Adds parsed entries to the list if desktop_should_include() returns TRUE.
+ * Skips hidden files, symlinks to directories, and already-visited paths
+ * to prevent infinite recursion through symlink loops.
+ */
+static void
+scan_directory_recursive(const gchar *dir_path,
+                        const gchar *lang,
+                        GSList **entries,
+                        GHashTable *visited)
 {
-    GSList *entries = NULL;
     GDir *dir;
-    const gchar *filename;
-    gchar *apps_dir;
+    const gchar *name;
     gchar *full_path;
-    gchar *lang;
     dtxdg2appmgr_DesktopEntry *entry;
-    int i;
 
-    if (data_dirs == NULL)
-        return NULL;
+    dir = g_dir_open(dir_path, 0, NULL);
+    if (dir == NULL)
+        return;
 
-    lang = dtxdg2appmgr_xdg_get_language();
-
-    for (i = 0; data_dirs[i] != NULL; i++)
+    while ((name = g_dir_read_name(dir)) != NULL)
     {
-        apps_dir = g_build_filename(data_dirs[i], "applications", NULL);
-        dir = g_dir_open(apps_dir, 0, NULL);
-        if (dir == NULL)
-        {
-            g_free(apps_dir);
+        if (name[0] == '.')
             continue;
-        }
 
-        while ((filename = g_dir_read_name(dir)) != NULL)
+        full_path = g_build_filename(dir_path, name, NULL);
+
+        if (g_file_test(full_path, G_FILE_TEST_IS_DIR))
         {
-            if (filename[0] == '.')
+            /* Skip symlinks to directories — don't follow for security */
+            if (g_file_test(full_path, G_FILE_TEST_IS_SYMLINK))
+            {
+                g_free(full_path);
                 continue;
+            }
 
-            if (!g_str_has_suffix(filename, ".desktop"))
+            gchar *canonical = realpath(full_path, NULL);
+            if (canonical == NULL)
+            {
+                g_free(full_path);
                 continue;
+            }
 
-            full_path = g_build_filename(apps_dir, filename, NULL);
+            if (g_hash_table_contains(visited, canonical))
+            {
+                g_free(canonical);
+                g_free(full_path);
+                continue;
+            }
+
+            g_hash_table_add(visited, canonical);
+            scan_directory_recursive(full_path, lang, entries, visited);
+            g_free(full_path);
+        }
+        else if (g_str_has_suffix(name, ".desktop"))
+        {
             entry = dtxdg2appmgr_desktop_parse(full_path, lang);
             g_free(full_path);
 
@@ -121,18 +142,45 @@ dtxdg2appmgr_xdg_scan_applications(gchar **data_dirs)
 
             if (dtxdg2appmgr_desktop_should_include(entry))
             {
-                entries = g_slist_prepend(entries, entry);
+                *entries = g_slist_prepend(*entries, entry);
             }
             else
             {
                 dtxdg2appmgr_desktop_entry_free(entry);
             }
         }
+        else
+        {
+            g_free(full_path);
+        }
+    }
 
-        g_dir_close(dir);
+    g_dir_close(dir);
+}
+
+GSList *
+dtxdg2appmgr_xdg_scan_applications(gchar **data_dirs)
+{
+    GSList *entries = NULL;
+    gchar *apps_dir;
+    gchar *lang;
+    GHashTable *visited;
+    int i;
+
+    if (data_dirs == NULL)
+        return NULL;
+
+    lang = dtxdg2appmgr_xdg_get_language();
+    visited = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+
+    for (i = 0; data_dirs[i] != NULL; i++)
+    {
+        apps_dir = g_build_filename(data_dirs[i], "applications", NULL);
+        scan_directory_recursive(apps_dir, lang, &entries, visited);
         g_free(apps_dir);
     }
 
+    g_hash_table_destroy(visited);
     g_free(lang);
     return entries;
 }

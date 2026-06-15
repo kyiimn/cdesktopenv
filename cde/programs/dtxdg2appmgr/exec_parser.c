@@ -72,10 +72,7 @@ dtxdg2appmgr_exec_to_cde_string(const gchar *exec_line,
                     g_string_append(result, "%Arg_1%");
                     p++;
                 } else if (*p == 'i') {
-                    if (icon_name != NULL && icon_name[0] != '\0') {
-                        g_string_append(result, "--icon ");
-                        g_string_append(result, icon_name);
-                    }
+                    /* %i (icon) is consumed silently; CDE uses the ICON field directly */
                     p++;
                 } else if (*p == 'c') {
                     if (name != NULL)
@@ -114,10 +111,7 @@ dtxdg2appmgr_exec_to_cde_string(const gchar *exec_line,
                     g_string_append(result, "%Arg_1%");
                     p++;
                 } else if (*p == 'i') {
-                    if (icon_name != NULL && icon_name[0] != '\0') {
-                        g_string_append(result, "--icon ");
-                        g_string_append(result, icon_name);
-                    }
+                    /* %i (icon) is consumed silently; CDE uses the ICON field directly */
                     p++;
                 } else if (*p == 'c') {
                     if (name != NULL)
