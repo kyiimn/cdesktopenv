@@ -17,6 +17,9 @@ libOther_a_AR = $(LD) -r -o
 BUILT_SOURCES = Other.msg
 CLEANFILES = $(BUILT_SOURCES)
 
+Other.msg:
+	cat $(Other_MSGS) > $@
+
 EXTRA_DIST = detached_bw.xbm \
 	detached_bw.xpm \
 	graphic_unavailable.xbm \
