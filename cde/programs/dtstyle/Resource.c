@@ -462,6 +462,442 @@ XtResource family1UserFont_resources[] = {
       "-dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:" },
 };
 
+/* FontFamily2-7 resource tables — defaults are empty strings.
+ * Admin must configure them via xrdb if they want families 2-7 populated.
+ * numFamilies defaults to 2, so these tables are not loaded by default. */
+
+/* FontFamily2 System Font string resources */
+XtResource family2SysStr_resources[] = {
+  {"fontFamily2SystemFont0", "FontFamily2SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,0)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont1", "FontFamily2SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,1)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont2", "FontFamily2SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,2)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont3", "FontFamily2SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,3)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont4", "FontFamily2SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,4)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont5", "FontFamily2SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,5)].sysStr), XmRString, "" },
+  {"fontFamily2SystemFont6", "FontFamily2SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily2 System FontList resources */
+XtResource family2SysFont_resources[] = {
+  {"fontFamily2SystemFont0", "FontFamily2SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,0)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont1", "FontFamily2SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,1)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont2", "FontFamily2SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,2)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont3", "FontFamily2SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,3)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont4", "FontFamily2SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,4)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont5", "FontFamily2SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,5)].sysFont), XmRString, "" },
+  {"fontFamily2SystemFont6", "FontFamily2SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily2 User Font string resources */
+XtResource family2UserStr_resources[] = {
+  {"fontFamily2UserFont0", "FontFamily2UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,0)].userStr), XmRString, "" },
+  {"fontFamily2UserFont1", "FontFamily2UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,1)].userStr), XmRString, "" },
+  {"fontFamily2UserFont2", "FontFamily2UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,2)].userStr), XmRString, "" },
+  {"fontFamily2UserFont3", "FontFamily2UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,3)].userStr), XmRString, "" },
+  {"fontFamily2UserFont4", "FontFamily2UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,4)].userStr), XmRString, "" },
+  {"fontFamily2UserFont5", "FontFamily2UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,5)].userStr), XmRString, "" },
+  {"fontFamily2UserFont6", "FontFamily2UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily2 User FontList resources */
+XtResource family2UserFont_resources[] = {
+  {"fontFamily2UserFont0", "FontFamily2UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,0)].userFont), XmRString, "" },
+  {"fontFamily2UserFont1", "FontFamily2UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,1)].userFont), XmRString, "" },
+  {"fontFamily2UserFont2", "FontFamily2UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,2)].userFont), XmRString, "" },
+  {"fontFamily2UserFont3", "FontFamily2UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,3)].userFont), XmRString, "" },
+  {"fontFamily2UserFont4", "FontFamily2UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,4)].userFont), XmRString, "" },
+  {"fontFamily2UserFont5", "FontFamily2UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,5)].userFont), XmRString, "" },
+  {"fontFamily2UserFont6", "FontFamily2UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(2,6)].userFont), XmRString, "" },
+};
+
+/* FontFamily3 System Font string resources */
+XtResource family3SysStr_resources[] = {
+  {"fontFamily3SystemFont0", "FontFamily3SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,0)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont1", "FontFamily3SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,1)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont2", "FontFamily3SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,2)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont3", "FontFamily3SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,3)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont4", "FontFamily3SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,4)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont5", "FontFamily3SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,5)].sysStr), XmRString, "" },
+  {"fontFamily3SystemFont6", "FontFamily3SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily3 System FontList resources */
+XtResource family3SysFont_resources[] = {
+  {"fontFamily3SystemFont0", "FontFamily3SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,0)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont1", "FontFamily3SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,1)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont2", "FontFamily3SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,2)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont3", "FontFamily3SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,3)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont4", "FontFamily3SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,4)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont5", "FontFamily3SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,5)].sysFont), XmRString, "" },
+  {"fontFamily3SystemFont6", "FontFamily3SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily3 User Font string resources */
+XtResource family3UserStr_resources[] = {
+  {"fontFamily3UserFont0", "FontFamily3UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,0)].userStr), XmRString, "" },
+  {"fontFamily3UserFont1", "FontFamily3UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,1)].userStr), XmRString, "" },
+  {"fontFamily3UserFont2", "FontFamily3UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,2)].userStr), XmRString, "" },
+  {"fontFamily3UserFont3", "FontFamily3UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,3)].userStr), XmRString, "" },
+  {"fontFamily3UserFont4", "FontFamily3UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,4)].userStr), XmRString, "" },
+  {"fontFamily3UserFont5", "FontFamily3UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,5)].userStr), XmRString, "" },
+  {"fontFamily3UserFont6", "FontFamily3UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily3 User FontList resources */
+XtResource family3UserFont_resources[] = {
+  {"fontFamily3UserFont0", "FontFamily3UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,0)].userFont), XmRString, "" },
+  {"fontFamily3UserFont1", "FontFamily3UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,1)].userFont), XmRString, "" },
+  {"fontFamily3UserFont2", "FontFamily3UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,2)].userFont), XmRString, "" },
+  {"fontFamily3UserFont3", "FontFamily3UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,3)].userFont), XmRString, "" },
+  {"fontFamily3UserFont4", "FontFamily3UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,4)].userFont), XmRString, "" },
+  {"fontFamily3UserFont5", "FontFamily3UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,5)].userFont), XmRString, "" },
+  {"fontFamily3UserFont6", "FontFamily3UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(3,6)].userFont), XmRString, "" },
+};
+
+/* FontFamily4 System Font string resources */
+XtResource family4SysStr_resources[] = {
+  {"fontFamily4SystemFont0", "FontFamily4SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,0)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont1", "FontFamily4SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,1)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont2", "FontFamily4SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,2)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont3", "FontFamily4SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,3)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont4", "FontFamily4SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,4)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont5", "FontFamily4SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,5)].sysStr), XmRString, "" },
+  {"fontFamily4SystemFont6", "FontFamily4SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily4 System FontList resources */
+XtResource family4SysFont_resources[] = {
+  {"fontFamily4SystemFont0", "FontFamily4SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,0)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont1", "FontFamily4SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,1)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont2", "FontFamily4SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,2)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont3", "FontFamily4SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,3)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont4", "FontFamily4SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,4)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont5", "FontFamily4SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,5)].sysFont), XmRString, "" },
+  {"fontFamily4SystemFont6", "FontFamily4SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily4 User Font string resources */
+XtResource family4UserStr_resources[] = {
+  {"fontFamily4UserFont0", "FontFamily4UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,0)].userStr), XmRString, "" },
+  {"fontFamily4UserFont1", "FontFamily4UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,1)].userStr), XmRString, "" },
+  {"fontFamily4UserFont2", "FontFamily4UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,2)].userStr), XmRString, "" },
+  {"fontFamily4UserFont3", "FontFamily4UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,3)].userStr), XmRString, "" },
+  {"fontFamily4UserFont4", "FontFamily4UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,4)].userStr), XmRString, "" },
+  {"fontFamily4UserFont5", "FontFamily4UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,5)].userStr), XmRString, "" },
+  {"fontFamily4UserFont6", "FontFamily4UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily4 User FontList resources */
+XtResource family4UserFont_resources[] = {
+  {"fontFamily4UserFont0", "FontFamily4UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,0)].userFont), XmRString, "" },
+  {"fontFamily4UserFont1", "FontFamily4UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,1)].userFont), XmRString, "" },
+  {"fontFamily4UserFont2", "FontFamily4UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,2)].userFont), XmRString, "" },
+  {"fontFamily4UserFont3", "FontFamily4UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,3)].userFont), XmRString, "" },
+  {"fontFamily4UserFont4", "FontFamily4UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,4)].userFont), XmRString, "" },
+  {"fontFamily4UserFont5", "FontFamily4UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,5)].userFont), XmRString, "" },
+  {"fontFamily4UserFont6", "FontFamily4UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(4,6)].userFont), XmRString, "" },
+};
+
+/* FontFamily5 System Font string resources */
+XtResource family5SysStr_resources[] = {
+  {"fontFamily5SystemFont0", "FontFamily5SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,0)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont1", "FontFamily5SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,1)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont2", "FontFamily5SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,2)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont3", "FontFamily5SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,3)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont4", "FontFamily5SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,4)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont5", "FontFamily5SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,5)].sysStr), XmRString, "" },
+  {"fontFamily5SystemFont6", "FontFamily5SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily5 System FontList resources */
+XtResource family5SysFont_resources[] = {
+  {"fontFamily5SystemFont0", "FontFamily5SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,0)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont1", "FontFamily5SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,1)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont2", "FontFamily5SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,2)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont3", "FontFamily5SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,3)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont4", "FontFamily5SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,4)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont5", "FontFamily5SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,5)].sysFont), XmRString, "" },
+  {"fontFamily5SystemFont6", "FontFamily5SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily5 User Font string resources */
+XtResource family5UserStr_resources[] = {
+  {"fontFamily5UserFont0", "FontFamily5UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,0)].userStr), XmRString, "" },
+  {"fontFamily5UserFont1", "FontFamily5UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,1)].userStr), XmRString, "" },
+  {"fontFamily5UserFont2", "FontFamily5UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,2)].userStr), XmRString, "" },
+  {"fontFamily5UserFont3", "FontFamily5UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,3)].userStr), XmRString, "" },
+  {"fontFamily5UserFont4", "FontFamily5UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,4)].userStr), XmRString, "" },
+  {"fontFamily5UserFont5", "FontFamily5UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,5)].userStr), XmRString, "" },
+  {"fontFamily5UserFont6", "FontFamily5UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily5 User FontList resources */
+XtResource family5UserFont_resources[] = {
+  {"fontFamily5UserFont0", "FontFamily5UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,0)].userFont), XmRString, "" },
+  {"fontFamily5UserFont1", "FontFamily5UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,1)].userFont), XmRString, "" },
+  {"fontFamily5UserFont2", "FontFamily5UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,2)].userFont), XmRString, "" },
+  {"fontFamily5UserFont3", "FontFamily5UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,3)].userFont), XmRString, "" },
+  {"fontFamily5UserFont4", "FontFamily5UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,4)].userFont), XmRString, "" },
+  {"fontFamily5UserFont5", "FontFamily5UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,5)].userFont), XmRString, "" },
+  {"fontFamily5UserFont6", "FontFamily5UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(5,6)].userFont), XmRString, "" },
+};
+
+/* FontFamily6 System Font string resources */
+XtResource family6SysStr_resources[] = {
+  {"fontFamily6SystemFont0", "FontFamily6SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,0)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont1", "FontFamily6SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,1)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont2", "FontFamily6SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,2)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont3", "FontFamily6SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,3)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont4", "FontFamily6SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,4)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont5", "FontFamily6SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,5)].sysStr), XmRString, "" },
+  {"fontFamily6SystemFont6", "FontFamily6SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily6 System FontList resources */
+XtResource family6SysFont_resources[] = {
+  {"fontFamily6SystemFont0", "FontFamily6SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,0)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont1", "FontFamily6SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,1)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont2", "FontFamily6SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,2)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont3", "FontFamily6SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,3)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont4", "FontFamily6SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,4)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont5", "FontFamily6SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,5)].sysFont), XmRString, "" },
+  {"fontFamily6SystemFont6", "FontFamily6SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily6 User Font string resources */
+XtResource family6UserStr_resources[] = {
+  {"fontFamily6UserFont0", "FontFamily6UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,0)].userStr), XmRString, "" },
+  {"fontFamily6UserFont1", "FontFamily6UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,1)].userStr), XmRString, "" },
+  {"fontFamily6UserFont2", "FontFamily6UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,2)].userStr), XmRString, "" },
+  {"fontFamily6UserFont3", "FontFamily6UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,3)].userStr), XmRString, "" },
+  {"fontFamily6UserFont4", "FontFamily6UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,4)].userStr), XmRString, "" },
+  {"fontFamily6UserFont5", "FontFamily6UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,5)].userStr), XmRString, "" },
+  {"fontFamily6UserFont6", "FontFamily6UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily6 User FontList resources */
+XtResource family6UserFont_resources[] = {
+  {"fontFamily6UserFont0", "FontFamily6UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,0)].userFont), XmRString, "" },
+  {"fontFamily6UserFont1", "FontFamily6UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,1)].userFont), XmRString, "" },
+  {"fontFamily6UserFont2", "FontFamily6UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,2)].userFont), XmRString, "" },
+  {"fontFamily6UserFont3", "FontFamily6UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,3)].userFont), XmRString, "" },
+  {"fontFamily6UserFont4", "FontFamily6UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,4)].userFont), XmRString, "" },
+  {"fontFamily6UserFont5", "FontFamily6UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,5)].userFont), XmRString, "" },
+  {"fontFamily6UserFont6", "FontFamily6UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(6,6)].userFont), XmRString, "" },
+};
+
+/* FontFamily7 System Font string resources */
+XtResource family7SysStr_resources[] = {
+  {"fontFamily7SystemFont0", "FontFamily7SystemFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,0)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont1", "FontFamily7SystemFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,1)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont2", "FontFamily7SystemFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,2)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont3", "FontFamily7SystemFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,3)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont4", "FontFamily7SystemFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,4)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont5", "FontFamily7SystemFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,5)].sysStr), XmRString, "" },
+  {"fontFamily7SystemFont6", "FontFamily7SystemFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,6)].sysStr), XmRString, "" },
+};
+
+/* FontFamily7 System FontList resources */
+XtResource family7SysFont_resources[] = {
+  {"fontFamily7SystemFont0", "FontFamily7SystemFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,0)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont1", "FontFamily7SystemFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,1)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont2", "FontFamily7SystemFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,2)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont3", "FontFamily7SystemFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,3)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont4", "FontFamily7SystemFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,4)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont5", "FontFamily7SystemFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,5)].sysFont), XmRString, "" },
+  {"fontFamily7SystemFont6", "FontFamily7SystemFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,6)].sysFont), XmRString, "" },
+};
+
+/* FontFamily7 User Font string resources */
+XtResource family7UserStr_resources[] = {
+  {"fontFamily7UserFont0", "FontFamily7UserFont0", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,0)].userStr), XmRString, "" },
+  {"fontFamily7UserFont1", "FontFamily7UserFont1", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,1)].userStr), XmRString, "" },
+  {"fontFamily7UserFont2", "FontFamily7UserFont2", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,2)].userStr), XmRString, "" },
+  {"fontFamily7UserFont3", "FontFamily7UserFont3", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,3)].userStr), XmRString, "" },
+  {"fontFamily7UserFont4", "FontFamily7UserFont4", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,4)].userStr), XmRString, "" },
+  {"fontFamily7UserFont5", "FontFamily7UserFont5", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,5)].userStr), XmRString, "" },
+  {"fontFamily7UserFont6", "FontFamily7UserFont6", XmRString, sizeof (String),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,6)].userStr), XmRString, "" },
+};
+
+/* FontFamily7 User FontList resources */
+XtResource family7UserFont_resources[] = {
+  {"fontFamily7UserFont0", "FontFamily7UserFont0", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,0)].userFont), XmRString, "" },
+  {"fontFamily7UserFont1", "FontFamily7UserFont1", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,1)].userFont), XmRString, "" },
+  {"fontFamily7UserFont2", "FontFamily7UserFont2", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,2)].userFont), XmRString, "" },
+  {"fontFamily7UserFont3", "FontFamily7UserFont3", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,3)].userFont), XmRString, "" },
+  {"fontFamily7UserFont4", "FontFamily7UserFont4", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,4)].userFont), XmRString, "" },
+  {"fontFamily7UserFont5", "FontFamily7UserFont5", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,5)].userFont), XmRString, "" },
+  {"fontFamily7UserFont6", "FontFamily7UserFont6", XmRFontList, sizeof (XmFontList),
+      XtOffset(ApplicationDataPtr, fontChoice[FONT_INDEX(7,6)].userFont), XmRString, "" },
+};
+
 XtResource resources[] = {
 
   {"numFonts", "NumFonts", XmRInt, sizeof (int), 
@@ -597,40 +1033,100 @@ GetFamilyNamesResources(void)
 }
 
 /************************************************************************
- * GetFamily0FontResources
+ * GetFamilyFontResources
  *
  *  Description:
  *  -----------
- *  This function retrieves the Dtstyle Font Family 0 font resources
+ *  Generalized font resource loader for any family index (0-7).
+ *  Family 0: sysStr/userStr already loaded by GetFontStrResources via
+ *            legacy resource names — only load sysFont/userFont to
+ *            avoid overwriting admin customizations (M2 bugfix).
+ *  Family 1+: load all 4 resource groups (sysStr, sysFont, userStr, userFont).
+ *  Family 2-7: load all 4 groups; defaults are empty strings.
  ************************************************************************/
 void
-GetFamily0FontResources(void)
+GetFamilyFontResources(int fam)
 {
-    /* sysStr/userStr already loaded by GetFontStrResources for Family 0 — skip to avoid overwriting */
-    XtGetApplicationResources(style.shell, &style.xrdb, family0SysFont_resources,
-                              XtNumber(family0SysFont_resources), NULL, 0);
-    XtGetApplicationResources(style.shell, &style.xrdb, family0UserFont_resources,
-                              XtNumber(family0UserFont_resources), NULL, 0);
-}
-
-/************************************************************************
- * GetFamily1FontResources
- *
- *  Description:
- *  -----------
- *  This function retrieves the Dtstyle Font Family 1 font resources
- ************************************************************************/
-void
-GetFamily1FontResources(void)
-{
-    XtGetApplicationResources(style.shell, &style.xrdb, family1SysStr_resources,
-                              XtNumber(family1SysStr_resources), NULL, 0);
-    XtGetApplicationResources(style.shell, &style.xrdb, family1SysFont_resources,
-                              XtNumber(family1SysFont_resources), NULL, 0);
-    XtGetApplicationResources(style.shell, &style.xrdb, family1UserStr_resources,
-                              XtNumber(family1UserStr_resources), NULL, 0);
-    XtGetApplicationResources(style.shell, &style.xrdb, family1UserFont_resources,
-                              XtNumber(family1UserFont_resources), NULL, 0);
+    switch (fam) {
+    case 0:
+        XtGetApplicationResources(style.shell, &style.xrdb, family0SysFont_resources,
+                                  XtNumber(family0SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family0UserFont_resources,
+                                  XtNumber(family0UserFont_resources), NULL, 0);
+        break;
+    case 1:
+        XtGetApplicationResources(style.shell, &style.xrdb, family1SysStr_resources,
+                                  XtNumber(family1SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family1SysFont_resources,
+                                  XtNumber(family1SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family1UserStr_resources,
+                                  XtNumber(family1UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family1UserFont_resources,
+                                  XtNumber(family1UserFont_resources), NULL, 0);
+        break;
+    case 2:
+        XtGetApplicationResources(style.shell, &style.xrdb, family2SysStr_resources,
+                                  XtNumber(family2SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family2SysFont_resources,
+                                  XtNumber(family2SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family2UserStr_resources,
+                                  XtNumber(family2UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family2UserFont_resources,
+                                  XtNumber(family2UserFont_resources), NULL, 0);
+        break;
+    case 3:
+        XtGetApplicationResources(style.shell, &style.xrdb, family3SysStr_resources,
+                                  XtNumber(family3SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family3SysFont_resources,
+                                  XtNumber(family3SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family3UserStr_resources,
+                                  XtNumber(family3UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family3UserFont_resources,
+                                  XtNumber(family3UserFont_resources), NULL, 0);
+        break;
+    case 4:
+        XtGetApplicationResources(style.shell, &style.xrdb, family4SysStr_resources,
+                                  XtNumber(family4SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family4SysFont_resources,
+                                  XtNumber(family4SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family4UserStr_resources,
+                                  XtNumber(family4UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family4UserFont_resources,
+                                  XtNumber(family4UserFont_resources), NULL, 0);
+        break;
+    case 5:
+        XtGetApplicationResources(style.shell, &style.xrdb, family5SysStr_resources,
+                                  XtNumber(family5SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family5SysFont_resources,
+                                  XtNumber(family5SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family5UserStr_resources,
+                                  XtNumber(family5UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family5UserFont_resources,
+                                  XtNumber(family5UserFont_resources), NULL, 0);
+        break;
+    case 6:
+        XtGetApplicationResources(style.shell, &style.xrdb, family6SysStr_resources,
+                                  XtNumber(family6SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family6SysFont_resources,
+                                  XtNumber(family6SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family6UserStr_resources,
+                                  XtNumber(family6UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family6UserFont_resources,
+                                  XtNumber(family6UserFont_resources), NULL, 0);
+        break;
+    case 7:
+        XtGetApplicationResources(style.shell, &style.xrdb, family7SysStr_resources,
+                                  XtNumber(family7SysStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family7SysFont_resources,
+                                  XtNumber(family7SysFont_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family7UserStr_resources,
+                                  XtNumber(family7UserStr_resources), NULL, 0);
+        XtGetApplicationResources(style.shell, &style.xrdb, family7UserFont_resources,
+                                  XtNumber(family7UserFont_resources), NULL, 0);
+        break;
+    default:
+        break;  /* Family index out of range — skip */
+    }
 }
 
 /************************************************************************
@@ -644,12 +1140,15 @@ GetFamily1FontResources(void)
 void
 GetApplicationResources( void )
 {
+    int fam;
+
     XtGetApplicationResources(style.shell, &style.xrdb, resources,
                               XtNumber(resources), NULL, 0);
     GetFontStrResources();
     GetFamilyNamesResources();
-    GetFamily0FontResources();
-    GetFamily1FontResources();
+    for (fam = 0; fam < style.xrdb.numFamilies; fam++) {
+        GetFamilyFontResources(fam);
+    }
 }
 
 

@@ -47,8 +47,7 @@
 extern void GetUserFontResource(int);
 extern void GetSysFontResource(int);
 extern void GetFamilyNamesResources(void);
-extern void GetFamily0FontResources(void);
-extern void GetFamily1FontResources(void);
+extern void GetFamilyFontResources(int fam);
 
 extern void GetApplicationResources( void ) ;
 extern void AddResourceConverters( void ) ;
