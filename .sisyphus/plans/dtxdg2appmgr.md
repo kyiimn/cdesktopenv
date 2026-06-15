@@ -1145,7 +1145,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add to ReloadApps action`
   - Files: `cde/programs/types/dt.dt.src`
 
-- [ ] 15. **사용자/시스템 .desktop 발견 통합 테스트**
+- [x] 15. **사용자/시스템 .desktop 발견 통합 테스트**
 
   **What to do**:
   - 테스트 시나리오:
@@ -1201,7 +1201,7 @@ Wave 3 (통합 + Xsession + 문서):
 
   **Commit**: NO (테스트만, 코드 변경 없음)
 
-- [ ] 16. **종합 QA 시나리오 + 문서화**
+- [x] 16. **종합 QA 시나리오 + 문서화**
 
   **What to do**:
   - README.md 보강:
