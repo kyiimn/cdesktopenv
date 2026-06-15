@@ -503,6 +503,7 @@ StartFirst()
     fi
 #endif
     StartFirst dtstart_appgather            # setup session applications
+    StartFirst dtstart_xdg2appmgr
   fi
 
   HASH 

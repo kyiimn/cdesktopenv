@@ -53,21 +53,26 @@ convert_with_imagemagick(const gchar *src_path,
                          const gchar *xpm_path,
                          GError **error)
 {
-    gchar *cmdline;
+    gchar *resize_arg;
+    gchar *argv[8];
     gint exit_status;
-    gchar *stdout_buf = NULL;
-    gchar *stderr_buf = NULL;
     gboolean ok;
 
-    cmdline = g_strdup_printf(
-        "convert -background none -resize %dx%d %s %s",
-        width, height, src_path, xpm_path);
+    resize_arg = g_strdup_printf("%dx%d", width, height);
 
-    ok = g_spawn_command_line_sync(cmdline, &stdout_buf, &stderr_buf,
-                                   &exit_status, error);
-    g_free(cmdline);
-    g_free(stdout_buf);
-    g_free(stderr_buf);
+    argv[0] = "convert";
+    argv[1] = "-background";
+    argv[2] = "none";
+    argv[3] = "-resize";
+    argv[4] = resize_arg;
+    argv[5] = (gchar *)src_path;
+    argv[6] = (gchar *)xpm_path;
+    argv[7] = NULL;
+
+    ok = g_spawn_sync(NULL, argv, NULL,
+                      G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL,
+                      NULL, NULL, NULL, NULL, &exit_status, error);
+    g_free(resize_arg);
 
     if (!ok)
         return FALSE;
@@ -87,21 +92,30 @@ convert_with_netpbm(const gchar *src_path,
                     const gchar *xpm_path,
                     GError **error)
 {
+    gchar *quoted_src;
+    gchar *quoted_dst;
     gchar *cmdline;
+    gchar *argv[4];
     gint exit_status;
-    gchar *stdout_buf = NULL;
-    gchar *stderr_buf = NULL;
     gboolean ok;
 
+    quoted_src = g_shell_quote(src_path);
+    quoted_dst = g_shell_quote(xpm_path);
     cmdline = g_strdup_printf(
         "pngtopnm %s | pnmscale -xysize %d %d | ppmtoxpm > %s",
-        src_path, width, height, xpm_path);
+        quoted_src, width, height, quoted_dst);
 
-    ok = g_spawn_command_line_sync(cmdline, &stdout_buf, &stderr_buf,
-                                   &exit_status, error);
+    argv[0] = "/bin/sh";
+    argv[1] = "-c";
+    argv[2] = cmdline;
+    argv[3] = NULL;
+
+    ok = g_spawn_sync(NULL, argv, NULL,
+                      G_SPAWN_SEARCH_PATH,
+                      NULL, NULL, NULL, NULL, &exit_status, error);
+    g_free(quoted_src);
+    g_free(quoted_dst);
     g_free(cmdline);
-    g_free(stdout_buf);
-    g_free(stderr_buf);
 
     if (!ok)
         return FALSE;
