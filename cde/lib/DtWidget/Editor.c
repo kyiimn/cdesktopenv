@@ -1801,6 +1801,7 @@ extractFontMetrics(
     Boolean have_font_struct = False;
     Boolean have_font_set = False;
     Boolean use_font_set = False;
+    Boolean have_xft_font = False;
     XFontSetExtents *fs_extents;
     unsigned long tmp_width = 0;
     int	font_descent, font_ascent;
@@ -1887,15 +1888,14 @@ extractFontMetrics(
 #ifdef USE_XFT
 #ifdef HAVE_X11_XFT_XFT_H
              else if (type_return == XmFONT_IS_XFT) {
-                XftFont *xft_font = (XftFont *)tmp_font;
-                font_ascent = xft_font->ascent;
-                font_descent = xft_font->descent;
-                tmp_width = (unsigned long)xft_font->max_advance_width;
-                have_font_struct = True;
-                /* Don't need to set use_font_set since Xft metrics are
-                 * already in pixel units */
-                use_font_set = False;
-             }
+                 XftFont *xft_font = (XftFont *)tmp_font;
+                 font_ascent = xft_font->ascent;
+                 font_descent = xft_font->descent;
+                 tmp_width = (unsigned long)xft_font->max_advance_width;
+                 have_font_struct = True;
+                 have_xft_font = True;
+                 use_font_set = False;
+              }
 #endif /* HAVE_X11_XFT_XFT_H */
 #endif /* USE_XFT */
           }
@@ -1927,6 +1927,14 @@ extractFontMetrics(
           font_descent = fs_extents->max_logical_extent.height +
                          fs_extents->max_logical_extent.y;
        } 
+#ifdef USE_XFT
+       else if (have_xft_font) {
+          /*
+	   * Xft font metrics were already extracted in the loop above.
+	   * font_ascent, font_descent, and tmp_width are already set.
+	   */
+       }
+#endif /* USE_XFT */
        else {
 
           /*

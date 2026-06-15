@@ -113,6 +113,11 @@ extern	XFontSet	 __DtHelpFontSetGet (
 extern	XFontStruct	*__DtHelpFontStructGet (
 				DtHelpDAFontInfo	 font_info,
 				long			 font_index);
+#ifdef USE_XFT
+extern	XftFont		*__DtHelpFontXftGet (
+				DtHelpDAFontInfo	 font_info,
+				long			 font_index);
+#endif /* USE_XFT */
 extern	int		 _DtHelpGetExactFontIndex(
 				DtHelpDispAreaStruct	*pDAS,
 				const char		*lang,

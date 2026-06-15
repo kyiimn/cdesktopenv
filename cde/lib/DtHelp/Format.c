@@ -332,6 +332,21 @@ FormatChunksToXmString(
 		*ret_list = XmFontListAppendEntry (*ret_list, fontEntry);
 		XmFontListEntryFree (&fontEntry);
 	      }
+#ifdef USE_XFT
+	    else if (myIdx >= 10000)
+	      {
+		XftFont *xftFont = __DtHelpFontXftGet(pDAS->font_info, myIdx);
+		if (xftFont != NULL)
+		  {
+		    XmFontListEntry fontEntry;
+		    fontEntry = XmFontListEntryCreate (buffer,
+						    XmFONT_IS_XFT,
+						    (XtPointer) xftFont);
+		    *ret_list = XmFontListAppendEntry (*ret_list, fontEntry);
+		    XmFontListEntryFree (&fontEntry);
+		  }
+	      }
+#endif /* USE_XFT */
 	    else
 	      {
 		XFontStruct *fontStruct =
