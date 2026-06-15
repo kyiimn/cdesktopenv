@@ -633,6 +633,25 @@ AC_CHECK_LIB(Xm, XmTextSetString, [XTOOLLIB="-lXm ${XTOOLLIB}"], ,
 XTOOLLIB="${EXTRA_INCS} ${EXTRA_LIBS} ${X_EXTRA_LIBS} ${XTOOLLIB}"
 AC_SUBST([XTOOLLIB])
 
+dnl GLib / GIO support for dtxdg2appmgr
+AC_ARG_WITH([xdg-integration],
+  AS_HELP_STRING([--without-xdg-integration],
+    [disable XDG application integration support (requires glib-2.0 and gio-2.0)]),
+  [with_xdg_integration="$withval"],
+  [with_xdg_integration=yes])
+
+if test "x$with_xdg_integration" != "xno"; then
+  PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.40 gio-2.0 >= 2.40], [have_glib=yes], [have_glib=no])
+  if test "x$have_glib" = "xno"; then
+    AC_MSG_WARN([GLib/GIO not found - dtxdg2appmgr will not be built])
+  fi
+else
+  have_glib=no
+fi
+AM_CONDITIONAL([HAVE_GLIB2], [test "x$have_glib" = "xyes"])
+AC_SUBST([GLIB_CFLAGS])
+AC_SUBST([GLIB_LIBS])
+
 dnl only needed by dtlogin
 AC_CHECK_LIB(Xdmcp, XdmcpFlush, [XDMCPLIB="-lXdmcp"], [XDMCPLIB=""],
                  [${EXTRA_INCS} ${EXTRA_LIBS}])
@@ -876,6 +895,8 @@ programs/dtappbuilder/src/abmf/Makefile
 programs/dtappbuilder/src/ab/Makefile
 
 programs/dtappintegrate/Makefile
+
+programs/dtxdg2appmgr/Makefile
 
 programs/dtprintegrate/Makefile
 

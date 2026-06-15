@@ -8,6 +8,10 @@ SUBDIRS = backdrops icons dsdm dtmail dtpad dtfile dtwm dtlogin		\
         dtpdm dtsr dtpdmd dtinfo types tttypes util dtopen localized	\
         dthelp dtdocbook dtudcfonted dtudcexch
 
+if HAVE_GLIB2
+SUBDIRS += dtxdg2appmgr
+endif
+
 install-data-hook:
 	-if [ $(CDE_INSTALLATION_TOP)/bin != $(bindir) ];then \
 		cd $(DESTDIR)$(CDE_INSTALLATION_TOP) && $(LN_S) $(bindir) bin ; fi
