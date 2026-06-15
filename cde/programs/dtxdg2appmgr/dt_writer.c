@@ -70,8 +70,12 @@ dtxdg2appmgr_write_dt_file(const dtxdg2appmgr_DesktopEntry *entry,
         return FALSE;
     }
 
-    file_path = g_build_filename(dt_output_dir, sanitized, NULL);
-    g_free(sanitized);
+    {
+        gchar *name_with_ext = g_strconcat(sanitized, ".dt", NULL);
+        g_free(sanitized);
+        file_path = g_build_filename(dt_output_dir, name_with_ext, NULL);
+        g_free(name_with_ext);
+    }
 
     fp = g_fopen(file_path, "w");
     if (fp == NULL) {
@@ -155,7 +159,7 @@ dtxdg2appmgr_write_group_dt(const gchar *group_name,
     g_return_val_if_fail(group_name != NULL, FALSE);
     g_return_val_if_fail(dt_output_dir != NULL, FALSE);
 
-    group_xdg = g_strdup_printf("%s_XDG", group_name);
+    group_xdg = g_strdup(group_name);
     criteria_name = g_strdup_printf("%sCriteria1", group_xdg);
 
     if (g_mkdir_with_parents(dt_output_dir, 0755) != 0) {
