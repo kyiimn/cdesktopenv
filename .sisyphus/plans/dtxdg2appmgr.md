@@ -1252,19 +1252,19 @@ Wave 3 (통합 + Xsession + 문서):
 
 ## Final Verification Wave (MANDATORY)
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   - 모든 Must Have 충족 확인
   - Must NOT Have 위반 없음 확인
   - XDG 호환 .desktop 처리 검증
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   - `-Wall -Wextra` 경고 0개
   - GLib 메모리 누수 검사 (`valgrind --leak-check=full`)
   - `gcc -std=c11 -pedantic` 통과
-- [ ] F3. **Real Manual QA** — `unspecified-high`
+- [x] F3. **Real Manual QA** — `unspecified-high`
   - 실제 Linux 시스템에서 실행
   - 적어도 3개 카테고리(Network, Office, Graphics)의 .desktop 변환 확인
   - dtfile에서 XDG 그룹 표시 확인
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   - 모든 Task의 "What to do"와 실제 구현 일치
   - Cross-task contamination 없음
   - 기존 CDE .dt 파일 미변경 확인
