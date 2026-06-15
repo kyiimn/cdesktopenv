@@ -83,6 +83,48 @@ $ Do not translate message 6.
 $ This is a locale dependent value.
 $ ----------------------------------------------------------------------------
 6 " "
+$ NumFontFamilies
+7 "2"
+$ FontFamily0 identifier
+8 "system"
+$ FontFamily0Label
+9 "System"
+$ Set of FontFamily0SystemFont
+10 "Dtstyle*FontFamily0SystemFont0: -dt-interface system-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont1: -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont2: -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont3: -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont4: -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont5: -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0SystemFont6: -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ Set of FontFamily0UserFont
+11 "Dtstyle*FontFamily0UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily0UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ FontFamily1 identifier
+12 "user"
+$ FontFamily1Label
+13 "User"
+$ Set of FontFamily1SystemFont
+14 "Dtstyle*FontFamily1SystemFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1SystemFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ Set of FontFamily1UserFont
+15 "Dtstyle*FontFamily1UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily1UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
 
 $ \
 $ ----------------------------------------------------------------------------\
