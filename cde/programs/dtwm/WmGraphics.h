@@ -57,6 +57,11 @@ extern void WmDrawXmString (Display *dpy, Window w, XmFontList xmfontlist,
 			    Dimension width, XRectangle *pbox,
 			    Boolean bCenter);
 
+#ifdef USE_XFT
+#include <Dt/DtFont.h>
+extern void WmSetXftFont (DtFont font);
+#endif
+
 extern GC WmGetGC (WmScreenData *pSD, unsigned long gc_mask, XGCValues *pGcv);
 
 

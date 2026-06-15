@@ -70,7 +70,35 @@
 #include <X11/Xft/Xft.h>
 #include <Dt/DtFont.h>
 #include <DtI/DtFontI.h>
-#endif
+
+/*
+ * Per-drawable XftDraw cache — avoids the overhead of creating and
+ * destroying an XftDraw on every single string draw call.
+ * XftDrawChange() re-targets the cached object to a new Drawable.
+ */
+static XftDraw *xft_draw_cache = NULL;
+
+static XftDraw *
+get_xft_draw(Display *dpy, Drawable draw)
+{
+    if (xft_draw_cache != NULL) {
+	XftDrawChange(xft_draw_cache, draw);
+	return xft_draw_cache;
+    }
+    xft_draw_cache = XftDrawCreate(dpy, draw,
+			  DefaultVisual(dpy, DefaultScreen(dpy)),
+			  DefaultColormap(dpy, DefaultScreen(dpy)));
+    return xft_draw_cache;
+}
+
+/*
+ * Module-scoped DtFont for WmDrawString.
+ * WmDrawString's public signature does not carry a font parameter,
+ * so callers that need Xft rendering must call WmSetXftFont() first.
+ */
+static DtFont wm_xft_font = NULL;
+
+#endif /* USE_XFT */
 
 
 #define RLIST_EXTENSION_SIZE	10
@@ -907,86 +935,58 @@ void DrawStringInBox (Display *dpy, Window win, GC gc, XFontStruct *pfs, XRectan
     XRectangle clipBox;
     size_t strLen = strlen(str);
 #ifdef USE_XFT
-    XftFont *xftFont = (XftFont *) pfs;
-    XGlyphInfo extents;
-    XftDraw *xftDraw;
-    XftColor xftFg;
-    XftColor xftBg;
+    DtFont dtfont;
+    struct _DtFont _dtf_buf;
     XGCValues gcvXft;
-    Visual *visual;
-    Colormap cmap;
-    int ascent;
-    int renderXft = 0;
 #endif
 
-    /* compute text position */
 #ifdef USE_XFT
-    XftTextExtents8(dpy, xftFont, (FcChar8 *) str, strLen, &extents);
-    textWidth = extents.xOff;
+    _dtf_buf.display = dpy;
+    _dtf_buf.screen  = DefaultScreen(dpy);
+    _dtf_buf.use_xft = True;
+    _dtf_buf.xft_font = (XftFont *) pfs;
+    _dtf_buf.xfs   = pfs;
+    _dtf_buf.fontset = NULL;
+    dtfont = &_dtf_buf;
+
+    textWidth = DtFont_TextWidth(dtfont, str, (int) strLen);
 #else
     textWidth = XTextWidth(pfs, str, strLen);
 #endif
 
-    if (textWidth < (int) pbox->width) {	/* center text if there's room */
+    if (textWidth < (int) pbox->width) {
 	xCenter = (int) pbox->x + ((int) pbox->width - textWidth) / 2 ;
 	xPos = xCenter;
     }
-    else {				/* left justify & clip text */
+    else {
 	xPos = (int) pbox->x;
 
-	clipBox.x = 0;			/* set up clip rectangle */
+	clipBox.x = 0;
 	clipBox.y = 0;
 	clipBox.width = pbox->width;
 	clipBox.height = pbox->height;
 
-	XSetClipRectangles (dpy, gc, pbox->x, pbox->y,	/* put into gc */
+	XSetClipRectangles (dpy, gc, pbox->x, pbox->y,
 			    &clipBox, 1, Unsorted);
     }
 
 #ifdef USE_XFT
-    ascent = xftFont->ascent;
-    yBaseline = (int) pbox->y + ascent;
+    yBaseline = (int) pbox->y + DtFont_Ascent(dtfont);
 
-    visual = DefaultVisual(dpy, DefaultScreen(dpy));
-    cmap = DefaultColormap(dpy, DefaultScreen(dpy));
-    xftDraw = XftDrawCreate(dpy, win, visual, cmap);
-    if (xftDraw != NULL)
+    (void) XGetGCValues(dpy, gc, GCBackground, &gcvXft);
+    wm_xft_font = dtfont;
+    if (ACTIVE_PSD->cleanText)
     {
-	char _xftClr[12];
-	(void) XGetGCValues(dpy, gc, GCForeground | GCBackground, &gcvXft);
-	snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
-		 gcvXft.foreground & 0xFFFFFFul);
-	if (XftColorAllocName(dpy, visual, cmap, _xftClr, &xftFg))
-	{
-	    snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
-		     gcvXft.background & 0xFFFFFFul);
-	    if (XftColorAllocName(dpy, visual, cmap, _xftClr, &xftBg))
-	    {
-		/*
-		 * Guardrail G8: for "image string" semantics (cleanText),
-		 * the background rectangle MUST be filled before the
-		 * foreground glyphs.
-		 */
-		if (ACTIVE_PSD->cleanText)
-		{
-		    XftDrawRect(xftDraw, &xftBg,
-				xPos, yBaseline - ascent,
-				(unsigned int) textWidth,
-				(unsigned int)(ascent + xftFont->descent));
-		}
-		XftDrawString8(xftDraw, &xftFg, xftFont,
-			       xPos, yBaseline, (FcChar8 *) str, strLen);
-		XftColorFree(dpy, visual, cmap, &xftBg);
-	    }
-	    XftColorFree(dpy, visual, cmap, &xftFg);
-	    renderXft = 1;
-	}
-	XftDrawDestroy(xftDraw);
+	DtFont_DrawImageString(dpy, win, gc, dtfont,
+			       xPos, yBaseline, str, (int) strLen,
+			       gcvXft.background);
     }
-    if (!renderXft)
+    else
     {
-	WmDrawString(dpy, win, gc, xPos, yBaseline, str, strLen);
+	DtFont_DrawString(dpy, win, gc, dtfont,
+			  xPos, yBaseline, str, (int) strLen);
     }
+    wm_xft_font = NULL;
 #else
     yBaseline = (int) pbox->y + pfs->ascent;
     WmDrawString(dpy, win, gc, xPos, yBaseline, str, strLen);
@@ -994,7 +994,7 @@ void DrawStringInBox (Display *dpy, Window win, GC gc, XFontStruct *pfs, XRectan
 
     if (textWidth >= (int) pbox->width)
     {
-	gcv.clip_x_origin = 0;		/* erase clip_mask from gc */
+	gcv.clip_x_origin = 0;
 	gcv.clip_y_origin = 0;
 	gcv.clip_mask = None;
 	XChangeGC (dpy, gc,
@@ -1168,6 +1168,27 @@ void FreeRList (RList *prl)
  *************************************<->***********************************/
 void WmDrawString (Display *dpy, Drawable d, GC gc, int x, int y, char *string, unsigned int length)
 {
+#ifdef USE_XFT
+    if (wm_xft_font != NULL)
+    {
+	XGCValues gcvBg;
+	unsigned long bg_pixel = 0;
+
+	if (ACTIVE_PSD->cleanText)
+	{
+	    if (XGetGCValues(dpy, gc, GCBackground, &gcvBg))
+		bg_pixel = gcvBg.background;
+	    DtFont_DrawImageString(dpy, d, gc, wm_xft_font,
+				   x, y, string, (int) length, bg_pixel);
+	}
+	else
+	{
+	    DtFont_DrawString(dpy, d, gc, wm_xft_font,
+			       x, y, string, (int) length);
+	}
+	return;
+    }
+#endif
     if (ACTIVE_PSD->cleanText)
     {
 	XDrawImageString(dpy, d, gc, x, y, string, length);
@@ -1178,6 +1199,43 @@ void WmDrawString (Display *dpy, Drawable d, GC gc, int x, int y, char *string, 
     }
 
 }/* END OF FUNCTION WmDrawString */
+
+
+#ifdef USE_XFT
+/*************************************<->*************************************
+ *
+ *  WmSetXftFont (font)
+ *
+ *
+ *  Description:
+ *  -----------
+ *  Sets the module-scoped DtFont used by WmDrawString when
+ *  USE_XFT is enabled.  Callers that invoke WmDrawString on
+ *  an Xft build must set this beforehand and clear it (pass
+ *  NULL) afterwards.
+ *
+ *
+ *  Inputs:
+ *  ------
+ *  font	- DtFont handle (may be NULL to clear)
+ * 
+ *  Outputs:
+ *  -------
+ *
+ *
+ *  Comments:
+ *  --------
+ *  This exists because WmDrawString's public signature cannot
+ *  carry a font parameter (it is called from other dtwm files
+ *  that pass only a GC).  The DtFont is needed by the Xft
+ *  rendering path since Xft ignores the GC's font field.
+ *			
+ *************************************<->***********************************/
+void WmSetXftFont (DtFont font)
+{
+    wm_xft_font = font;
+}/* END OF FUNCTION WmSetXftFont */
+#endif /* USE_XFT */
 
 
 
