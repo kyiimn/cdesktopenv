@@ -148,7 +148,24 @@ main(int argc, char **argv)
     gint errors = 0;
 
     /* 1. Set up signal handling */
-    signal(SIGINT, sigint_handler);
+    {
+        struct sigaction sa;
+        struct sigaction sa_ign;
+
+        /* Handle SIGINT, SIGTERM, SIGHUP - graceful shutdown */
+        sa.sa_handler = sigint_handler;
+        sigemptyset(&sa.sa_mask);
+        sa.sa_flags = 0;  /* NOT SA_RESTART - we want EINTR */
+        sigaction(SIGINT,  &sa, NULL);
+        sigaction(SIGTERM, &sa, NULL);
+        sigaction(SIGHUP,  &sa, NULL);
+
+        /* Ignore SIGPIPE (broken pipe from icon conversion child) */
+        sa_ign.sa_handler = SIG_IGN;
+        sigemptyset(&sa_ign.sa_mask);
+        sa_ign.sa_flags = 0;
+        sigaction(SIGPIPE, &sa_ign, NULL);
+    }
 
     /* 2. Parse CLI options */
     opts = dtxdg2appmgr_parse_options(&argc, &argv);
@@ -256,9 +273,11 @@ main(int argc, char **argv)
             g_print("  Processing:      %s\n", entry->id);
 
         /* 8c. Get primary category and map to CDE group (always _XDG suffix) */
-        gchar *primary_cat = dtxdg2appmgr_get_primary_category(entry->categories ? g_strjoinv(";", entry->categories) : "");
+        gchar *cats_joined = entry->categories ? g_strjoinv(";", entry->categories) : g_strdup("");
+        gchar *primary_cat = dtxdg2appmgr_get_primary_category(cats_joined);
         gchar *group = dtxdg2appmgr_category_to_group(primary_cat);
         g_free(primary_cat);
+        g_free(cats_joined);
 
         if (group == NULL) {
             group = g_strdup("Other_XDG");
@@ -348,6 +367,7 @@ main(int argc, char **argv)
         g_free(dt_path);
 
         /* 8j. Write appmanager stub */
+        gboolean stub_ok = TRUE;
         if (!opts->dry_run) {
             if (!ensure_dir(group_dir, &error)) {
                 g_printerr("Error creating appmanager group dir %s: %s\n",
@@ -355,6 +375,7 @@ main(int argc, char **argv)
                 g_error_free(error);
                 error = NULL;
                 errors++;
+                stub_ok = FALSE;
             } else if (!dtxdg2appmgr_write_appmanager_stub(group_dir, action_name,
                                                             &error)) {
                 g_printerr("Error writing appmanager stub for %s: %s\n",
@@ -362,13 +383,14 @@ main(int argc, char **argv)
                 g_error_free(error);
                 error = NULL;
                 errors++;
+                stub_ok = FALSE;
             }
         } else if (opts->verbose) {
             g_print("    Would write stub: %s/%s\n", group_dir, action_name);
         }
 
         /* 8k. Update cache */
-        if (!opts->dry_run) {
+        if (!opts->dry_run && stub_ok) {
             dtxdg2appmgr_cache_update(cache, entry->path, dt_path_ext,
                                       (glong)entry->mtime);
         }

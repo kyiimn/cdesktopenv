@@ -100,7 +100,7 @@ dtxdg2appmgr_desktop_parse(const gchar *path, const gchar *lang)
         return NULL;
 
     kf = g_key_file_new();
-    if (!g_key_file_load_from_file(kf, path, G_KEY_FILE_NONE, &error)) {
+    if (!g_key_file_load_from_file(kf, path, G_KEY_FILE_KEEP_COMMENTS | G_KEY_FILE_KEEP_TRANSLATIONS, &error)) {
         g_error_free(error);
         g_key_file_free(kf);
         return NULL;
@@ -194,6 +194,10 @@ dtxdg2appmgr_desktop_should_include(const dtxdg2appmgr_DesktopEntry *entry)
         return FALSE;
 
     if (entry->hidden)
+        return FALSE;
+
+    /* Skip applications that require a terminal emulator */
+    if (g_ascii_strcasecmp(entry->terminal, "true") == 0)
         return FALSE;
 
     return TRUE;
