@@ -298,7 +298,9 @@ XCOMM ##########################################################################
   HASH _DTDTSMMTEMPDIR in DtSvc/DtUtil1/DtsMM.h
   HASH
   dtdbcacherm="rm -f /tmp/dtdbcache_$DISPLAY"
-  dtstart_appgather="$DT_BINPATH/dtappgather &"
+   dtstart_appgather="$DT_BINPATH/dtappgather &"
+   HASH XDG .desktop to CDE Application Manager conversion
+   dtstart_xdg2appmgr="$DT_BINPATH/dtxdg2appmgr &"
 #if defined(sun)
   dtstart_dsdm="$DT_BINPATH/dsdm &"
 #endif

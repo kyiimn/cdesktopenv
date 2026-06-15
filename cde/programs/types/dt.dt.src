@@ -323,6 +323,7 @@ ACTION ReloadApps
         WINDOW_TYPE     NO_STDIO
         EXEC_STRING     /bin/sh -c '/usr/dt/bin/dtaction ReloadActions; \
                            /usr/dt/bin/dtappgather -r; \
+			   /usr/dt/bin/dtxdg2appmgr -r; \
 			   /usr/dt/bin/dthelpgen -dir $HOME/.dt/help '
         DESCRIPTION     %|nls-2021-#The#|
 }

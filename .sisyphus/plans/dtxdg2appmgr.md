@@ -1053,7 +1053,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add main orchestrator (with desktop2dt parity)`
   - Files: `cde/programs/dtxdg2appmgr/dtxdg2appmgr.c`
 
-- [ ] 13. **Xsession.src에 자동 실행 추가**
+- [x] 13. **Xsession.src에 자동 실행 추가**
 
   **What to do**:
   - `cde/programs/dtlogin/config/Xsession.src` 수정:
@@ -1099,7 +1099,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): integrate with Xsession for automatic execution`
   - Files: `cde/programs/dtlogin/config/Xsession.src`
 
-- [ ] 14. **dt.dt.src의 ReloadApps 액션에 `-r` 추가**
+- [x] 14. **dt.dt.src의 ReloadApps 액션에 `-r` 추가**
 
   **What to do**:
   - `cde/programs/types/dt.dt.src` line 318-328의 `ReloadApps` ACTION 수정:
