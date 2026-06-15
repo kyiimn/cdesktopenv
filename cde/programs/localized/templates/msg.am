@@ -11,7 +11,7 @@ SUFFIXES = .msg .cat
 
 .msg.cat:
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 SYM2NUM_CMD = $(KSH) $(top_builddir)/programs/dtprintinfo/sym2num
 
@@ -22,5 +22,5 @@ dtprintinfo.cat: export LC_COLLATE = C
 dtprintinfo.cat: dtprintinfo.msg
 	$(RM) $@
 	$(SYM2NUM_CMD) $(@:.cat=) $(@:.cat=.msg) > tmp.msg
-	LANG=C $(GENCAT) $@ tmp.msg
+	LANG=C.utf8 $(GENCAT) $@ tmp.msg
 	$(RM) tmp.msg $(@:.cat=_msg.h)

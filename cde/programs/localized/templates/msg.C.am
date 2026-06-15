@@ -27,24 +27,24 @@ MKCATDEFS = $(TOP)/localized/util/mkcatdefs
 Xm.cat: $(top_srcdir)/imports/motif/localized/$(LANG)/msg/Xm.msg
 	$(RM) $@
 	$(MKCATDEFS) Xm $^ -h > Xm.tmp.msg
-	LANG=C $(GENCAT) $@ Xm.tmp.msg || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ Xm.tmp.msg
 	$(RM) Xm.tmp.msg
 
 Mrm.cat: $(top_srcdir)/imports/motif/localized/$(LANG)/msg/Mrm.msg
 	$(RM) $@
 	$(MKCATDEFS) Mrm $^ -h > Mrm.tmp.msg
-	LANG=C $(GENCAT) $@ Mrm.tmp.msg || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ Mrm.tmp.msg
 	$(RM) Mrm.tmp.msg
 
 Uil.cat: $(top_srcdir)/imports/motif/localized/$(LANG)/msg/Uil.msg
 	$(RM) $@
 	$(MKCATDEFS) Uil $^ -h > Uil.tmp.msg
-	LANG=C $(GENCAT) $@ Uil.tmp.msg || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ Uil.tmp.msg
 	$(RM) Uil.tmp.msg
 
 DtHelp.cat: $(TOPLIB)/DtHelp/DtHelp.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 # FIXME This appears to have been broken a long time ago.  Needs
 # investigation.
@@ -55,177 +55,177 @@ DtHelp.cat: $(TOPLIB)/DtHelp/DtHelp.msg
 
 DtMail.cat: $(TOP)/dtmail/dtmail/DtMail.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 DtPrint.cat: $(TOPLIB)/DtPrint/DtPrint.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 DtWidget.cat: $(TOPLIB)/DtWidget/DtWidget.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 MotifApp.cat: $(TOP)/dtmail/MotifApp/MotifApp.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 SUNW_TOOLTALK.cat: $(TOPLIB)/tt/SUNW_TOOLTALK.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dt.cat: $(TOPLIB)/DtSvc/dtsvc.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtact.cat: $(TOP)/dtaction/dtact.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtcodegen.cat: $(TOP)/dtappbuilder/src/libAButil/libAButil.msg $(TOP)/dtappbuilder/src/libABobjXm/libABobjXm.msg $(TOP)/dtappbuilder/src/libABil/libABil.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtbuilder.cat: $(TOP)/dtappbuilder/src/libAButil/libAButil.msg $(TOP)/dtappbuilder/src/libABobjXm/libABobjXm.msg $(TOP)/dtappbuilder/src/libABil/libABil.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtcalc.cat: $(TOP)/dtcalc/dtcalc.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtcm.cat: $(TOP)/dtcm/dtcm/dtcm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtconfig.cat: $(TOP)/dtconfig/dtconfig.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtcopy.cat: $(TOP)/dtfile/dtcopy/dtcopy.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtcreate.cat: $(TOP)/dtcreate/dtcreate.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtfile.cat: $(TOP)/dtfile/dtfile.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dthello.cat: $(TOP)/dthello/dthello.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dthelpgen.cat: $(TOP)/dthelp/dthelpgen/dthelpgen.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dthelpprint.cat: $(TOP)/dthelp/dthelpprint/dthelpprint.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dticon.cat: $(TOP)/dticon/dticon.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtimsstart.cat: $(TOP)/dtimsstart/dtimsstart.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtinfo.cat: $(TOP)/dtinfo/dtinfo/src/dtinfo.msg.updated
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtinfo_start.cat: $(TOP)/dtinfo/clients/dtinfo_start/dtinfo_start.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtksh.cat: $(TOP)/dtksh/dtksh.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtlogin.cat: $(TOP)/dtlogin/dtlogin.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtlp.cat: $(TOP)/dtprintegrate/dtlp.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtmailopts.cat: $(TOP)/dtmail/dtmail/dtmailopts.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtpad.cat: $(TOP)/dtpad/dtpad.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtpdm.cat: $(TOP)/dtpdm/dtpdm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtpdmd.cat: $(TOP)/dtpdmd/dtpdmd.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 # This one assumes that sym2num was already run on this berfore we get here
 dtprintinfo.cat: $(TOP)/dtprintinfo/dtprintinfo.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtscreen.cat: $(TOP)/dtscreen/dtscreen.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtsearch.cat: $(TOPLIB)/DtSearch/dtsearch.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtsession.cat: $(TOP)/dtsession/dtsession.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtstyle.cat: $(TOP)/dtstyle/dtstyle.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtterm.cat: $(TOP)/dtterm/dtterm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dttypes.cat: $(TOP)/util/dttypes/dttypes.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtwm.cat: $(TOP)/dtwm/dtwm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtudcexch.cat: $(TOP)/dtudcexch/dtudcexch.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 dtudcfonted.cat: $(TOP)/dtudcfonted/dtudcfonted.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 libABil.cat: $(TOP)/dtappbuilder/src/libABil/libABil.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 libABobjXm.cat: $(TOP)/dtappbuilder/src/libABobjXm/libABobjXm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 libAButil.cat: $(TOP)/dtappbuilder/src/libAButil/libAButil.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 libdtcm.cat: $(TOP)/dtcm/libDtCmP/libdtcm.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
 
 libDtMail.cat: $(TOP)/dtmail/libDtMail/Common/libDtMail.msg
 	$(RM) $@
-	LANG=C $(GENCAT) $@ $^ || $(RM) $@
+	LANG=C.utf8 $(GENCAT) $@ $^
