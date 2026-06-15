@@ -245,7 +245,12 @@ doc/en_US.UTF-8/guides/sysAdminGuide/TOC.sgm
 doc/en_US.UTF-8/guides/ttGuide/TOC.sgm
 doc/en_US.UTF-8/guides/usersGuide/TOC.sgm
 doc/en_US.UTF-8/guides/man/TOC.sgm
-doc/en_US.UTF-8/cde.dti/
+# cde.dti directories contain pre-built dtsearch index files needed by make dist.
+# Previously the entire directory was ignored, but the dtsearch database files
+# (*.d??, *.k??, *.knj, *.sfx, *.stp, *.dbd, *.dbi, *.sch, *.ocf, bookcase.map, cde.oli)
+# are listed as dist_*_DATA in Makefile.am and must be present for make dist.
+# Only ignore the transient .fzk files (deleted after dtsrindex runs).
+doc/en_US.UTF-8/cde.dti/**/*.fzk
 doc/en_US.UTF-8/help/*.sdl
 doc/en_US.UTF-8/m-guides/common
 doc/en_US.UTF-8/man/man1/*
@@ -254,22 +259,22 @@ doc/en_US.UTF-8/man/man3/*
 doc/en_US.UTF-8/man/man4/*
 doc/en_US.UTF-8/man/man5/*
 doc/en_US.UTF-8/man/man6/*
-doc/de_DE.UTF-8/cde.dti/
+doc/de_DE.UTF-8/cde.dti/**/*.fzk
 doc/de_DE.UTF-8/guides/infoUGd/TOC.sgm
 doc/de_DE.UTF-8/guides/sysAdminGuide/TOC.sgm
 doc/de_DE.UTF-8/guides/usersGuide/TOC.sgm
 doc/de_DE.UTF-8/help/*.sdl
-doc/es_ES.UTF-8/cde.dti/
+doc/es_ES.UTF-8/cde.dti/**/*.fzk
 doc/es_ES.UTF-8/guides/infoUGd/TOC.sgm
 doc/es_ES.UTF-8/guides/sysAdminGuide/TOC.sgm
 doc/es_ES.UTF-8/guides/usersGuide/TOC.sgm
 doc/es_ES.UTF-8/help/*.sdl
-doc/fr_FR.UTF-8/cde.dti/
+doc/fr_FR.UTF-8/cde.dti/**/*.fzk
 doc/fr_FR.UTF-8/guides/infoUGd/TOC.sgm
 doc/fr_FR.UTF-8/guides/sysAdminGuide/TOC.sgm
 doc/fr_FR.UTF-8/guides/usersGuide/TOC.sgm
 doc/fr_FR.UTF-8/help/*.sdl
-doc/it_IT.UTF-8/cde.dti/
+doc/it_IT.UTF-8/cde.dti/**/*.fzk
 doc/it_IT.UTF-8/guides/infoUGd/TOC.sgm
 doc/it_IT.UTF-8/guides/sysAdminGuide/TOC.sgm
 doc/it_IT.UTF-8/guides/usersGuide/TOC.sgm
@@ -935,7 +940,7 @@ doc/*/guides/sysAdminGuide/TOC.sgm
 doc/*/guides/ttGuide/TOC.sgm
 doc/*/guides/usersGuide/TOC.sgm
 doc/*/guides/man/TOC.sgm
-doc/*/cde.dti/
+doc/*/cde.dti/**/*.fzk
 doc/*/help/*.sdl
 doc/*/m-guides/common
 doc/*/man/man1/*
