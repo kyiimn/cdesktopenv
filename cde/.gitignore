@@ -62,7 +62,6 @@ programs/dtprintegrate/dtlp
 programs/dtprintegrate/dtlpsetup
 programs/dtprintegrate/dtprintegrate
 programs/dtprintinfo/dtprintinfo
-programs/dtscreen/Dtscreen
 programs/dtscreen/dtscreen
 programs/dtsearchpath/dtsp/dtsp
 programs/dtsession/Dtsession
