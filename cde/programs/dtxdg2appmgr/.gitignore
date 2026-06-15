@@ -1,5 +1,0 @@
-dtxdg2appmgr
-*.o
-.deps/
-Makefile
-Makefile.in
