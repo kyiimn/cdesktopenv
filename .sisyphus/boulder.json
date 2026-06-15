@@ -1,0 +1,50 @@
+{
+  "active_plan": "/home/kyiimn/Projects/cdesktopenv/.sisyphus/plans/dtxdg2appmgr-fixes.md",
+  "started_at": "2026-06-15T11:03:07.157Z",
+  "session_ids": [
+    "ses_13a20c6d1ffetAk27r979Xq80G"
+  ],
+  "session_origins": {
+    "ses_13a20c6d1ffetAk27r979Xq80G": "direct"
+  },
+  "plan_name": "dtxdg2appmgr-fixes",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "**xpm_converter.c 셸 인젝션 제거 (CRITICAL)**",
+      "session_id": "ses_135091fa5ffes9gdxS9aSneMwm",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-06-15T11:08:49.473Z"
+    },
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "**dtxdg2appmgr.c 캐시 실패 + 메모리 누수 수정 (MAJOR)**",
+      "session_id": "ses_13505d5b9ffeqYkMxgJ2o2DaJb",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-15T11:13:14.743Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "**path_scanner.c 재귀 디렉토리 스캔 (MAJOR)**",
+      "session_id": "ses_1350260bfffe2yvGpj1EFFLCmI",
+      "agent": "Sisyphus-Junior",
+      "category": "medium",
+      "updated_at": "2026-06-15T11:15:59.262Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "**Plan Compliance Audit** — 모든 11개 TODO 완료 확인",
+      "session_id": "ses_134fcbdccffe4SL1ERdx5p4aWt",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-15T11:25:01.149Z"
+    }
+  }
+}
