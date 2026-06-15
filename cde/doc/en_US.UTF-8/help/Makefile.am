@@ -15,6 +15,10 @@ include $(top_srcdir)/doc/common/help/sdl-data.am
 # needed by help system processing. These must be distributed.
 EXTRA_DIST += common/ProdEnt.sgm common/glossary.sgm
 
+# AppBuilder help sources only exist for en_US.UTF-8 and ja_JP.UTF-8,
+# so they are distributed only from those locales.
+EXTRA_DIST += $(APPBUILDER_SRCS)
+
 # need to setup a symlink for the C locale to point toward en_US
 install-data-hook:
 	$(RM) -rf $(DESTDIR)$(CDE_INSTALLATION_TOP)/appconfig/help/C

@@ -140,7 +140,11 @@ Textedit.sdl: $(TEXTEDIT_SRCS)
 # Include all help SGML source files in the distribution tarball.
 # These are referenced as build dependencies but without EXTRA_DIST
 # they would be omitted from 'make dist' tarballs, causing build failures.
-EXTRA_DIST = $(APPMANAGER_SRCS) $(APPBUILDER_SRCS) $(CALCULATOR_SRCS) \
+# Note: APPBUILDER_SRCS is NOT included here by default because the
+# AppBuilder/ directory only exists in en_US.UTF-8 and ja_JP.UTF-8.
+# Locales that define APPBUILDER must add $(APPBUILDER_SRCS) to their
+# own EXTRA_DIST.
+EXTRA_DIST = $(APPMANAGER_SRCS) $(CALCULATOR_SRCS) \
     $(CALENDAR_SRCS) $(CREATACT_SRCS) $(FPANEL_SRCS) $(FILEMGR_SRCS) \
     $(HELP4HELP_SRCS) $(ICONED_SRCS) $(INFOMGR_SRCS) $(INTROMGR_SRCS) \
     $(LIBDTPRINT_SRCS) $(LOGINMGR_SRCS) $(MAILER_SRCS) $(PRINTMGR_SRCS) \
