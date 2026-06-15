@@ -1,4 +1,4 @@
-dtxdg2appmgr/dtxdg2appmgr
+dtxdg2appmgr
 *.o
 .deps/
 Makefile

@@ -92,6 +92,7 @@ programs/dtterm/DtTermFallBackResources.c.src
 programs/dtterm/Dtterm.ad
 programs/dtterm/dtterm
 programs/dtterm/dtterm.ti
+programs/dtxdg2appmgr/dtxdg2appmgr
 programs/dtwm/dtwm
 
 # dtappbuilder
