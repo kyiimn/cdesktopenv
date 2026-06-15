@@ -24,14 +24,35 @@
 #ifndef _DTXD2A_ICON_RESOLVER_H
 #define _DTXD2A_ICON_RESOLVER_H
 
+#include <glib.h>
+
 typedef struct {
-    char *icon_path;
-    char *icon_name;
-    int   size;
+    gchar *absolute_path;  /* found icon's absolute path */
+    gchar *format;          /* extension: "png", "svg", "xpm", "jpg" */
 } dtxdg2appmgr_IconResolution;
 
-extern dtxdg2appmgr_IconResolution *dtxdg2appmgr_icon_resolve(const char *icon_name,
-                                                              int size);
+/*
+ * dtxdg2appmgr_icon_resolve - find an icon file using the XDG Icon Theme
+ * Specification search algorithm.
+ *
+ * @icon_name:  icon name from .desktop file (e.g. "firefox")
+ * @data_dirs:  NULL-terminated array of XDG data directories
+ *              (e.g. from XDG_DATA_DIRS or default list)
+ * @result:     pointer to IconResolution struct to fill in
+ *
+ * Returns: TRUE if icon found, FALSE otherwise.
+ *          On TRUE, result->absolute_path and result->format are set
+ *          to heap-allocated strings the caller must free with
+ *          dtxdg2appmgr_icon_resolution_free().
+ */
+extern gboolean dtxdg2appmgr_icon_resolve(const gchar *icon_name,
+                                          const gchar **data_dirs,
+                                          dtxdg2appmgr_IconResolution *result);
+
+/*
+ * dtxdg2appmgr_icon_resolution_free - free heap memory inside an
+ * IconResolution struct. Does NOT free the struct itself.
+ */
 extern void dtxdg2appmgr_icon_resolution_free(dtxdg2appmgr_IconResolution *res);
 
 #endif /* _DTXD2A_ICON_RESOLVER_H */

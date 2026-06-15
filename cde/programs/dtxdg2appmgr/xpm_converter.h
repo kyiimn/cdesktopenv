@@ -24,17 +24,21 @@
 #ifndef _DTXD2A_XPM_CONVERTER_H
 #define _DTXD2A_XPM_CONVERTER_H
 
+#include <glib.h>
+
 typedef struct {
-    int tiny;
-    int small;
-    int medium;
-    int large;
+    gint tiny;    /* 16x16 */
+    gint medium;  /* 32x32 */
+    gint large;   /* 48x48 */
 } dtxdg2appmgr_IconSizes;
 
-extern int dtxdg2appmgr_convert_to_xpm_set(const char *icon_path,
-                                            const char *output_dir,
-                                            const dtxdg2appmgr_IconSizes *sizes);
-extern int dtxdg2appmgr_check_tool_available(const char *tool_name);
-extern char *dtxdg2appmgr_generate_pm_basename(const char *desktop_name);
+gboolean dtxdg2appmgr_convert_to_xpm_set(const gchar *src_path,
+                                         const gchar *base_name,
+                                         const gchar *output_dir,
+                                         GError **error);
+
+gboolean dtxdg2appmgr_check_tool_available(const gchar *tool_name);
+
+gchar *dtxdg2appmgr_generate_pm_basename(const gchar *app_name);
 
 #endif /* _DTXD2A_XPM_CONVERTER_H */

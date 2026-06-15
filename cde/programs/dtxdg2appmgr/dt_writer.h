@@ -24,15 +24,22 @@
 #ifndef _DTXD2A_DT_WRITER_H
 #define _DTXD2A_DT_WRITER_H
 
-extern int dtxdg2appmgr_write_dt_file(const char *dir,
-                                       const char *name,
-                                       const char *exec_str,
-                                       const char *icon_basename,
-                                       const char *comment);
-extern int dtxdg2appmgr_write_appmanager_stub(const char *dir,
-                                              const char *name);
-extern int dtxdg2appmgr_write_group_dt(const char *dir,
-                                       const char *group_name,
-                                       const char *title);
+#include <glib.h>
+#include "desktop_parser.h"
+
+gboolean dtxdg2appmgr_write_dt_file(const dtxdg2appmgr_DesktopEntry *entry,
+                                     const gchar *action_name,
+                                     const gchar *exec_string,
+                                     const gchar *icon_basename,
+                                     const gchar *dt_output_dir,
+                                     GError **error);
+
+gboolean dtxdg2appmgr_write_appmanager_stub(const gchar *group_dir,
+                                            const gchar *action_name,
+                                            GError **error);
+
+gboolean dtxdg2appmgr_write_group_dt(const gchar *group_name,
+                                     const gchar *dt_output_dir,
+                                     GError **error);
 
 #endif /* _DTXD2A_DT_WRITER_H */

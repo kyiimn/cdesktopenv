@@ -27,27 +27,257 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <glib.h>
 #include "xpm_converter.h"
 
-int
-dtxdg2appmgr_convert_to_xpm_set(const char *icon_path,
-                                 const char *output_dir,
-                                 const dtxdg2appmgr_IconSizes *sizes)
+typedef struct {
+    gint width;
+    const gchar *suffix;
+} SizeEntry;
+
+static const SizeEntry size_table[] = {
+    { 16, "t" },
+    { 32, "m" },
+    { 48, "l" },
+};
+
+#define NUM_SIZES (sizeof(size_table) / sizeof(size_table[0]))
+
+static gboolean
+convert_with_imagemagick(const gchar *src_path,
+                         gint width,
+                         gint height,
+                         const gchar *xpm_path,
+                         GError **error)
 {
-    /* TODO: implement */
-    return 0;
+    gchar *cmdline;
+    gint exit_status;
+    gchar *stdout_buf = NULL;
+    gchar *stderr_buf = NULL;
+    gboolean ok;
+
+    cmdline = g_strdup_printf(
+        "convert -background none -resize %dx%d %s %s",
+        width, height, src_path, xpm_path);
+
+    ok = g_spawn_command_line_sync(cmdline, &stdout_buf, &stderr_buf,
+                                   &exit_status, error);
+    g_free(cmdline);
+    g_free(stdout_buf);
+    g_free(stderr_buf);
+
+    if (!ok)
+        return FALSE;
+
+    if (!g_spawn_check_wait_status(exit_status, error)) {
+        g_clear_error(error);
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
-int
-dtxdg2appmgr_check_tool_available(const char *tool_name)
+static gboolean
+convert_with_netpbm(const gchar *src_path,
+                    gint width,
+                    gint height,
+                    const gchar *xpm_path,
+                    GError **error)
 {
-    /* TODO: implement */
-    return 0;
+    gchar *cmdline;
+    gint exit_status;
+    gchar *stdout_buf = NULL;
+    gchar *stderr_buf = NULL;
+    gboolean ok;
+
+    cmdline = g_strdup_printf(
+        "pngtopnm %s | pnmscale -xysize %d %d | ppmtoxpm > %s",
+        src_path, width, height, xpm_path);
+
+    ok = g_spawn_command_line_sync(cmdline, &stdout_buf, &stderr_buf,
+                                   &exit_status, error);
+    g_free(cmdline);
+    g_free(stdout_buf);
+    g_free(stderr_buf);
+
+    if (!ok)
+        return FALSE;
+
+    if (!g_spawn_check_wait_status(exit_status, error)) {
+        g_clear_error(error);
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
-char *
-dtxdg2appmgr_generate_pm_basename(const char *desktop_name)
+static gboolean
+is_png_file(const gchar *path)
 {
-    /* TODO: implement */
-    return NULL;
+    const gchar *ext;
+
+    if (!path)
+        return FALSE;
+
+    ext = strrchr(path, '.');
+    if (!ext)
+        return FALSE;
+
+    return g_ascii_strcasecmp(ext, ".png") == 0;
+}
+
+static gchar *
+xpm_path_to_pm_path(const gchar *xpm_path)
+{
+    gchar *copy;
+    gchar *dot;
+
+    copy = g_strdup(xpm_path);
+    dot = strrchr(copy, '.');
+    if (dot)
+        *dot = '\0';
+
+    return g_strconcat(copy, ".pm", NULL);
+}
+
+static gboolean
+rename_xpm_to_pm(const gchar *xpm_path, GError **error)
+{
+    gchar *pm_path;
+    gint rc;
+
+    pm_path = xpm_path_to_pm_path(xpm_path);
+
+    rc = rename(xpm_path, pm_path);
+    if (rc != 0) {
+        gint saved_errno = errno;
+        g_set_error(error, G_FILE_ERROR, g_file_error_from_errno(saved_errno),
+                    "Failed to rename %s to %s: %s",
+                    xpm_path, pm_path, g_strerror(saved_errno));
+        g_free(pm_path);
+        return FALSE;
+    }
+
+    g_free(pm_path);
+    return TRUE;
+}
+
+gboolean
+dtxdg2appmgr_convert_to_xpm_set(const gchar *src_path,
+                                 const gchar *base_name,
+                                 const gchar *output_dir,
+                                 GError **error)
+{
+    gchar *created_pm[NUM_SIZES];
+    gboolean created_flag[NUM_SIZES];
+    gboolean all_ok = TRUE;
+
+    if (!src_path || !base_name || !output_dir) {
+        g_set_error(error, G_FILE_ERROR, G_FILE_ERROR_INVAL,
+                    "src_path, base_name, and output_dir must not be NULL");
+        return FALSE;
+    }
+
+    g_mkdir_with_parents(output_dir, 0755);
+
+    memset(created_pm, 0, sizeof(created_pm));
+    memset(created_flag, 0, sizeof(created_flag));
+
+    for (gsize i = 0; i < NUM_SIZES; i++) {
+        gchar *xpm_path;
+        gchar *filename;
+        gboolean converted = FALSE;
+
+        filename = g_strdup_printf("%s.%s.xpm", base_name,
+                                   size_table[i].suffix);
+        xpm_path = g_build_filename(output_dir, filename, NULL);
+        g_free(filename);
+
+        if (convert_with_imagemagick(src_path,
+                                      size_table[i].width,
+                                      size_table[i].width,
+                                      xpm_path, NULL)) {
+            converted = TRUE;
+        } else if (is_png_file(src_path)) {
+            converted = convert_with_netpbm(src_path,
+                                            size_table[i].width,
+                                            size_table[i].width,
+                                            xpm_path, NULL);
+        }
+
+        if (converted) {
+            if (rename_xpm_to_pm(xpm_path, NULL)) {
+                created_pm[i] = xpm_path_to_pm_path(xpm_path);
+                created_flag[i] = TRUE;
+                g_free(xpm_path);
+            } else {
+                unlink(xpm_path);
+                g_free(xpm_path);
+                all_ok = FALSE;
+            }
+        } else {
+            g_free(xpm_path);
+            all_ok = FALSE;
+        }
+    }
+
+    if (!all_ok) {
+        for (gsize i = 0; i < NUM_SIZES; i++) {
+            if (created_flag[i] && created_pm[i]) {
+                unlink(created_pm[i]);
+            }
+            g_free(created_pm[i]);
+        }
+        g_set_error(error, G_FILE_ERROR, G_FILE_ERROR_FAILED,
+                    "Failed to convert some icon sizes for %s", src_path);
+        return FALSE;
+    }
+
+    for (gsize i = 0; i < NUM_SIZES; i++)
+        g_free(created_pm[i]);
+
+    return TRUE;
+}
+
+gboolean
+dtxdg2appmgr_check_tool_available(const gchar *tool_name)
+{
+    gchar *found;
+
+    if (!tool_name)
+        return FALSE;
+
+    found = g_find_program_in_path(tool_name);
+    if (found) {
+        g_free(found);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+gchar *
+dtxdg2appmgr_generate_pm_basename(const gchar *app_name)
+{
+    GString *sanitized;
+    gchar *result;
+
+    if (!app_name)
+        return NULL;
+
+    sanitized = g_string_new("xdg-");
+
+    for (const gchar *p = app_name; *p; p++) {
+        if (g_ascii_isalnum(*p)) {
+            g_string_append_c(sanitized, *p);
+        } else {
+            g_string_append_c(sanitized, '_');
+        }
+    }
+
+    result = g_string_free(sanitized, FALSE);
+    return result;
 }

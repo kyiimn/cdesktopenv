@@ -199,7 +199,7 @@ Wave 3 (통합 + Xsession + 문서):
 
 <!-- Tasks will be appended below by Edit operations -->
 
-- [ ] 1. **configure.ac에 GLib 검사 추가**
+- [x] 1. **configure.ac에 GLib 검사 추가**
 
   **What to do**:
   - `cde/configure.ac`에 `PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.40 gio-2.0 >= 2.40], [have_glib=yes], [have_glib=no])` 추가
@@ -261,7 +261,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add configure.ac GLib detection`
   - Files: `configure.ac`
 
-- [ ] 2. **디렉토리 구조 + Makefile.am 골격**
+- [x] 2. **디렉토리 구조 + Makefile.am 골격**
 
   **What to do**:
   - `cde/programs/dtxdg2appmgr/` 디렉토리 생성
@@ -314,7 +314,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add directory structure and Makefile.am skeleton`
   - Files: `cde/programs/dtxdg2appmgr/Makefile.am`, `*.c`, `*.h`, `README.md`
 
-- [ ] 3. **CLI 옵션 파서 (`options.c`/`.h`)**
+- [x] 3. **CLI 옵션 파서 (`options.c`/`.h`)**
 
   **What to do**:
   - `Options` 구조체 정의:
@@ -370,7 +370,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add CLI options parser`
   - Files: `cde/programs/dtxdg2appmgr/options.c`, `options.h`
 
-- [ ] 4. **.desktop GKeyFile 파서 (`desktop_parser.c`/`.h`)**
+- [x] 4. **.desktop GKeyFile 파서 (`desktop_parser.c`/`.h`)**
 
   **What to do**:
   - `DesktopEntry` 구조체 정의:
@@ -446,7 +446,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add .desktop GKeyFile parser`
   - Files: `cde/programs/dtxdg2appmgr/desktop_parser.c`, `desktop_parser.h`
 
-- [ ] 5. **XDG 데이터 경로 스캐너 (`path_scanner.c`/`.h`)**
+- [x] 5. **XDG 데이터 경로 스캐너 (`path_scanner.c`/`.h`)**
 
   **What to do**:
   - `xdg_get_data_dirs(void)` 함수:
@@ -503,7 +503,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add XDG data path scanner`
   - Files: `cde/programs/dtxdg2appmgr/path_scanner.c`, `path_scanner.h`
 
-- [ ] 6. **Exec 라인 필드 코드 파서 (`exec_parser.c`/`.h`)**
+- [x] 6. **Exec 라인 필드 코드 파서 (`exec_parser.c`/`.h`)**
 
   **What to do**:
   - `exec_parse(const gchar *exec_line, const gchar *file_uri, ExecContext *ctx)` 함수:
@@ -564,7 +564,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add XDG Exec line parser`
   - Files: `cde/programs/dtxdg2appmgr/exec_parser.c`, `exec_parser.h`
 
-- [ ] 7. **카테고리 → 그룹명 sanitization 유틸리티 (`category_mapper.c`/`.h`)**
+- [x] 7. **카테고리 → 그룹명 sanitization 유틸리티 (`category_mapper.c`/`.h`)**
 
   **What to do**:
   - `gchar *category_to_group(const gchar *category)` 함수:
@@ -648,7 +648,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add category to group mapper (always _XDG suffix)`
   - Files: `cde/programs/dtxdg2appmgr/category_mapper.c`, `category_mapper.h`
 
-- [ ] 8. **아이콘 검색 (XDG Icon Theme Spec) (`icon_resolver.c`/`.h`)**
+- [x] 8. **아이콘 검색 (XDG Icon Theme Spec) (`icon_resolver.c`/`.h`)**
 
   **What to do**:
   - **기존 `contrib/desktop2dt/desktop2dt`의 `find_convert()` 알고리즘 포팅** (line 48-74):
@@ -724,7 +724,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add XDG icon resolver (ported from desktop2dt)`
   - Files: `cde/programs/dtxdg2appmgr/icon_resolver.c`, `icon_resolver.h`
 
-- [ ] 9. **XPM 변환기 (`xpm_converter.c`/`.h`)**
+- [x] 9. **XPM 변환기 (`xpm_converter.c`/`.h`)**
 
   **What to do**:
   - **3개 CDE 크기 동시 생성: `.t.pm` (16x16), `.m.pm` (32x32), `.l.pm` (48x48)** — CDE 표준 컨벤션
@@ -819,7 +819,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add 3-size XPM converter (ported from desktop2dt)`
   - Files: `cde/programs/dtxdg2appmgr/xpm_converter.c`, `xpm_converter.h`
 
-- [ ] 10. **.dt 파일 생성기 (`dt_writer.c`/`.h`)**
+- [x] 10. **.dt 파일 생성기 (`dt_writer.c`/`.h`)**
 
   **What to do**:
   - `gboolean write_dt_file(const DesktopEntry *entry, const gchar *action_name, const gchar *icon_basename, const gchar *dt_output_dir, GError **error)` 함수:
@@ -907,7 +907,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add .dt file and appmanager stub writer`
   - Files: `cde/programs/dtxdg2appmgr/dt_writer.c`, `dt_writer.h`
 
-- [ ] 11. **mtime 기반 캐시 (`cache.c`/`.h`)**
+- [x] 11. **mtime 기반 캐시 (`cache.c`/`.h`)**
 
   **What to do**:
   - `CacheEntry` 구조체:

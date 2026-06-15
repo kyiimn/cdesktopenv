@@ -24,16 +24,20 @@
 #ifndef _DTXD2A_CACHE_H
 #define _DTXD2A_CACHE_H
 
+#include <glib.h>
+
 typedef struct {
-    char *desktop_path;
-    char *dt_path;
-    long  mtime;
+    gchar *desktop_path;   /* absolute path of .desktop file */
+    gchar *dt_path;        /* path of generated .dt file      */
+    glong  mtime;          /* mtime of .desktop file when cached */
 } dtxdg2appmgr_CacheEntry;
 
-extern void dtxdg2appmgr_cache_load(const char *cache_file);
-extern void dtxdg2appmgr_cache_save(const char *cache_file);
-extern int  dtxdg2appmgr_cache_is_valid(const char *desktop_path,
-                                        const char *dt_path);
-extern void dtxdg2appmgr_cache_entry_free(dtxdg2appmgr_CacheEntry *entry);
+GHashTable *dtxdg2appmgr_cache_load(const gchar *cache_file);
+gboolean    dtxdg2appmgr_cache_save(GHashTable *cache, const gchar *cache_file);
+gboolean    dtxdg2appmgr_cache_is_valid(GHashTable *cache, const gchar *desktop_path);
+void        dtxdg2appmgr_cache_entry_free(dtxdg2appmgr_CacheEntry *entry);
+void        dtxdg2appmgr_cache_update(GHashTable *cache, const gchar *desktop_path,
+                                      const gchar *dt_path, glong mtime);
+void        dtxdg2appmgr_cache_free(GHashTable *cache);
 
 #endif /* _DTXD2A_CACHE_H */
