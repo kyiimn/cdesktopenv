@@ -27,3 +27,8 @@ SGMLDEPS = $(SGMLDIR)/docbook.dtd $(SGMLDIR)/isobox.gml \
 DTINFOGEN = \
 	PATH=$(PATH):$(DTSRDIR) \
 	$(top_srcdir)/programs/dtdocbook/doc_utils/dtdocbook2infolib
+
+# Include all SGML source files in the distribution tarball.
+# These are referenced as build dependencies but without EXTRA_DIST
+# they would be omitted from 'make dist' tarballs, causing build failures.
+EXTRA_DIST = $(SGMLDEPS)
