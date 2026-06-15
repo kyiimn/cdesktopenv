@@ -966,7 +966,7 @@ Wave 3 (통합 + Xsession + 문서):
   - Message: `feat(dtxdg2appmgr): add mtime-based cache`
   - Files: `cde/programs/dtxdg2appmgr/cache.c`, `cache.h`
 
-- [ ] 12. **main() 오케스트레이션 (`dtxdg2appmgr.c`)**
+- [x] 12. **main() 오케스트레이션 (`dtxdg2appmgr.c`)**
 
   **What to do**:
   - main() 함수 구현 (**`contrib/desktop2dt/desktop2dt`의 메인 루프 패턴 포팅**):
