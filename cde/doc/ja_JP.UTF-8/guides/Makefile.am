@@ -31,6 +31,21 @@ include $(top_srcdir)/doc/common/guides/docbookGuide.am
 # build the infolib + search DB
 INFOLIBDEPS = $(SGMLDEPS) $(top_srcdir)/doc/common/docbook/docbook.stl
 
+# The guides/common/ directory contains shared SGML entities and catalogs
+# needed by SGML processing (SSEntity.sgm, catalog). These must be distributed.
+EXTRA_DIST += common/SSEntity.sgm common/catalog \
+	usersGuide/graphics/H4Hghelp.tif \
+	usersGuide/graphics/H4Hqhelp.tif \
+	usersGuide/graphics/H4Hsubpa.tif \
+	usersGuide/graphics/bspushb1.tif \
+	usersGuide/graphics/pholdr.tif \
+	usersGuide/graphics/pmmainw.tif \
+	usersGuide/graphics/screen3.tif \
+	infoUGd/graphics/graphmic.tif \
+	sysAdminGuide/graphics/appmgr.tif \
+	sysAdminGuide/graphics/approot.tif \
+	sysAdminGuide/graphics/types.tif
+
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)
 	$(DGENV) $(DTINFOGEN) build -v -T $(DTINFOGENTMPDIR) $(DTINFOGENOPTIONS) $(DGOPTS) $(SSENTS) -l $(INFOLIB) bookcase.bc

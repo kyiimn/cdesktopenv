@@ -103,7 +103,16 @@ USERSGUIDE_GRS3 = \
     usersGuide/graphics/SMColBox.tif  usersGuide/graphics/ugglobop.tif \
     usersGuide/graphics/SMColor.tif   usersGuide/graphics/ugpamenu.tif \
     usersGuide/graphics/SMFont.tif    usersGuide/graphics/ugtermop.tif \
-    usersGuide/graphics/SMFront.tif   usersGuide/graphics/ugtermpo.tif
+    usersGuide/graphics/SMFront.tif   usersGuide/graphics/ugtermpo.tif \
+    usersGuide/graphics/BSpushb1.tif  usersGuide/graphics/MailOptP.tif \
+    usersGuide/graphics/MailPrnt.tif  usersGuide/graphics/Screen3.tif \
+    usersGuide/graphics/bklist.tif    usersGuide/graphics/calpopts.tif \
+    usersGuide/graphics/calprint.tif  usersGuide/graphics/fpanel1.tif \
+    usersGuide/graphics/fpanel2.tif   usersGuide/graphics/fpinfico.tif \
+    usersGuide/graphics/helptype.tif  usersGuide/graphics/ilibico.tif \
+    usersGuide/graphics/infoico.tif   usersGuide/graphics/infosubp.tif \
+    usersGuide/graphics/mailopts.tif  usersGuide/graphics/printset.tif \
+    usersGuide/graphics/readwin.tif
 
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(USERSGUIDE_GRS1) \
 		$(USERSGUIDE_GRS2) $(USERSGUIDE_GRS3)
@@ -120,5 +129,5 @@ $(USERSGUIDE_TOC): $(USERSGUIDE_SRCS)
 BUILT_SOURCES += usersGuide/TOC.sgm
 CLEANFILES += usersGuide/TOC.sgm
 
-EXTRA_DIST += $(USERSGUIDE_SRCS)
+EXTRA_DIST += $(USERSGUIDE_SRCS) $(USERSGUIDE_GRS1) $(USERSGUIDE_GRS2) $(USERSGUIDE_GRS3)
 

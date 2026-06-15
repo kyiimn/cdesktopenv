@@ -31,4 +31,4 @@ DTINFOGEN = \
 # Include all SGML source files in the distribution tarball.
 # These are referenced as build dependencies but without EXTRA_DIST
 # they would be omitted from 'make dist' tarballs, causing build failures.
-EXTRA_DIST = $(SGMLDEPS)
+EXTRA_DIST = $(SGMLDEPS) $(top_srcdir)/doc/common/docbook/docbook.stl

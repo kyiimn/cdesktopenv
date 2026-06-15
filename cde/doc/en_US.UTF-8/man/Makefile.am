@@ -1,5 +1,9 @@
 MAINTAINERCLEANFILES = Makefile.in
 
+# cdedecl.sgm and motifdecl.sgm are SGML declaration files needed as build
+# dependencies for man page generation (MANDEPS). They must be distributed.
+EXTRA_DIST = cdedecl.sgm motifdecl.sgm
+
 # this sets the LANG variables
 include $(top_srcdir)/programs/localized/templates/English.am
 

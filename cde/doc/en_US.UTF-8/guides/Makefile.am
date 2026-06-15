@@ -32,6 +32,15 @@ include $(top_srcdir)/doc/common/guides/docbookGuide.am
 # build the infolib + search DB
 INFOLIBDEPS = $(SGMLDEPS) $(top_srcdir)/doc/common/docbook/docbook.stl
 
+# The guides/common/ directory contains shared SGML entities and catalogs
+# needed by the man page build (ManLinks.sgm, ManLinksMotif.sgm) and
+# SGML processing (SSEntity.sgm, catalog). These must be distributed.
+EXTRA_DIST += common/ManLinks.sgm common/ManLinksMotif.sgm common/SSEntity.sgm common/catalog
+
+# Man page SGML sources referenced by man/Makefile.am build rules but
+# not included in MAN_SRCS (which only lists guide-format SGML files).
+EXTRA_DIST += man/m3_Dt/CrePrntD.sgm man/man6/ttsnoop.sgm
+
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)
 	$(DGENV) $(DTINFOGEN) build -v -T $(DTINFOGENTMPDIR) $(DTINFOGENOPTIONS) $(DGOPTS) $(SSENTS) -l $(INFOLIB) bookcase.bc

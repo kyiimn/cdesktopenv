@@ -20,6 +20,21 @@ include $(top_srcdir)/doc/common/guides/sysAdminGuide.am
 # build the infolib + search DB
 INFOLIBDEPS = $(SGMLDEPS) $(top_srcdir)/doc/common/docbook/docbook.stl
 
+# The guides/common/ directory contains shared SGML entities and catalogs
+# needed by SGML processing (SSEntity.sgm, catalog). These must be distributed.
+EXTRA_DIST += common/SSEntity.sgm common/catalog \
+	usersGuide/graphics/frex1.tif \
+	usersGuide/graphics/frex2.tif \
+	usersGuide/graphics/frex3.tif \
+	usersGuide/graphics/frex4.tif \
+	sysAdminGuide/graphics/appmgr.tif \
+	sysAdminGuide/graphics/approot.tif \
+	sysAdminGuide/graphics/frex1.tif \
+	sysAdminGuide/graphics/frex2.tif \
+	sysAdminGuide/graphics/frex3.tif \
+	sysAdminGuide/graphics/frex4.tif \
+	sysAdminGuide/graphics/types.tif
+
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)
 	$(DGENV) $(DTINFOGEN) build -v -T $(DTINFOGENTMPDIR) $(DTINFOGENOPTIONS) $(DGOPTS) $(SSENTS) -l $(INFOLIB) bookcase.bc
