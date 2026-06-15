@@ -374,10 +374,15 @@ static void LoadPrefixFont(
    /* work with copy, because FontListAppendEntry() destroys input FL */
    newFontList = XmFontListCopy(curFontList);
 
-   /* load and merge fonts */
-   s_PrefixFontListTag = PREFIX_FONT_TAG;
-   entry = XmFontListEntryLoad(XtDisplay(hw->help_dialog.srch.srchForm),
-             fontSpec,XmFONT_IS_FONT, s_PrefixFontListTag);
+    /* load and merge fonts */
+    s_PrefixFontListTag = PREFIX_FONT_TAG;
+#ifdef USE_XFT
+    entry = XmFontListEntryLoad(XtDisplay(hw->help_dialog.srch.srchForm),
+              fontSpec, XmFONT_IS_XFT, s_PrefixFontListTag);
+    if (entry == NULL)
+#endif
+    entry = XmFontListEntryLoad(XtDisplay(hw->help_dialog.srch.srchForm),
+              fontSpec, XmFONT_IS_FONT, s_PrefixFontListTag);
    newFontList = XmFontListAppendEntry(newFontList,entry);
    XmFontListEntryFree(&entry);
 

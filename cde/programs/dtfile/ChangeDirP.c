@@ -64,6 +64,9 @@
 #endif
 #include <Xm/Xm.h>
 #include <Xm/XmP.h>
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif /* USE_XFT */
 #include <Xm/DrawP.h>
 #undef USE_XFT
 #include <Xm/TextFP.h>
@@ -1369,6 +1372,17 @@ get_textwidth( FileMgrData *fmd,
             break;
         case XmFONT_IS_FONT:
             w = XTextWidth(fmd->cd_font, str, len);
+            break;
+#ifdef USE_XFT
+        case XmFONT_IS_XFT:
+            {
+                XGlyphInfo extents;
+                XftTextExtents8(fmd->cd_display, fmd->cd_xft_font,
+                                (const FcChar8 *)str, len, &extents);
+                w = extents.xOff;
+            }
+            break;
+#endif /* USE_XFT */
         default:
             break;
     }
@@ -1392,6 +1406,74 @@ draw_imagestring( Display *display,
             break;
         case XmFONT_IS_FONT:
             XDrawImageString(display, d, gc, x, y, text, bytes);
+            break;
+#ifdef USE_XFT
+        case XmFONT_IS_XFT:
+            {
+                XftDraw *xd;
+                XftColor fg_color, bg_color;
+                XGCValues gcv;
+                XGlyphInfo extents;
+                char _xftClr[12];
+
+                xd = XftDrawCreate(display, d,
+                                    DefaultVisual(display, DefaultScreen(display)),
+                                    DefaultColormap(display, DefaultScreen(display)));
+                if (xd == NULL)
+                    break;
+
+                if (XGetGCValues(display, gc, GCForeground | GCBackground, &gcv) == 0)
+                {
+                    XftDrawDestroy(xd);
+                    break;
+                }
+
+                snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+                         gcv.foreground & 0xFFFFFFul);
+                if (!XftColorAllocName(display,
+                            DefaultVisual(display, DefaultScreen(display)),
+                            DefaultColormap(display, DefaultScreen(display)),
+                            _xftClr, &fg_color))
+                {
+                    XftDrawDestroy(xd);
+                    break;
+                }
+
+                snprintf(_xftClr, sizeof(_xftClr), "#%06lx",
+                         gcv.background & 0xFFFFFFul);
+                if (!XftColorAllocName(display,
+                            DefaultVisual(display, DefaultScreen(display)),
+                            DefaultColormap(display, DefaultScreen(display)),
+                            _xftClr, &bg_color))
+                {
+                    XftColorFree(display,
+                                 DefaultVisual(display, DefaultScreen(display)),
+                                 DefaultColormap(display, DefaultScreen(display)),
+                                 &fg_color);
+                    XftDrawDestroy(xd);
+                    break;
+                }
+
+                XftTextExtents8(display, fmd->cd_xft_font,
+                                (const FcChar8 *)text, bytes, &extents);
+                XftDrawRect(xd, &bg_color, x, y - fmd->cd_xft_font->ascent,
+                            (unsigned int)extents.width,
+                            (unsigned int)(fmd->cd_xft_font->ascent + fmd->cd_xft_font->descent));
+                XftDrawString8(xd, &fg_color, fmd->cd_xft_font, x, y,
+                               (const FcChar8 *)text, bytes);
+
+                XftColorFree(display,
+                             DefaultVisual(display, DefaultScreen(display)),
+                             DefaultColormap(display, DefaultScreen(display)),
+                             &bg_color);
+                XftColorFree(display,
+                             DefaultVisual(display, DefaultScreen(display)),
+                             DefaultColormap(display, DefaultScreen(display)),
+                             &fg_color);
+                XftDrawDestroy(xd);
+            }
+            break;
+#endif /* USE_XFT */
         default:
             break;
     }

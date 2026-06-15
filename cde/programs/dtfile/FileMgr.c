@@ -113,6 +113,9 @@
 #define _CDE_SAVED_USE_XFT 1
 #endif
 #include <Xm/XmP.h>
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif /* USE_XFT */
 #include <Xm/CascadeB.h>
 #include <Xm/DrawingA.h>
 #include <Xm/DrawingAP.h>
@@ -1755,6 +1758,14 @@ SetValues(
           file_mgr_data->cd_fonttype = XmFONT_IS_FONTSET;
           gc_mask = GCForeground | GCBackground;
       }
+#ifdef USE_XFT
+      else if(type == XmFONT_IS_XFT) {
+          file_mgr_data->cd_xft_font = (XftFont *)entry_font;
+          file_mgr_data->cd_display = XtDisplay(widg);
+          file_mgr_data->cd_fonttype = XmFONT_IS_XFT;
+          gc_mask = GCForeground | GCBackground;
+      }
+#endif /* USE_XFT */
       else {
           file_mgr_data->cd_font = (XFontStruct *)entry_font;
           file_mgr_data->cd_fonttype = XmFONT_IS_FONT;

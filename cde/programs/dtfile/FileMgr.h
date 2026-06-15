@@ -45,6 +45,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif /* USE_XFT */
+
 
 /*  Resource names  */
 
@@ -275,6 +279,10 @@ typedef struct
    XtIntervalId msg_timer_id;
 
    Boolean       cd_inited;
+#ifdef USE_XFT
+   Display     * cd_display;
+   XftFont     * cd_xft_font;
+#endif /* USE_XFT */
    XFontStruct * cd_font;
    XFontSet      cd_fontset;
    XmFontType    cd_fonttype;

@@ -2418,29 +2418,42 @@ _DtHelpXmFontListGetPropertyMax(
        unsigned long value;
        XmFontType type;
 
-       fontData = XmFontListEntryGetFont(entry,&type);
-       if (XmFONT_IS_FONT == type)
-       {
-          XFontStruct * fontStruct;
+        fontData = XmFontListEntryGetFont(entry,&type);
+        if (XmFONT_IS_FONT == type)
+        {
+           XFontStruct * fontStruct;
 
-          /* cast according to type */
-          fontStruct = (XFontStruct *) fontData;
+           /* cast according to type */
+           fontStruct = (XFontStruct *) fontData;
 
-          if(XGetFontProperty(fontStruct, atom, &value) == TRUE) 
-          {
-             if(gotValue == False) /* haven't gotten any prop value yet */
-             {
-                 *ret_propertyValue = value;
-                 gotValue = True;
-             }
-             else   /* have a good prop value already...get the max one */
-             {
-                 if(value > *ret_propertyValue)
-                     *ret_propertyValue = value;
-             }
-          } /* if the getproperty call was good */
-       }
-       else  /* XmFONT_IS_FONTSET */
+           if(XGetFontProperty(fontStruct, atom, &value) == TRUE) 
+           {
+              if(gotValue == False) /* haven't gotten any prop value yet */
+              {
+                  *ret_propertyValue = value;
+                  gotValue = True;
+              }
+              else   /* have a good prop value already...get the max one */
+              {
+                  if(value > *ret_propertyValue)
+                      *ret_propertyValue = value;
+              }
+           } /* if the getproperty call was good */
+        }
+#ifdef USE_XFT
+        else if (XmFONT_IS_XFT == type)
+        {
+           XftFont *xftFont = (XftFont *) fontData;
+           /*
+            * XftFont has ascent/descent but no XFontStruct-style
+            * properties. Skip property lookup for Xft entries —
+            * the caller's requested property will be found from
+            * another font entry (FONT or FONTSET) in the list.
+            */
+           (void) xftFont;  /* suppress unused-variable warning */
+        }
+#endif /* USE_XFT */
+        else  /* XmFONT_IS_FONTSET */
        {
           XFontSet fontSet;
           XFontStruct **font_list;
