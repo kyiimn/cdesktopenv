@@ -225,6 +225,12 @@ available in the Size list. If a new font is selected and\n\
 applied, you will not be able to return to the current font\n\
 using the Style Manager - Font dialog.
 
+$ _DtMessage 25 is the label of the titlebox containing the list of font families
+25 Family
+
+$ _DtMessage 26 is a label used for accessibility/tooltip of the font family list
+26 Font Family
+
 $set 6
 $ _DtMessage set 6 is for the Beep dialog
 $ _DtMessage 1,6 from set 6 have been deleted from the message catalog

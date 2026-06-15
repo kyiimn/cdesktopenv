@@ -81,6 +81,14 @@ extern XmWidgetExtData _XmGetWidgetExtData(
                          MWM_FUNC_MINIMIZE | \
                          MWM_FUNC_MAXIMIZE
 
+/* Font Family Selection Constants */
+#define MAX_FONT_FAMILIES  8   /* Max number of font families in Style Manager Font dialog */
+#define MAX_FONT_SIZES     7   /* Max number of font sizes per family (backward compat: was numFonts) */
+#define FONT_INDEX(fam, sz) ((fam) * MAX_FONT_SIZES + (sz))
+#define FONT_FAMILY(idx)    ((idx) / MAX_FONT_SIZES)
+#define FONT_SIZE(idx)      ((idx) % MAX_FONT_SIZES)
+#define fontChoiceIdx(fam, sz) fontChoice[FONT_INDEX(fam, sz)]
+
 #define COLOR    "Color"
 #define FONT     "Font"
 #define BACKDROP "Backdrop"
@@ -143,7 +151,8 @@ typedef struct {
                systemFont;
     String     userFontStr,
                systemFontStr;
-    Fontset    fontChoice[10];
+    /* Font family + size 2D structure flattened to 1D for XtOffset compatibility */
+    Fontset    fontChoice[MAX_FONT_FAMILIES * MAX_FONT_SIZES];
     String     session,
                backdropDir,
                paletteDir,
@@ -154,6 +163,10 @@ typedef struct {
     XmStringTable   imServerHosts;
     XmStringTable   preeditType;
     int        pipeTimeOut;
+    /* Font family selection (new feature) */
+    int        numFamilies;        /* Number of font families (default 2: system, user) */
+    String     familyNames[MAX_FONT_FAMILIES];    /* Family identifiers from Xresources */
+    String     familyLabels[MAX_FONT_FAMILIES];   /* Display labels for UI */
 } ApplicationData, *ApplicationDataPtr;
 
 typedef struct {
@@ -203,6 +216,9 @@ typedef struct {
     Boolean          workProcs;
     int              horizontalSpacing, verticalSpacing;
 	int              visualClass;
+    /* Font family selection widgets (new) */
+    Widget           familyTB,           /* TitleBox containing family list */
+                     familyList;         /* ScrolledList of font families */
 } Style;
 
 /*

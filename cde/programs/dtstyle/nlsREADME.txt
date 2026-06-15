@@ -101,3 +101,12 @@ App-defaults file:
 	Dtstyle*UserFont4: -hp-mincho-medium-r-normal--32-320-75-75-c-160-hp-japanese15
 
 
+! Font Family Selection Resources:
+! NumFontFamilies - Number of font families available in the Font dialog (default: 2)
+! FontFamily0..FontFamily7 - Identifier for each font family (default: "system", "user", "")
+! FontFamily0Label..FontFamily7Label - Display label for each family in the UI (default: "System", "User", "")
+! FontFamily0SystemFont0..FontFamily0SystemFont6 - System fonts for family 0, sizes 0-6
+! FontFamily0UserFont0..FontFamily0UserFont6 - User fonts for family 0, sizes 0-6
+! FontFamily1SystemFont0..FontFamily1SystemFont6 - System fonts for family 1, sizes 0-6
+! FontFamily1UserFont0..FontFamily1UserFont6 - User fonts for family 1, sizes 0-6
+

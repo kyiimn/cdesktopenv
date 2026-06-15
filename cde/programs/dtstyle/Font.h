@@ -49,6 +49,9 @@ typedef struct {
   String     sysStr;
   String     userStr;
   XmString   pointSize;
+  /* Added for font family selection feature */
+  String     familyName;   /* family identifier (e.g., "system", "user", "serif") */
+  String     familyLabel;  /* display label for UI list (e.g., "System", "User", "Serif") */
 } Fontset;
 
 /* External Interface */

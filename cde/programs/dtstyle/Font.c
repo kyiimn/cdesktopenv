@@ -94,7 +94,11 @@
 #define USER_MSG   ((char *)GETMESSAGE(5, 21, "AaBbCcDdEeFfGg0123456789"))
 #define BLANK_MSG  "                          "
 #define SIZE       ((char *)GETMESSAGE(5, 22, "Size"))
+#define FAMILY     ((char *)GETMESSAGE(5, 25, "Family"))
 
+#ifndef MIN
+#define MIN(a,b) ((a) < (b) ? (a) : (b))
+#endif
 
 /*+++++++++++++++++++++++++++++++++++++++*/
 /* Internal Variables                    */
@@ -107,6 +111,8 @@ typedef struct {
     Widget previewForm;
     Widget systemLabel;
     Widget userText;
+    Widget familyTB;          /* NEW */
+    Widget familyList;        /* NEW */
     Widget sizeTB;
     Widget sizeList;
     int    originalFontIndex;
@@ -137,6 +143,10 @@ static void changeSampleFontCB(
                         Widget w,
                         XtPointer client_data,
                         XtPointer call_data) ;
+static void changeFamilyCB(
+                        Widget w,
+                        XtPointer client_data,
+                        XtPointer call_data) ;
 static void valueChangedCB( 
                         Widget w,
                         XtPointer client_data,
@@ -146,22 +156,28 @@ static void valueChangedCB(
 /*+++++++++++++++++++++++++++++++++++++++*/
 /* popup_fontBB                          */
 /*+++++++++++++++++++++++++++++++++++++++*/
-void 
+void
 popup_fontBB(
         Widget shell )
 {
+  int savedIndex = font.selectedFontIndex;
   if (style.fontDialog == NULL) {
-    _DtTurnOnHourGlass(shell);  
-    CreateFontDlg(shell); 
+    _DtTurnOnHourGlass(shell);
+    CreateFontDlg(shell);
+    font.selectedFontIndex = savedIndex;  /* restore after CreateFontDlg resets to -1 */
+    if (savedIndex >= 0) {
+      int fam = FONT_FAMILY(savedIndex);
+      int sz = FONT_SIZE(savedIndex);
+      if (style.xrdb.numFamilies > 1)
+        XmListSelectPos(font.familyList, fam + 1, False);
+      XmListSelectPos(font.sizeList, sz + 1, False);
+    }
     XtManageChild(style.fontDialog);
-    _DtTurnOffHourGlass(shell);  
-  } else { 
+    _DtTurnOffHourGlass(shell);
+  } else {
     XtManageChild(style.fontDialog);
     raiseWindow(XtWindow(XtParent(style.fontDialog)));
   }
-
-  /* If no font is found to match current Desktop
-     font, pop up informative message */
   if (font.selectedFontIndex < 0)
      InfoDialog(INFO_MSG, style.shell, False);
 }
@@ -175,14 +191,13 @@ CreateFontDlg(
 {
 
     int     n;
-    int              i;
     Arg              args[MAX_ARGS];
     Widget           appTBox;
     Widget           sizeMenuPlDn;
     XmString         button_string[NUM_LABELS];
     XmString         string;
     int              count = 0;
-    Widget           widget_list[6];
+    Widget           widget_list[7];
     XmString         *sizeItems;
     XmStringTable    selectedSize;
     char             sizeStr[111];
@@ -209,17 +224,26 @@ CreateFontDlg(
      * Look for the selectedFont in the fontChoice array and set 
      * selectedFontIndex to that entry
      */
-    for (i=0; i<style.xrdb.numFonts; i++)
-        if (strcmp (font.selectedFontStr, 
-                    style.xrdb.fontChoice[i].sysStr) == 0)
-        {
-            font.selectedFontIndex = i;        
-            if (!style.xrdb.fontChoice[i].userFont)
-                GetUserFontResource(i);
-            if (!style.xrdb.fontChoice[i].sysFont)
-                GetSysFontResource(i);
-            break;    
-        }            
+    /* Search through all families × sizes for matching font */
+    {
+        int fam, sz;
+        for (fam = 0; fam < style.xrdb.numFamilies; fam++) {
+            for (sz = 0; sz < style.xrdb.numFonts; sz++) {
+                int idx = FONT_INDEX(fam, sz);
+                if (style.xrdb.fontChoice[idx].sysStr != NULL &&
+                    strcmp(font.selectedFontStr,
+                           style.xrdb.fontChoice[idx].sysStr) == 0) {
+                    font.selectedFontIndex = idx;
+                    if (!style.xrdb.fontChoice[idx].userFont)
+                        GetUserFontResource(idx);
+                    if (!style.xrdb.fontChoice[idx].sysFont)
+                        GetSysFontResource(idx);
+                    break;
+                }
+            }
+            if (font.selectedFontIndex >= 0) break;
+        }
+    }
 
     /* 
      * Save the index of the originally selected font.  If no
@@ -292,6 +316,50 @@ CreateFontDlg(
     widget_list[count++] = font.fontpictLabel = 
         _DtCreateIcon(font.fontWkarea, "fontpictLabel", args, n);
 
+    /* Create Family TitleBox for font family selection (new feature) */
+    n = 0;
+    string = CMPSTR(FAMILY);
+    XtSetArg(args[n], XmNtitleString, string);  n++;
+    XtSetArg(args[n], XmNtopAttachment,      XmATTACH_WIDGET);     n++;
+    XtSetArg(args[n], XmNtopWidget,          font.fontpictLabel);  n++;
+    XtSetArg(args[n], XmNtopOffset,          style.verticalSpacing+5);  n++;
+    XtSetArg(args[n], XmNleftAttachment,     XmATTACH_FORM);       n++;
+    XtSetArg(args[n], XmNleftOffset,         style.horizontalSpacing);  n++;
+    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_FORM);       n++;
+    widget_list[count++] = font.familyTB =
+        _DtCreateTitleBox(font.fontWkarea, "familyTB", args, n);
+    XmStringFree(string);
+
+    /* Populate family list from familyLabels resource */
+    {
+        XmStringTable familyItems;
+        int nf;
+        familyItems = (XmString *) XtMalloc(sizeof(XmString) * style.xrdb.numFamilies);
+        for (nf = 0; nf < style.xrdb.numFamilies; nf++) {
+            familyItems[nf] = CMPSTR(style.xrdb.familyLabels[nf] ? style.xrdb.familyLabels[nf] : "");
+        }
+        n = 0;
+        XtSetArg(args[n], XmNselectionPolicy, XmBROWSE_SELECT); n++;
+        XtSetArg(args[n], XmNautomaticSelection, True); n++;
+        XtSetArg(args[n], XmNvisibleItemCount, MIN(7, style.xrdb.numFamilies)); n++;
+        XtSetArg(args[n], XmNitemCount, style.xrdb.numFamilies); n++;
+        XtSetArg(args[n], XmNitems, familyItems); n++;
+        if (font.selectedFontIndex >= 0) {
+            XmString famStr = CMPSTR(style.xrdb.familyLabels[FONT_FAMILY(font.selectedFontIndex)] ?
+                                     style.xrdb.familyLabels[FONT_FAMILY(font.selectedFontIndex)] : "");
+            XtSetArg(args[n], XmNselectedItems, &famStr); n++;
+            XtSetArg(args[n], XmNselectedItemCount, 1); n++;
+            font.familyList = XmCreateScrolledList(font.familyTB, "familyList", args, n);
+            XmStringFree(famStr);
+        } else {
+            font.familyList = XmCreateScrolledList(font.familyTB, "familyList", args, n);
+        }
+        XtAddCallback(font.familyList, XmNbrowseSelectionCallback, changeFamilyCB, NULL);
+        for (nf = 0; nf < style.xrdb.numFamilies; nf++)
+            XmStringFree(familyItems[nf]);
+        XtFree((char *)familyItems);
+    }
+
     /* Create a TitleBox and Scale/List to choose the font size */
 
     n = 0;
@@ -300,7 +368,8 @@ CreateFontDlg(
     XtSetArg(args[n], XmNtopAttachment,      XmATTACH_WIDGET);     n++;
     XtSetArg(args[n], XmNtopWidget,          font.fontpictLabel);  n++;
     XtSetArg(args[n], XmNtopOffset,          style.verticalSpacing+5);  n++;
-    XtSetArg(args[n], XmNleftAttachment,     XmATTACH_FORM);       n++;
+    XtSetArg(args[n], XmNleftAttachment,     XmATTACH_WIDGET);     n++;
+    XtSetArg(args[n], XmNleftWidget,         font.familyTB);       n++;
     XtSetArg(args[n], XmNleftOffset,         style.horizontalSpacing);  n++;
     XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_FORM);       n++;
     widget_list[count++] = font.sizeTB =
@@ -314,7 +383,10 @@ CreateFontDlg(
       {
 	sprintf(sizeStr, "%d", (int)(n+1));
 	sizeItems[n] = CMPSTR(sizeStr);
-	style.xrdb.fontChoice[n].pointSize = CMPSTR(sizeStr); 
+        {
+          int curFam = (font.selectedFontIndex >= 0) ? FONT_FAMILY(font.selectedFontIndex) : 0;
+          style.xrdb.fontChoice[FONT_INDEX(curFam, n)].pointSize = CMPSTR(sizeStr);
+        }
       }
   
 
@@ -343,6 +415,8 @@ CreateFontDlg(
     if (font.selectedFontIndex >=0)
       XmListSetItem(font.sizeList,
         style.xrdb.fontChoice[font.selectedFontIndex].pointSize);
+    for (n = 0; n < style.xrdb.numFonts; n++)
+        XmStringFree(sizeItems[n]);
     XtFree((char *)sizeItems);
 
     /* preview TitleBox */
@@ -423,8 +497,19 @@ CreateFontDlg(
     XtManageChild(font.userText);
     XtManageChild(font.previewForm);
     XtManageChild(font.sizeList);
+    XtManageChild(font.familyList);
     XtManageChildren(widget_list,count);
     XtManageChild(font.fontWkarea);
+
+    /* Hide family UI when only one family (backward compat) */
+    if (style.xrdb.numFamilies <= 1) {
+        XtUnmanageChild(font.familyTB);
+        /* Re-attach sizeTB left to form since familyTB is gone */
+        n = 0;
+        XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
+        XtSetArg(args[n], XmNleftOffset, style.horizontalSpacing); n++;
+        XtSetValues(font.sizeTB, args, n);
+    }
 
 }
 
@@ -484,9 +569,14 @@ ButtonCB(
          /*   Post an info dialog explaining when the new fonts will appear */
          if ((font.selectedFontIndex != font.originalFontIndex) && (items > 0))
          {
-            XtUnmanageChild(style.fontDialog);  
+            XtUnmanageChild(style.fontDialog);
+            if (!style.xrdb.fontChoice[font.selectedFontIndex].userStr ||
+                !style.xrdb.fontChoice[font.selectedFontIndex].sysStr) {
+                XtUnmanageChild(style.fontDialog);
+                break;
+            }
 
-            if(style.xrdb.writeXrdbImmediate) 
+            if(style.xrdb.writeXrdbImmediate)
             { 
               InfoDialog(IMMEDIATE, style.shell, False); 
             }
@@ -543,18 +633,23 @@ ButtonCB(
 	    }
 
            /* create the font resource specs with the selected font for xrdb */
-            sprintf(fontres,
-		 "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n",
-                 style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].userStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].userStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].userStr,
-                 style.xrdb.fontChoice[font.selectedFontIndex].userStr,
-	         style.xrdb.fontChoice[font.selectedFontIndex].userStr,
-                 fntstr, fntsetstr);
+           {
+             int selectedFamily = (font.selectedFontIndex >= 0) ?
+                                  FONT_FAMILY(font.selectedFontIndex) : 0;
+             sprintf(fontres,
+                 "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n",
+                     style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].userStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].userStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].userStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].userStr,
+                     style.xrdb.fontChoice[font.selectedFontIndex].userStr,
+                     fntstr, fntsetstr,
+                     selectedFamily);
+           }
 
 	    XtFree(fntstr);
 	    XtFree(fntsetstr);
@@ -581,12 +676,20 @@ ButtonCB(
       XtUnmanageChild(style.fontDialog);
 
       if (font.originalFontIndex >= 0)
-        XmListSelectPos(font.sizeList, font.originalFontIndex+1, True);
-      else { 
-	/* 
+        {
+          int originalFamily = FONT_FAMILY(font.originalFontIndex);
+          int originalSize = FONT_SIZE(font.originalFontIndex);
+          if (style.xrdb.numFamilies > 1)
+            XmListSelectPos(font.familyList, originalFamily + 1, True);
+          XmListSelectPos(font.sizeList, originalSize + 1, True);
+        }
+      else {
+	/*
 	 * if no font was originally selected, need to undo any results
 	 * from selections that were made by user before pressing Cancel.
 	 */
+	if (style.xrdb.numFamilies > 1)
+	    XtVaSetValues(font.familyList, XmNselectedItemCount, 0, NULL);
 	XtVaSetValues (font.sizeList, XmNselectedItemCount, 0, NULL);
         XtVaSetValues (font.userText, 
 		       XmNvalue, BLANK_MSG, 
@@ -623,49 +726,106 @@ changeSampleFontCB(
 {
     int       n;
     int       pos;
+    int       fam;
     int       hourGlassOn;
     Arg       args[MAX_ARGS];
     XmListCallbackStruct *cb = (XmListCallbackStruct *) call_data;
 
-    pos = cb->item_position-1;
+    pos = cb->item_position - 1;
+    fam = (font.selectedFontIndex >= 0) ? FONT_FAMILY(font.selectedFontIndex) : 0;
 
-    font.selectedFontIndex = pos;
-    font.selectedFontStr = style.xrdb.fontChoice[pos].sysStr;
+    font.selectedFontIndex = FONT_INDEX(fam, pos);
+    font.selectedFontStr = style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysStr ?
+                           style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysStr : "";
 
-    hourGlassOn = !style.xrdb.fontChoice[pos].userFont ||
-                !style.xrdb.fontChoice[pos].sysFont;
+    hourGlassOn = !style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont ||
+                  !style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont;
 
     if (hourGlassOn)
       _DtTurnOnHourGlass(style.fontDialog);
 
-    if (!style.xrdb.fontChoice[pos].userFont)
-      GetUserFontResource(pos);
-    if (!style.xrdb.fontChoice[pos].sysFont)
-      GetSysFontResource(pos);
+    if (!style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont)
+      GetUserFontResource(FONT_INDEX(fam, pos));
+    if (!style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont)
+      GetSysFontResource(FONT_INDEX(fam, pos));
 
     if (hourGlassOn)
       _DtTurnOffHourGlass(style.fontDialog);
 
     /* Set the sample System Font string to different Font */
     n = 0;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].sysFont);
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont);
     n++;
     /* string_val = CMPSTR(SYSTEM_MSG);*/
     XtSetArg (args[n], XmNlabelString, CMPSTR(SYSTEM_MSG));
     n++;
-    XtSetValues (font.systemLabel, args, n); 
+    XtSetValues (font.systemLabel, args, n);
 
-    /* 
-     * If the user didn't change the text field, output standard user 
+    /*
+     * If the user didn't change the text field, output standard user
      * text message.
      */
     n = 0;
-    if (!font.userTextChanged) 
+    if (!font.userTextChanged)
       XtSetArg (args[n], XmNvalue, USER_MSG);
     n++;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[pos].userFont);
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont);
     n++;
     XtSetValues (font.userText, args, n);
+    XmTextShowPosition(font.userText, 0);
+}
+
+/*+++++++++++++++++++++++++++++++++++++++*/
+/* changeFamilyCB                        */
+/*  Change the font family and update   */
+/*  the sample areas                    */
+/*+++++++++++++++++++++++++++++++++++++++*/
+static void
+changeFamilyCB(
+        Widget w,
+        XtPointer client_data,
+        XtPointer call_data )
+{
+    int n;
+    int fam;
+    int sz;
+    int idx;
+    int hourGlassOn;
+    Arg args[MAX_ARGS];
+    XmListCallbackStruct *cb = (XmListCallbackStruct *) call_data;
+
+    fam = cb->item_position - 1;
+    sz = (font.selectedFontIndex >= 0) ? FONT_SIZE(font.selectedFontIndex) : 0;
+    idx = FONT_INDEX(fam, sz);
+
+    font.selectedFontIndex = idx;
+    font.selectedFontStr = style.xrdb.fontChoice[idx].sysStr ?
+                           style.xrdb.fontChoice[idx].sysStr : "";
+
+    hourGlassOn = !style.xrdb.fontChoice[idx].userFont ||
+                  !style.xrdb.fontChoice[idx].sysFont;
+    if (hourGlassOn)
+        _DtTurnOnHourGlass(style.fontDialog);
+
+    if (!style.xrdb.fontChoice[idx].userFont)
+        GetUserFontResource(idx);
+    if (!style.xrdb.fontChoice[idx].sysFont)
+        GetSysFontResource(idx);
+
+    if (hourGlassOn)
+        _DtTurnOffHourGlass(style.fontDialog);
+
+    n = 0;
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].sysFont); n++;
+    XtSetArg(args[n], XmNlabelString, CMPSTR(SYSTEM_MSG)); n++;
+    XtSetValues(font.systemLabel, args, n);
+
+    n = 0;
+    if (!font.userTextChanged)
+        XtSetArg(args[n], XmNvalue, USER_MSG);
+    n++;
+    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].userFont); n++;
+    XtSetValues(font.userText, args, n);
     XmTextShowPosition(font.userText, 0);
 }
 
@@ -705,23 +865,37 @@ restoreFonts(
 
     /* get x position */
     xrm_name [1] = XrmStringToQuark ("x");
-    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value)){
-      XtSetArg (save.posArgs[save.poscnt], XmNx, atoi((char *)value.addr)); 
+    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL){
+      XtSetArg (save.posArgs[save.poscnt], XmNx, atoi((char *)value.addr));
       save.poscnt++;
       save.restoreFlag = True;
     }
 
     /* get y position */
     xrm_name [1] = XrmStringToQuark ("y");
-    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value)){
-      XtSetArg (save.posArgs[save.poscnt], XmNy, atoi((char *)value.addr)); 
+    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL){
+      XtSetArg (save.posArgs[save.poscnt], XmNy, atoi((char *)value.addr));
       save.poscnt++;
     }
 
+    /* get family index */
+    xrm_name [1] = XrmStringToQuark ("familyIndex");
+    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value)){
+      int restoredFamily = atoi((char *)value.addr);
+      /* Clamp to valid range */
+      if (restoredFamily < 0) restoredFamily = 0;
+      if (style.xrdb.numFamilies > 0 && restoredFamily >= style.xrdb.numFamilies)
+          restoredFamily = style.xrdb.numFamilies - 1;
+      if (restoredFamily < 0) restoredFamily = 0;  /* safety for numFamilies==0 */
+      font.selectedFontIndex = FONT_INDEX(restoredFamily,
+          (font.selectedFontIndex >= 0) ? FONT_SIZE(font.selectedFontIndex) : 0);
+      font.originalFontIndex = font.selectedFontIndex;
+    }
+
     xrm_name [1] = XrmStringToQuark ("ismapped");
-    XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value);
     /* Are we supposed to be mapped? */
-    if (strcmp(value.addr, "True") == 0) 
+    if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value) &&
+        value.addr != NULL && strcmp(value.addr, "True") == 0)
       popup_fontBB(shell);
 }
 
@@ -767,10 +941,18 @@ saveFonts(
         x -= vendorExt->vendor.xOffset;
         y -= vendorExt->vendor.yOffset;
 
-        snprintf(bufr, sizeof(style.tmpBigStr), "*Fonts.x: %d\n", x);
+        snprintf(bufr, sizeof(bufr), "*Fonts.x: %d\n", x);
         WRITE_STR2FD(fd, bufr);
-        snprintf(bufr, sizeof(style.tmpBigStr), "*Fonts.y: %d\n", y);
+        snprintf(bufr, sizeof(bufr), "*Fonts.y: %d\n", y);
         WRITE_STR2FD(fd, bufr);
+
+        /* Save the selected font family index */
+        {
+            int curFamily = (font.selectedFontIndex >= 0) ?
+                            FONT_FAMILY(font.selectedFontIndex) : 0;
+            snprintf(bufr, sizeof(bufr), "*Fonts.familyIndex: %d\n", curFamily);
+            WRITE_STR2FD(fd, bufr);
+        }
     }
 }
 

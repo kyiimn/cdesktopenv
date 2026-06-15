@@ -70,3 +70,14 @@ Dtstyle*UserFont4: -dt-interface user-medium-r-normal-m*cns*:\n\
 Dtstyle*UserFont5: -dt-interface user-medium-r-normal-l*cns*:\n\
 Dtstyle*UserFont6: -dt-interface user-medium-r-normal-xl*cns*:\n\
 Dtstyle*UserFont7: -dt-interface user-medium-r-normal-xxl*cns*:
+
+$ \
+$ ----------------------------------------------------------------------------\
+$ Font Family Selection (added in CDE 2.5.4)\
+$ New Xresources: NumFontFamilies, FontFamily[0..N],\
+$   FontFamily[N]SystemFont[0..6], FontFamily[N]UserFont[0..6]\
+$ These are locale-dependent values (like messages 3-5) and are set\
+$ in the app-defaults/Dtstyle file, not via .tmsg translation.\
+$ No new .tmsg message numbers are needed for these resources.\
+$ Translations for family labels may be added in a follow-up.\
+$ ----------------------------------------------------------------------------

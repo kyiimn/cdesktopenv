@@ -293,6 +293,25 @@ the Font dialog.
 .IP "\fBuserFont[1-7]\fP"
 Specifies a UserFont for a particular font size that can be selected in
 the Font dialog.
+.IP "NumFontFamilies (class NumFontFamilies)"
+Specifies the number of font families available in the Font dialog.
+The default value is 2 (System and User).
+.IP "FontFamily0..FontFamily7 (class FontFamily0..FontFamily7)"
+Specifies the identifier string for each font family.
+FontFamily0 defaults to "system", FontFamily1 defaults to "user".
+.IP "FontFamily0Label..FontFamily7Label (class FontFamily0Label..FontFamily7Label)"
+Specifies the display label for each font family in the UI list.
+FontFamily0Label defaults to "System", FontFamily1Label defaults to "User".
+.IP "FontFamily0SystemFont0..6 (class FontFamily0SystemFont0..6)"
+Specifies the system font XLFD string for family 0, sizes 0 through 6.
+Defaults match the existing SystemFont1 through SystemFont7 values.
+.IP "FontFamily0UserFont0..6 (class FontFamily0UserFont0..6)"
+Specifies the user font XLFD string for family 0, sizes 0 through 6.
+Defaults match the existing UserFont1 through UserFont7 values.
+.IP "FontFamily1SystemFont0..6 (class FontFamily1SystemFont0..6)"
+Specifies the system font XLFD string for family 1, sizes 0 through 6.
+.IP "FontFamily1UserFont0..6 (class FontFamily1UserFont0..6)"
+Specifies the user font XLFD string for family 1, sizes 0 through 6.
 .RE
 .sp1
 .SH COPYRIGHT

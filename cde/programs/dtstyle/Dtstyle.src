@@ -49,6 +49,20 @@ Dtstyle*NumFonts: %|nls-3-7^NumFonts|
 
 %|nls-5-#Set of UserFont#|
 
+!# Number of font families available in the Style Manager Font dialog
+Dtstyle*NumFontFamilies: %|nls-7-2^NumFontFamilies|
+
+!# Family 0: System (alias to legacy SystemFont/userFont 1-7)
+Dtstyle*FontFamily0: %|nls-8-system^FontFamily0|
+Dtstyle*FontFamily0Label: %|nls-9-System^FontFamily0Label|
+%|nls-10-#Set of FontFamily0SystemFont#|
+%|nls-11-#Set of FontFamily0UserFont#|
+
+!# Family 1: User (second font family)
+Dtstyle*FontFamily1: %|nls-12-user^FontFamily1|
+Dtstyle*FontFamily1Label: %|nls-13-User^FontFamily1Label|
+%|nls-14-#Set of FontFamily1SystemFont#|
+%|nls-15-#Set of FontFamily1UserFont#|
 
 !###
 !#
