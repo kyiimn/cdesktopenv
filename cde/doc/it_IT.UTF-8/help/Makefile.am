@@ -6,3 +6,7 @@ include $(top_srcdir)/programs/localized/templates/Italian.am
 include $(top_srcdir)/doc/common/help/sdl-docs.am
 # install all of the extra assets
 include $(top_srcdir)/doc/common/help/sdl-data.am
+
+# The common/ directory contains shared SGML entities
+# needed by help system processing. These must be distributed.
+EXTRA_DIST += common/ProdEnt.sgm common/glossary.sgm

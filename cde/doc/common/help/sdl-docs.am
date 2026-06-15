@@ -137,3 +137,12 @@ TEXTEDIT_SRCS = Textedit/GEntity.sgm Textedit/Ref.sgm		\
 
 Textedit.sdl: $(TEXTEDIT_SRCS)
 
+# Include all help SGML source files in the distribution tarball.
+# These are referenced as build dependencies but without EXTRA_DIST
+# they would be omitted from 'make dist' tarballs, causing build failures.
+EXTRA_DIST = $(APPMANAGER_SRCS) $(APPBUILDER_SRCS) $(CALCULATOR_SRCS) \
+    $(CALENDAR_SRCS) $(CREATACT_SRCS) $(FPANEL_SRCS) $(FILEMGR_SRCS) \
+    $(HELP4HELP_SRCS) $(ICONED_SRCS) $(INFOMGR_SRCS) $(INTROMGR_SRCS) \
+    $(LIBDTPRINT_SRCS) $(LOGINMGR_SRCS) $(MAILER_SRCS) $(PRINTMGR_SRCS) \
+    $(PRNSETUP_SRCS) $(STYLEMGR_SRCS) $(TERMINAL_SRCS) $(TEXTEDIT_SRCS)
+

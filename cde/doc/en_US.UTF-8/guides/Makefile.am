@@ -41,6 +41,10 @@ EXTRA_DIST += common/ManLinks.sgm common/ManLinksMotif.sgm common/SSEntity.sgm c
 # not included in MAN_SRCS (which only lists guide-format SGML files).
 EXTRA_DIST += man/m3_Dt/CrePrntD.sgm man/man6/ttsnoop.sgm
 
+# bookcase.bc is the bookcase definition file for the CDE infolib.
+# It is a build dependency but not in any _SRCS variable.
+EXTRA_DIST += bookcase.bc
+
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)
 	$(DGENV) $(DTINFOGEN) build -v -T $(DTINFOGENTMPDIR) $(DTINFOGENOPTIONS) $(DGOPTS) $(SSENTS) -l $(INFOLIB) bookcase.bc

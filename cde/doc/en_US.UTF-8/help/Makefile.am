@@ -11,6 +11,10 @@ include $(top_srcdir)/doc/common/help/sdl-docs.am
 # install all of the extra assets
 include $(top_srcdir)/doc/common/help/sdl-data.am
 
+# The common/ directory contains shared SGML entities
+# needed by help system processing. These must be distributed.
+EXTRA_DIST += common/ProdEnt.sgm common/glossary.sgm
+
 # need to setup a symlink for the C locale to point toward en_US
 install-data-hook:
 	$(RM) -rf $(DESTDIR)$(CDE_INSTALLATION_TOP)/appconfig/help/C

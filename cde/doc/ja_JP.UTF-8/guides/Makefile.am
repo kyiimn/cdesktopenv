@@ -44,7 +44,8 @@ EXTRA_DIST += common/SSEntity.sgm common/catalog \
 	infoUGd/graphics/graphmic.tif \
 	sysAdminGuide/graphics/appmgr.tif \
 	sysAdminGuide/graphics/approot.tif \
-	sysAdminGuide/graphics/types.tif
+	sysAdminGuide/graphics/types.tif \
+	bookcase.bc
 
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)

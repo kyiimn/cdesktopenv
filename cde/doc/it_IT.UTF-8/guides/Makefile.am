@@ -25,7 +25,8 @@ INFOLIBDEPS = $(SGMLDEPS) $(top_srcdir)/doc/common/docbook/docbook.stl
 EXTRA_DIST += common/SSEntity.sgm common/catalog \
 	sysAdminGuide/graphics/appmgr.tif \
 	sysAdminGuide/graphics/approot.tif \
-	sysAdminGuide/graphics/types.tif
+	sysAdminGuide/graphics/types.tif \
+	bookcase.bc
 
 $(INFOLIB)/$(BOOKCASE)/dtsearch/dtsearch.ocf: $(INFOLIBDEPS)
 	$(MKDIR_P) $(INFOLIB)
