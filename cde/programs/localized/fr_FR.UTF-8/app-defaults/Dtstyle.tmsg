@@ -84,7 +84,7 @@ $ This is a locale dependent values.
 $ ----------------------------------------------------------------------------
 6 " "
 $ NumFontFamilies
-7 "2"
+7 "4"
 $ FontFamily0 identifier
 8 "system"
 $ FontFamily0Label
@@ -125,14 +125,53 @@ Dtstyle*FontFamily1UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-
 Dtstyle*FontFamily1UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
 Dtstyle*FontFamily1UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
 Dtstyle*FontFamily1UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ FontFamily2 identifier
+16 "serif"
+$ FontFamily2Label
+17 "Serif"
+$ Set of FontFamily2SystemFont
+18 "Dtstyle*FontFamily2SystemFont0: -dt-interface system-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont1: -dt-interface system-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont2: -dt-interface system-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont3: -dt-interface system-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont4: -dt-interface system-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont5: -dt-interface system-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2SystemFont6: -dt-interface system-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ Set of FontFamily2UserFont
+19 "Dtstyle*FontFamily2UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily2UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ FontFamily3 identifier
+20 "monospace"
+$ FontFamily3Label
+21 "Monospace"
+$ Set of FontFamily3SystemFont
+22 "Dtstyle*FontFamily3SystemFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3SystemFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
+$ Set of FontFamily3UserFont
+23 "Dtstyle*FontFamily3UserFont0: -dt-interface user-medium-r-normal-xxs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont1: -dt-interface user-medium-r-normal-xs*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont2: -dt-interface user-medium-r-normal-s*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont3: -dt-interface user-medium-r-normal-m*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont4: -dt-interface user-medium-r-normal-l*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont5: -dt-interface user-medium-r-normal-xl*-*-*-*-*-*-*-*-*:\n\
+Dtstyle*FontFamily3UserFont6: -dt-interface user-medium-r-normal-xxl*-*-*-*-*-*-*-*-*:"
 
 $ \
 $ ----------------------------------------------------------------------------\
-$ Font Family Selection (added in CDE 2.5.4)\
-$ New Xresources: NumFontFamilies, FontFamily[0..N],\
+$ Font Family Selection (added in CDE 2.5.4, extended in 2.5.4)\
+$ Xresources: NumFontFamilies, FontFamily[0..N],\
 $   FontFamily[N]SystemFont[0..6], FontFamily[N]UserFont[0..6]\
+$ Messages 16-23 added for FontFamily2 (Serif) and FontFamily3 (Monospace).\
 $ These are locale-dependent values (like messages 3-5) and are set\
-$ in the app-defaults/Dtstyle file, not via .tmsg translation.\
-$ No new .tmsg message numbers are needed for these resources.\
-$ Translations for family labels may be added in a follow-up.\
+$ in the app-defaults/Dtstyle file via .tmsg translation.\
 $ ----------------------------------------------------------------------------

@@ -50,7 +50,7 @@ Dtstyle*NumFonts: %|nls-3-7^NumFonts|
 %|nls-5-#Set of UserFont#|
 
 !# Number of font families available in the Style Manager Font dialog
-Dtstyle*NumFontFamilies: %|nls-7-2^NumFontFamilies|
+Dtstyle*NumFontFamilies: %|nls-7-4^NumFontFamilies|
 
 !# Family 0: System (alias to legacy SystemFont/userFont 1-7)
 Dtstyle*FontFamily0: %|nls-8-system^FontFamily0|
@@ -63,6 +63,18 @@ Dtstyle*FontFamily1: %|nls-12-user^FontFamily1|
 Dtstyle*FontFamily1Label: %|nls-13-User^FontFamily1Label|
 %|nls-14-#Set of FontFamily1SystemFont#|
 %|nls-15-#Set of FontFamily1UserFont#|
+
+!# Family 2: Serif (LucidaBright proportional)
+Dtstyle*FontFamily2: %|nls-16-serif^FontFamily2|
+Dtstyle*FontFamily2Label: %|nls-17-Serif^FontFamily2Label|
+%|nls-18-#Set of FontFamily2SystemFont#|
+%|nls-19-#Set of FontFamily2UserFont#|
+
+!# Family 3: Monospace (Courier fixed-width)
+Dtstyle*FontFamily3: %|nls-20-monospace^FontFamily3|
+Dtstyle*FontFamily3Label: %|nls-21-Monospace^FontFamily3Label|
+%|nls-22-#Set of FontFamily3SystemFont#|
+%|nls-23-#Set of FontFamily3UserFont#|
 
 !###
 !#

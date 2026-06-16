@@ -81,7 +81,7 @@ $quote "
 6 " "
 
 $ NumFontFamilies
-7 2
+7 4
 $ FontFamily0 identifier
 8 system
 $ FontFamily0Label
@@ -126,14 +126,53 @@ Dtstyle*FontFamily1UserFont3: Monospace-14\n\
 Dtstyle*FontFamily1UserFont4: Monospace-18\n\
 Dtstyle*FontFamily1UserFont5: Monospace-20\n\
 Dtstyle*FontFamily1UserFont6: Monospace-24
+$ FontFamily2 identifier
+16 serif
+$ FontFamily2Label
+17 Serif
+$ Set of FontFamily2SystemFont
+18 Dtstyle*FontFamily2SystemFont0: Serif-8\n\
+Dtstyle*FontFamily2SystemFont1: Serif-10\n\
+Dtstyle*FontFamily2SystemFont2: Serif-12\n\
+Dtstyle*FontFamily2SystemFont3: Serif-14\n\
+Dtstyle*FontFamily2SystemFont4: Serif-18\n\
+Dtstyle*FontFamily2SystemFont5: Serif-20\n\
+Dtstyle*FontFamily2SystemFont6: Serif-24
+$ Set of FontFamily2UserFont
+19 Dtstyle*FontFamily2UserFont0: Monospace-8\n\
+Dtstyle*FontFamily2UserFont1: Monospace-10\n\
+Dtstyle*FontFamily2UserFont2: Monospace-12\n\
+Dtstyle*FontFamily2UserFont3: Monospace-14\n\
+Dtstyle*FontFamily2UserFont4: Monospace-18\n\
+Dtstyle*FontFamily2UserFont5: Monospace-20\n\
+Dtstyle*FontFamily2UserFont6: Monospace-24
+$ FontFamily3 identifier
+20 monospace
+$ FontFamily3Label
+21 Monospace
+$ Set of FontFamily3SystemFont
+22 Dtstyle*FontFamily3SystemFont0: Monospace-8\n\
+Dtstyle*FontFamily3SystemFont1: Monospace-10\n\
+Dtstyle*FontFamily3SystemFont2: Monospace-12\n\
+Dtstyle*FontFamily3SystemFont3: Monospace-14\n\
+Dtstyle*FontFamily3SystemFont4: Monospace-18\n\
+Dtstyle*FontFamily3SystemFont5: Monospace-20\n\
+Dtstyle*FontFamily3SystemFont6: Monospace-24
+$ Set of FontFamily3UserFont
+23 Dtstyle*FontFamily3UserFont0: Monospace-8\n\
+Dtstyle*FontFamily3UserFont1: Monospace-10\n\
+Dtstyle*FontFamily3UserFont2: Monospace-12\n\
+Dtstyle*FontFamily3UserFont3: Monospace-14\n\
+Dtstyle*FontFamily3UserFont4: Monospace-18\n\
+Dtstyle*FontFamily3UserFont5: Monospace-20\n\
+Dtstyle*FontFamily3UserFont6: Monospace-24
 
 $ \
 $ ----------------------------------------------------------------------------\
-$ Font Family Selection (added in CDE 2.5.4)\
-$ New Xresources: NumFontFamilies, FontFamily[0..N],\
+$ Font Family Selection (added in CDE 2.5.4, extended in 2.5.4)\
+$ Xresources: NumFontFamilies, FontFamily[0..N],\
 $   FontFamily[N]SystemFont[0..6], FontFamily[N]UserFont[0..6]\
+$ Messages 16-23 added for FontFamily2 (Serif) and FontFamily3 (Monospace).\
 $ These are locale-dependent values (like messages 3-5) and are set\
-$ in the app-defaults/Dtstyle file, not via .tmsg translation.\
-$ No new .tmsg message numbers are needed for these resources.\
-$ Translations for family labels may be added in a follow-up.\
+$ in the app-defaults/Dtstyle file via .tmsg translation.\
 $ ----------------------------------------------------------------------------
