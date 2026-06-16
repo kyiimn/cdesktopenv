@@ -386,6 +386,41 @@ SaveFontSet (
     return (-fontIndex);
 }
 
+#ifdef USE_XFT
+/******************************************************************************
+ * Function: SaveXftFont (xft_font)
+ *
+ * Saves an XftFont* into the font_info->xft_fonts array and returns
+ * an index >= 10000 that dispatches to __DtHelpFontXftGet.
+ *
+ *****************************************************************************/
+static int
+SaveXftFont (
+    XftFont		*xftFont,
+    DtHelpDAFontInfo	*font_info)
+{
+    int	xftIndex;
+
+    xftIndex = font_info->xft_cnt;
+    if (font_info->xft_cnt >= font_info->max_xft)
+      {
+	font_info->max_xft += GROW_SIZE;
+	if (font_info->xft_fonts != NULL)
+	    font_info->xft_fonts = (XftFont **) XtRealloc(
+		((char *) font_info->xft_fonts),
+		(sizeof(XftFont *) * font_info->max_xft));
+	else
+	    font_info->xft_fonts = (XftFont **) XtMalloc(
+		sizeof(XftFont *) * font_info->max_xft);
+      }
+
+    font_info->xft_fonts[xftIndex] = xftFont;
+    font_info->xft_cnt++;
+
+    return (10000 + xftIndex);
+}
+#endif /* USE_XFT */
+
 /******************************************************************************
  * Function: LoadFont (char *font_string, int *ret_index)
  *
@@ -882,6 +917,10 @@ __DtHelpFontDatabaseInit (
      */
     if (type == XmFONT_IS_FONTSET)
         strIdx = SaveFontSet ((XFontSet) string_font, fontInfo);
+#ifdef USE_XFT
+    else if (type == XmFONT_IS_XFT)
+        strIdx = SaveXftFont ((XftFont *) string_font, fontInfo);
+#endif
     else
         strIdx = SaveFontStruct ((XFontStruct *) string_font, fontInfo);
 

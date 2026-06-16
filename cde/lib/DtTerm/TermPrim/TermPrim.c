@@ -691,7 +691,18 @@ _DtTermPrimGetFontSet
 		Debug('f', fprintf(stderr, ">>  font %d: %s\n", i + 1,
 			fontNames[i]));
 	    }
-	} else {
+	}
+#ifdef USE_XFT
+	else if (fontType == XmFONT_IS_XFT) {
+	    Debug('f', fprintf(stderr, ">>fontType == XmFONT_IS_XFT\n"));
+	    /* XftFont* is not usable as XFontStruct* or XFontSet.
+	     * The Xft rendering path in TermPrim handles this via
+	     * _DtTermPrimRenderXftCreate; here we just skip the
+	     * core-font fields since tw->term.font/fontSet remain NULL
+	     * and the Xft path (xftFont != NULL) takes over. */
+	}
+#endif
+	else {
 	    unsigned long ret;
 	    Debug('f', fprintf(stderr, ">>fontType != XmFONT_IS_FONTSET\n"));
 	    *font = (XFontStruct *) pointer;

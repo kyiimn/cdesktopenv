@@ -71,6 +71,7 @@
 
 /* DtFont abstraction for Xft-aware font list creation */
 #ifdef USE_XFT
+#include <X11/Xft/Xft.h>
 #include <Dt/DtFont.h>
 #include <DtI/DtFontI.h>
 #endif
@@ -4298,6 +4299,17 @@ FallbackMakeTitleHeight (AppearanceData *pAData) {
 	result = 1;
       }
       break;
+#ifdef USE_XFT
+    case XmFONT_IS_XFT:
+      {
+	XftFont *xft = (XftFont *) pFont;
+	if (WM_TITLE_BAR_PADDING + xft->ascent + xft->descent > pAData->titleHeight) {
+	  pAData->titleHeight = WM_TITLE_BAR_PADDING + xft->ascent + xft->descent;
+	  result = 1;
+	}
+      }
+      break;
+#endif
     default:
       break;
     }
@@ -4397,8 +4409,15 @@ MakeAppearanceResources (WmScreenData *pSD, AppearanceData *pAData, Boolean make
 	if (!FallbackMakeTitleHeight(pAData))
 	{
 	  /* failed to get height from fontList - falling back to fixed */
+#ifdef USE_XFT
+	  /* pAData->font may be an XftFont*; ascent/descent offsets are
+	   * the same in XftFont and XFontStruct, but cast for clarity. */
+	  pAData->titleHeight = ((XftFont *)(pAData->font))->ascent
+	    + ((XftFont *)(pAData->font))->descent + WM_TITLE_BAR_PADDING;
+#else
 	  pAData->titleHeight = (pAData->font)->ascent + (pAData->font)->descent
 	    + WM_TITLE_BAR_PADDING;
+#endif
 	}
 #else
 	ExitWM(WM_ERROR_EXIT_VALUE);
@@ -4408,8 +4427,13 @@ MakeAppearanceResources (WmScreenData *pSD, AppearanceData *pAData, Boolean make
 	/*
 	 *  Calculate title bar's height (using selected font) and store it in pAData.
 	 */
+#ifdef USE_XFT
+	pAData->titleHeight = ((XftFont *)(pAData->font))->ascent
+	    + ((XftFont *)(pAData->font))->descent + WM_TITLE_BAR_PADDING;
+#else
 	pAData->titleHeight = (pAData->font)->ascent + (pAData->font)->descent
 	+ WM_TITLE_BAR_PADDING;
+#endif
     }
 
 
@@ -4659,10 +4683,16 @@ GetAppearanceGCs (WmScreenData *pSD, Pixel fg, Pixel bg, XFontStruct *font, Pixm
      * Get base GC
      */
 
-    mask = GCForeground | GCBackground | GCFont;
+    mask = GCForeground | GCBackground;
     gcv.foreground = fg;
     gcv.background = bg;
+#ifdef USE_XFT
+    /* Xft fonts have no XFontStruct->fid; skip GCFont.
+     * Text rendering uses XftDrawString* via DtFont API instead. */
+#else
+    mask |= GCFont;
     gcv.font = font->fid;
+#endif
 
     if (bg_pixmap)
     {

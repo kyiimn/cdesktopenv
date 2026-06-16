@@ -76,9 +76,7 @@
 #undef _CDE_SAVED_USE_XFT
 #endif
 #ifdef USE_XFT
-#ifdef HAVE_X11_XFT_XFT_H
 #include <X11/Xft/Xft.h>
-#endif
 #endif
 
 

@@ -885,6 +885,12 @@ Create(
           extents = XExtentsOfFontSet((XFontSet)entry_font);
           font_height = extents->max_logical_extent.height;
       }
+#ifdef USE_XFT
+      else if (type == XmFONT_IS_XFT) {
+          font_height = ((XftFont *)entry_font)->ascent +
+                        ((XftFont *)entry_font)->descent;
+      }
+#endif
       else {
           font_height = ((XFontStruct *)entry_font)->ascent +
                  ((XFontStruct *)entry_font)->descent;

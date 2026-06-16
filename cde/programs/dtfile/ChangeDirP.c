@@ -932,6 +932,13 @@ DrawCurrentDirectory(
        font_yoffset = -(extents->max_logical_extent.y);
        font_height = extents->max_logical_extent.height;
    }
+#ifdef USE_XFT
+   else if (file_mgr_data->cd_fonttype == XmFONT_IS_XFT) {
+       font_yoffset = ((XftFont *)file_mgr_data->cd_xft_font)->ascent;
+       font_height = ((XftFont *)file_mgr_data->cd_xft_font)->ascent +
+                     ((XftFont *)file_mgr_data->cd_xft_font)->descent;
+   }
+#endif
    else
    {
        font_yoffset = file_mgr_data->cd_font->ascent;
