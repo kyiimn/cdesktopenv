@@ -54,6 +54,10 @@
 #define CDE_CONFIGURATION_TOP "/etc/dt"
 #endif
 
+#ifndef CDE_LOGFILES_TOP
+#define CDE_LOGFILES_TOP "/var/dt"
+#endif
+
 static volatile sig_atomic_t interrupted = 0;
 
 static void
@@ -100,18 +104,37 @@ get_icon_output_dir(const dtxdg2appmgr_Options *opts)
 }
 
 /*
+ * Determine the cache file path.
+ * If user specified --cache-file, use that.
+ * Otherwise, use $HOME/.dt/xdg-cache.db (user-local).
+ * If $HOME is not available, fall back to /var/dt/xdg-cache.db (system).
+ */
+static gchar *
+get_cache_file(const dtxdg2appmgr_Options *opts)
+{
+    if (opts->cache_file)
+        return g_strdup(opts->cache_file);
+
+    const gchar *home = g_get_home_dir();
+    if (home)
+        return g_build_filename(home, ".dt", "xdg-cache.db", NULL);
+
+    return g_strdup(CDE_LOGFILES_TOP "/xdg-cache.db");
+}
+
+/*
  * Determine the appmanager output directory.
  * Uses DTUSERSESSION env var for the session subdirectory,
  * falling back to "C" (CDE default).
  */
 static gchar *
-get_appmanager_dir(const dtxdg2appmgr_Options *opts)
+get_appmanager_dir(const gchar *dt_output_dir)
 {
     const gchar *session = g_getenv("DTUSERSESSION");
     if (session == NULL || *session == '\0')
         session = "C";
 
-    return g_build_filename(opts->output_dir, session, NULL);
+    return g_build_filename(dt_output_dir, session, NULL);
 }
 
 /*
@@ -140,6 +163,7 @@ main(int argc, char **argv)
     gchar *dt_output_dir = NULL;
     gchar *icon_output_dir = NULL;
     gchar *appmanager_dir = NULL;
+    gchar *cache_file = NULL;
     GHashTable *groups_seen = NULL;   
     gint exit_code = 0;
     GError *error = NULL;
@@ -213,13 +237,15 @@ main(int argc, char **argv)
     /* 6. Determine output directories */
     dt_output_dir = get_dt_output_dir(opts);
     icon_output_dir = get_icon_output_dir(opts);
-    appmanager_dir = get_appmanager_dir(opts);
+    cache_file = get_cache_file(opts);
+    appmanager_dir = get_appmanager_dir(dt_output_dir);
 
     if (opts->verbose) {
         g_print("Output directories:\n");
         g_print("  .dt files:    %s\n", dt_output_dir);
         g_print("  icons:       %s\n", icon_output_dir);
         g_print("  appmanager:  %s\n", appmanager_dir);
+        g_print("  cache:       %s\n", cache_file);
     }
 
     
@@ -236,10 +262,18 @@ main(int argc, char **argv)
             error = NULL;
             errors++;
         }
+        gchar *cache_dir = g_path_get_dirname(cache_file);
+        if (!ensure_dir(cache_dir, &error)) {
+            g_printerr("Error: %s\n", error->message);
+            g_error_free(error);
+            error = NULL;
+            errors++;
+        }
+        g_free(cache_dir);
     }
 
     /* 7. Load cache */
-    cache = dtxdg2appmgr_cache_load(opts->cache_file);
+    cache = dtxdg2appmgr_cache_load(cache_file);
     if (cache == NULL)
         cache = g_hash_table_new_full(g_str_hash, g_str_equal,
                                        g_free,
@@ -437,10 +471,10 @@ main(int argc, char **argv)
 
     /* 10. Save cache */
     if (!opts->dry_run) {
-        if (!dtxdg2appmgr_cache_save(cache, opts->cache_file)) {
-            g_printerr("Warning: failed to save cache to %s\n", opts->cache_file);
+        if (!dtxdg2appmgr_cache_save(cache, cache_file)) {
+            g_printerr("Warning: failed to save cache to %s\n", cache_file);
         } else if (opts->verbose) {
-            g_print("Cache saved to %s\n", opts->cache_file);
+            g_print("Cache saved to %s\n", cache_file);
         }
     }
 
@@ -463,6 +497,7 @@ cleanup:
     g_free(dt_output_dir);
     g_free(icon_output_dir);
     g_free(appmanager_dir);
+    g_free(cache_file);
     dtxdg2appmgr_options_free(opts);
 
     return exit_code;

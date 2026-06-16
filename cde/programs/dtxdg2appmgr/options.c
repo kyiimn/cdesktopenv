@@ -88,9 +88,9 @@ dtxdg2appmgr_parse_options(int *argc, char ***argv)
     opts = g_new0(dtxdg2appmgr_Options, 1);
     opts->verbose = verbose;
     opts->retain = retain;
-    opts->output_dir = output_dir ? output_dir : g_strdup(CDE_INSTALLATION_TOP "/appconfig/appmanager");
-    opts->icon_output_dir = icon_output_dir ? icon_output_dir : g_strdup(CDE_INSTALLATION_TOP "/appconfig/icons/C");
-    opts->cache_file = cache_file ? cache_file : g_strdup(CDE_LOGFILES_TOP "/xdg-cache.db");
+    opts->output_dir = output_dir;       /* NULL → resolved at runtime to $HOME/.dt/types/ */
+    opts->icon_output_dir = icon_output_dir; /* NULL → resolved at runtime to $HOME/.dt/icons/ */
+    opts->cache_file = cache_file;        /* NULL → resolved at runtime to $HOME/.dt/xdg-cache.db */
     opts->force_rebuild = force_rebuild;
     opts->dry_run = dry_run;
 
@@ -109,17 +109,17 @@ dtxdg2appmgr_print_usage(const char *progname)
         "  -v, --verbose       Verbose output\n"
         "  -r, --retain        Retain temporary files\n"
         "  -o, --output-dir DIR   CDE appconfig output directory\n"
-        "                          (default: " CDE_INSTALLATION_TOP "/appconfig/appmanager)\n"
+        "                          (default: $HOME/.dt/types/)\n"
         "  -i, --icon-dir DIR     Icon output directory\n"
-        "                          (default: " CDE_INSTALLATION_TOP "/appconfig/icons/C)\n"
+        "                          (default: $HOME/.dt/icons/)\n"
         "  -c, --cache-file FILE  Cache file path\n"
-        "                          (default: " CDE_LOGFILES_TOP "/xdg-cache.db)\n"
+        "                          (default: $HOME/.dt/xdg-cache.db)\n"
         "  -f, --force         Force rebuild ignoring cache\n"
         "      --dry-run       Show what would be done without writing files\n"
         "\n"
         "Environment:\n"
         "  DTUSERSESSION       If set, output-dir defaults to\n"
-        "                      " CDE_INSTALLATION_TOP "/appconfig/appmanager/$DTUSERSESSION\n",
+        "                      $HOME/.dt/types/$DTUSERSESSION\n",
         progname);
 }
 
