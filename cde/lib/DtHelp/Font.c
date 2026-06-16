@@ -1142,6 +1142,18 @@ __DtHelpFontMetrics (
 	      }
 	  }
       }
+#ifdef USE_XFT
+    else if (font_index >= 10000)
+      {
+	XftFont *xftFont = __DtHelpFontXftGet(font_info, font_index);
+	if (xftFont != NULL)
+	  {
+	    maxAscent  = xftFont->ascent;
+	    maxDescent = xftFont->descent;
+	    maxCharW   = xftFont->max_advance_width;
+	  }
+      }
+#endif
     else if (font_index < font_info.struct_cnt)
       {
 	maxAscent  = font_info.font_structs[font_index]->ascent;
