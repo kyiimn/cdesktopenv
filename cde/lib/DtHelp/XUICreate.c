@@ -297,10 +297,27 @@ GetUnderLineInfo (
       }
     else
       {
-        myFont = (XtPointer)__DtHelpFontStructGet(pDAS->font_info, idx);
-        if (XGetFontProperty((XFontStruct *)myFont, XA_UNDERLINE_POSITION, 
-			     ((unsigned long *) &(pDAS->underLine))) == FALSE)
-            pDAS->underLine = ((XFontStruct *)myFont)->max_bounds.descent / 2;
+#ifdef USE_XFT
+        if (idx >= 10000)
+          {
+            XftFont *xftFont = __DtHelpFontXftGet(pDAS->font_info, idx);
+            if (xftFont != NULL)
+                pDAS->underLine = xftFont->descent / 2;
+            else
+                pDAS->underLine = pDAS->lineHeight * 15 / 100;
+          }
+        else
+#endif
+          {
+            myFont = (XtPointer)__DtHelpFontStructGet(pDAS->font_info, idx);
+            if (myFont != NULL) {
+                if (XGetFontProperty((XFontStruct *)myFont, XA_UNDERLINE_POSITION, 
+                             ((unsigned long *) &(pDAS->underLine))) == FALSE)
+                    pDAS->underLine = ((XFontStruct *)myFont)->max_bounds.descent / 2;
+            } else {
+                pDAS->underLine = pDAS->lineHeight * 15 / 100;
+            }
+          }
       }
 
     /*
@@ -318,9 +335,20 @@ GetUnderLineInfo (
       }
     else
       {
-        if (XGetFontProperty((XFontStruct *)myFont, XA_UNDERLINE_THICKNESS, 
-			     ((unsigned long *) ret_underThick)) == FALSE)
+#ifdef USE_XFT
+        if (idx >= 10000)
+          {
+            /* Xft fonts don't have XGetFontProperty underline thickness.
+             * Use 15% of line height as fallback (same pattern as below). */
             *ret_underThick = pDAS->lineHeight * 15 / 100;
+          }
+        else
+#endif
+          {
+            if (XGetFontProperty((XFontStruct *)myFont, XA_UNDERLINE_THICKNESS, 
+                             ((unsigned long *) ret_underThick)) == FALSE)
+                *ret_underThick = pDAS->lineHeight * 15 / 100;
+          }
       }
 
 

@@ -33,12 +33,37 @@
 /*
  * Included Files:
  */
+
+/*
+ * save/undef/restore USE_XFT before Motif pulls it in unconditionally.
+ * Motif 2.3+ defines USE_XFT in <Xm/Xm.h> (transitively via XmP.h and
+ * WmGlobal.h), which clobbers configure's -DUSE_XFT. Capture the
+ * configure-driven value first, then restore it after the Motif includes.
+ */
+#ifdef USE_XFT
+#define _CDE_CONFIG_USE_XFT 1
+#endif
+
 #include "WmGlobal.h"
 #include "WmResNames.h"
 
 #include "WmError.h"
+
+#ifdef USE_XFT
+#undef USE_XFT
+#endif
+
+#ifdef _CDE_CONFIG_USE_XFT
+#define USE_XFT 1
+#undef _CDE_CONFIG_USE_XFT
+#endif
+
 #include <Xm/Xm.h>
 #include <X11/Shell.h>
+
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 #include <Xm/Label.h>
 #include <Xm/DialogS.h>
 #include <Xm/BulletinB.h>
@@ -252,9 +277,25 @@ void ShowFeedbackWindow (WmScreenData *pSD, int x, int y, unsigned int width, un
      * Derive the size and position of the window from the text extents
      * Set starting position of each string 
      */
+#ifdef USE_XFT
+    {
+	XftFont *xftfont = (XftFont *)pSD->feedbackAppearance.font;
+	ascent = xftfont->ascent;
+	descent = xftfont->descent;
+	direction = FontLeftToRight;
+	{
+	    XGlyphInfo extents;
+	    XftTextExtents8(XtDisplay(pSD->screenTopLevelW), xftfont,
+			    (const FcChar8 *)DEFAULT_POSITION_STRING,
+			    strlen(DEFAULT_POSITION_STRING), &extents);
+	    xcsLocation.width = extents.xOff;
+	}
+    }
+#else
     XTextExtents(pSD->feedbackAppearance.font, DEFAULT_POSITION_STRING, 
 		 strlen(DEFAULT_POSITION_STRING), &direction, &ascent, 
 		 &descent, &xcsLocation);
+#endif
     
     pSD->fbWinWidth = xcsLocation.width + 4*FEEDBACK_BEVEL;
 
@@ -587,18 +628,40 @@ void UpdateFeedbackText (WmScreenData *pSD, int x, int y, unsigned int width, un
     if (pSD->fbStyle & FB_POSITION) 
     {
 	sprintf (pSD->fbLocation, "(%4d,%-4d)", x, y);
+#ifdef USE_XFT
+	{
+	    XftFont *xftfont = (XftFont *)pSD->feedbackAppearance.font;
+	    XGlyphInfo extents;
+	    XftTextExtents8(XtDisplay(pSD->screenTopLevelW), xftfont,
+			    (const FcChar8 *)pSD->fbLocation,
+			    strlen(pSD->fbLocation), &extents);
+	    xcs.width = extents.xOff;
+	}
+#else
 	XTextExtents(pSD->feedbackAppearance.font, pSD->fbLocation,
 		 strlen(pSD->fbLocation), &direction, &ascent, 
 		 &descent, &xcs);
+#endif
 	pSD->fbLocX = (pSD->fbWinWidth - xcs.width)/2;
     }
 
     if (pSD->fbStyle & FB_SIZE) 
     {
 	sprintf (pSD->fbSize,     "%4dx%-4d", width, height);
+#ifdef USE_XFT
+	{
+	    XftFont *xftfont = (XftFont *)pSD->feedbackAppearance.font;
+	    XGlyphInfo extents;
+	    XftTextExtents8(XtDisplay(pSD->screenTopLevelW), xftfont,
+			    (const FcChar8 *)pSD->fbSize,
+			    strlen(pSD->fbSize), &extents);
+	    xcs.width = extents.xOff;
+	}
+#else
 	XTextExtents(pSD->feedbackAppearance.font, pSD->fbSize,
 		 strlen(pSD->fbSize), &direction, &ascent, 
 		 &descent, &xcs);
+#endif
 	pSD->fbSizeX = (pSD->fbWinWidth - xcs.width)/2;
     }
 }
