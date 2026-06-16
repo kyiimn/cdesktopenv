@@ -1095,6 +1095,18 @@ doc/ja_JP.UTF-8/help/common/DesktopIntro.hf
 
 include/Makefile
 
+contrib/Makefile
+contrib/rc/Makefile
+contrib/rc/linux/Makefile
+contrib/rc/freebsd/Makefile
+contrib/rc/netbsd/Makefile
+contrib/rc/openbsd/Makefile
+contrib/rc/systemd/Makefile
+contrib/desktopentry/Makefile
+contrib/desktop2dt/Makefile
+contrib/vcal2xapia/Makefile
+contrib/xinetd/Makefile
+
 imports/Makefile
 imports/motif/Makefile
 imports/motif/doc/Makefile

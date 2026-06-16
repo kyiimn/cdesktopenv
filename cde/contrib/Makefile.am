@@ -1,0 +1,1 @@
+SUBDIRS = rc desktopentry desktop2dt vcal2xapia xinetd

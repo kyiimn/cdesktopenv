@@ -11,7 +11,7 @@ MAINTAINERCLEANFILES = Makefile.in \
 		config.h.in \
 		install-sh
 
-SUBDIRS = util lib programs include imports
+SUBDIRS = util lib programs include imports contrib
 
 if BUILD_DOCS
 SUBDIRS += doc
