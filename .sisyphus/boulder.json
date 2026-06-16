@@ -1,50 +1,98 @@
 {
-  "active_plan": "/home/kyiimn/Projects/cdesktopenv/.sisyphus/plans/dtxdg2appmgr-fixes.md",
-  "started_at": "2026-06-15T11:03:07.157Z",
+  "active_plan": "/home/kyiimn/Projects/cdesktopenv/.sisyphus/plans/style-manager-font-family.md",
+  "started_at": "2026-06-15T11:37:04.880Z",
   "session_ids": [
-    "ses_13a20c6d1ffetAk27r979Xq80G"
+    "ses_1383a9be6ffeAem12wOI2aFqR3",
+    "ses_134ca7e01ffe9Pvqg3gmD9XtMw",
+    "ses_134ca67c4ffe97p6oKW3JcofTh",
+    "ses_134ca4acbffeL9zrjkT1QtD8BQ",
+    "ses_134ca3431ffefevE5amizD3Yr7",
+    "ses_134bb831cffe2ZzYPBEWN9wqZm",
+    "ses_134bb6cbaffee6Fz7hVwau7g4Z",
+    "ses_134b6ef71ffeevrueQNtPxnaYc",
+    "ses_134b6af5bffeeAtI7lp4JtKbpC",
+    "ses_134b65c42ffesc63WdZEJZCI7n",
+    "ses_134a133c5ffeEPIl0SNYcuE8Yd",
+    "ses_134a120ddffesc4MaR2GLhW4Y5"
   ],
   "session_origins": {
-    "ses_13a20c6d1ffetAk27r979Xq80G": "direct"
+    "ses_1383a9be6ffeAem12wOI2aFqR3": "direct",
+    "ses_134ca7e01ffe9Pvqg3gmD9XtMw": "appended",
+    "ses_134ca67c4ffe97p6oKW3JcofTh": "appended",
+    "ses_134ca4acbffeL9zrjkT1QtD8BQ": "appended",
+    "ses_134ca3431ffefevE5amizD3Yr7": "appended",
+    "ses_134bb831cffe2ZzYPBEWN9wqZm": "appended",
+    "ses_134bb6cbaffee6Fz7hVwau7g4Z": "appended",
+    "ses_134b6ef71ffeevrueQNtPxnaYc": "appended",
+    "ses_134b6af5bffeeAtI7lp4JtKbpC": "appended",
+    "ses_134b65c42ffesc63WdZEJZCI7n": "appended",
+    "ses_134a133c5ffeEPIl0SNYcuE8Yd": "appended",
+    "ses_134a120ddffesc4MaR2GLhW4Y5": "appended"
   },
-  "plan_name": "dtxdg2appmgr-fixes",
+  "plan_name": "style-manager-font-family",
   "agent": "atlas",
   "task_sessions": {
     "todo:1": {
       "task_key": "todo:1",
       "task_label": "1",
-      "task_title": "**xpm_converter.c 셸 인젝션 제거 (CRITICAL)**",
-      "session_id": "ses_135091fa5ffes9gdxS9aSneMwm",
+      "task_title": "Add MAX_FONT_FAMILIES and MAX_FONT_SIZES constants to Main.h",
+      "session_id": "ses_134ea9950ffexSJh8cFJpID0RD",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-06-15T11:08:49.473Z"
+      "updated_at": "2026-06-15T11:41:17.050Z"
     },
     "todo:3": {
       "task_key": "todo:3",
       "task_label": "3",
-      "task_title": "**dtxdg2appmgr.c 캐시 실패 + 메모리 누수 수정 (MAJOR)**",
-      "session_id": "ses_13505d5b9ffeqYkMxgJ2o2DaJb",
+      "task_title": "Extend ApplicationData struct in Main.h for 2D font selection",
+      "session_id": "ses_134e91a30ffek1euRgPuSUbQdQ",
       "agent": "Sisyphus-Junior",
       "category": "unspecified-high",
-      "updated_at": "2026-06-15T11:13:14.743Z"
+      "updated_at": "2026-06-15T11:42:56.400Z"
     },
-    "todo:6": {
-      "task_key": "todo:6",
-      "task_label": "6",
-      "task_title": "**path_scanner.c 재귀 디렉토리 스캔 (MAJOR)**",
-      "session_id": "ses_1350260bfffe2yvGpj1EFFLCmI",
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "Add NumFontFamilies, familyNames, familyLabels Xresources to Resource.c",
+      "session_id": "ses_134e77006ffeikQ79q6zG1WyeA",
       "agent": "Sisyphus-Junior",
-      "category": "medium",
-      "updated_at": "2026-06-15T11:15:59.262Z"
+      "category": "unspecified-high",
+      "updated_at": "2026-06-15T11:47:39.193Z"
+    },
+    "todo:9": {
+      "task_key": "todo:9",
+      "task_label": "9",
+      "task_title": "Add familyTB/familyList widgets to CreateFontDlg layout (horizontal layout)",
+      "session_id": "ses_134e1ffd0ffej04a7IiKEn4tGN",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-06-15T11:56:02.346Z"
+    },
+    "todo:15": {
+      "task_key": "todo:15",
+      "task_label": "15",
+      "task_title": "Update dtstyle.msg (add messages 5-25, 5-26)",
+      "session_id": "ses_134dabdd6ffeQYkPgPAQqS2e9I",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-06-15T11:58:19.349Z"
+    },
+    "todo:16": {
+      "task_key": "todo:16",
+      "task_label": "16",
+      "task_title": "Update Dtstyle.src + Dtstyle (C locale app-defaults)",
+      "session_id": "ses_134d5b3deffeweisNcetciXVYn",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-15T12:10:00.472Z"
     },
     "final-wave:f1": {
       "task_key": "final-wave:f1",
       "task_label": "F1",
-      "task_title": "**Plan Compliance Audit** — 모든 11개 TODO 완료 확인",
-      "session_id": "ses_134fcbdccffe4SL1ERdx5p4aWt",
-      "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-06-15T11:25:01.149Z"
+      "task_title": "**Plan Compliance Audit** — `oracle`",
+      "session_id": "ses_134bb6cbaffee6Fz7hVwau7g4Z",
+      "agent": "oracle",
+      "updated_at": "2026-06-15T12:33:42.822Z"
     }
   }
 }

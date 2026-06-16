@@ -82,12 +82,12 @@ CDE Style Manager Font 대화상자에 폰트 패밀리 선택 UI를 추가하�
 - 10개 로케일 `cde/programs/localized/*/app-defaults/Dtstyle.tmsg`: 새 메시지 번호 추가 (ko_KR, sv_SE 포함)
 
 ### Definition of Done
-- [ ] `cd cde/programs/dtstyle && make clean && make 2>&1` → 경고 0, 에러 0
-- [ ] `gencat cde/programs/dtstyle/dtstyle.cat cde/programs/dtstyle/dtstyle.msg` → 성공
-- [ ] `grep "FontFamily0" cde/programs/localized/C/app-defaults/Dtstyle` → 매치
-- [ ] `grep "Family" cde/programs/localized/*/app-defaults/Dtstyle` → **8개** 로케일(C + de_DE, es_ES, fr_FR, it_IT, ja_JP, zh_CN, zh_TW)에 매치 (ko_KR, sv_SE은 .tmsg만 존재)
-- [ ] Family 0 기본값이 기존 SystemFont1..7 / UserFont1..7과 동일 값 유지 (backward compat)
-- [ ] session save/restore round-trip 검증 (수동)
+- [x] `cd cde/programs/dtstyle && make clean && make 2>&1` → 경고 0, 에러 0
+- [x] `gencat cde/programs/dtstyle/dtstyle.cat cde/programs/dtstyle/dtstyle.msg` → 성공
+- [x] `grep "FontFamily0" cde/programs/localized/C/app-defaults/Dtstyle` → 매치
+- [x] `grep "Family" cde/programs/localized/*/app-defaults/Dtstyle` → **8개** 로케일(C + de_DE, es_ES, fr_FR, it_IT, ja_JP, zh_CN, zh_TW)에 매치 (ko_KR, sv_SE은 .tmsg만 존재)
+- [x] Family 0 기본값이 기존 SystemFont1..7 / UserFont1..7과 동일 값 유지 (backward compat)
+- [x] session save/restore round-trip 검증 (수동)
 
 ### Must Have
 - 폰트 패밀리 선택 UI (좌측 TitleBox + ScrolledList)
@@ -188,7 +188,7 @@ Max Concurrent: 7 (Wave 3)
 
 ### Wave 1: Foundation - Data Model & Types (PARALLEL)
 
-- [ ] 1. Add MAX_FONT_FAMILIES and MAX_FONT_SIZES constants to Main.h
+- [x] 1. Add MAX_FONT_FAMILIES and MAX_FONT_SIZES constants to Main.h
 
   **What to do**:
   - In `cde/programs/dtstyle/Main.h`, add two `#define` constants:
@@ -254,7 +254,7 @@ Max Concurrent: 7 (Wave 3)
   **Commit**: NO (groups with Task 2-3)
   - Files: `cde/programs/dtstyle/Main.h`
 
-- [ ] 2. Extend Fontset struct in Font.h with familyName and familyLabel fields
+- [x] 2. Extend Fontset struct in Font.h with familyName and familyLabel fields
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.h`, extend the `Fontset` struct (lines 46-52):
@@ -347,7 +347,7 @@ Max Concurrent: 7 (Wave 3)
   **Commit**: NO (groups with Task 1, 3)
   - Files: `cde/programs/dtstyle/Font.h`
 
-- [ ] 3. Extend ApplicationData struct in Main.h for 2D font selection
+- [x] 3. Extend ApplicationData struct in Main.h for 2D font selection
 
   **What to do**:
   - In `cde/programs/dtstyle/Main.h` (lines 140-157), replace `Fontset fontChoice[10]` with:
@@ -455,7 +455,7 @@ Max Concurrent: 7 (Wave 3)
 
 ---
 
-- [ ] 4. Update Makefile.am if needed (likely no change)
+- [x] 4. Update Makefile.am if needed (likely no change)
 
   **What to do**:
   - Check `cde/programs/dtstyle/Makefile.am` for any references to Font.c or Resource.c
@@ -501,7 +501,7 @@ Max Concurrent: 7 (Wave 3)
 
 ### Wave 2: Resource System (PARALLEL)
 
-- [ ] 5. Add NumFontFamilies, familyNames, familyLabels Xresources to Resource.c
+- [x] 5. Add NumFontFamilies, familyNames, familyLabels Xresources to Resource.c
 
   **What to do**:
   - In `cde/programs/dtstyle/Resource.c`, add new XtResource tables (place after the existing `userStr_resources[]` table, before the main `resources[]` table at line 217):
@@ -610,7 +610,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Task 6-8)
 
-- [ ] 6. Add FontFamily[N]SystemFont/UserFont Xresources (Family 0 alias to SystemFont1..7)
+- [x] 6. Add FontFamily[N]SystemFont/UserFont Xresources (Family 0 alias to SystemFont1..7)
 
   **What to do**:
   - In `cde/programs/dtstyle/Resource.c`, add two new XtResource tables for Family 0 (the default that maps to existing SystemFont1..7 / UserFont1..7):
@@ -688,7 +688,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Task 5, 7, 8)
 
-- [ ] 7. Add GetFamilyResources() function and Resource.h declarations
+- [x] 7. Add GetFamilyResources() function and Resource.h declarations
 
   **What to do**:
   - In `cde/programs/dtstyle/Resource.c`, add new functions (place after `GetFontStrResources()` at line 309):
@@ -769,7 +769,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Task 5, 6, 8)
 
-- [ ] 8. Update GetApplicationResources() to call new family resource loaders
+- [x] 8. Update GetApplicationResources() to call new family resource loaders
 
   **What to do**:
   - In `cde/programs/dtstyle/Resource.c`, update `GetApplicationResources()` function (lines 332-339):
@@ -828,7 +828,7 @@ Max Concurrent: 7 (Wave 3)
 
 ---
 
-- [ ] 9. Add familyTB/familyList widgets to CreateFontDlg layout (horizontal layout)
+- [x] 9. Add familyTB/familyList widgets to CreateFontDlg layout (horizontal layout)
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, modify `CreateFontDlg()` (lines 172-429):
@@ -1021,7 +1021,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Tasks 10-14)
 
-- [ ] 10. Add originalFamilyIndex, selectedFamilyIndex tracking with FONT_INDEX macro
+- [x] 10. Add originalFamilyIndex, selectedFamilyIndex tracking with FONT_INDEX macro
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, update the `FontData` struct (lines 103-116):
@@ -1119,7 +1119,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Tasks 9, 11-14)
 
-- [ ] 11. Implement changeFamilyCB and update changeSampleFontCB for 2D selection
+- [x] 11. Implement changeFamilyCB and update changeSampleFontCB for 2D selection
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, add new static function (place after `changeSampleFontCB` declaration, before its definition):
@@ -1225,7 +1225,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Tasks 9, 10, 12-14)
 
-- [ ] 12. Update ButtonCB OK to include *FontFamily: N in fontres
+- [x] 12. Update ButtonCB OK to include *FontFamily: N in fontres
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, modify the `ButtonCB()` OK case (lines 475-570):
@@ -1342,7 +1342,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Tasks 9-11, 13, 14)
 
-- [ ] 13. Update ButtonCB CANCEL to revert both family and size
+- [x] 13. Update ButtonCB CANCEL to revert both family and size
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, modify the `ButtonCB()` CANCEL case (lines 577-602):
@@ -1418,7 +1418,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Tasks 9-12, 14)
 
-- [ ] 14. Update saveFonts() and restoreFonts() for family index
+- [x] 14. Update saveFonts() and restoreFonts() for family index
 
   **What to do**:
   - In `cde/programs/dtstyle/Font.c`, modify `restoreFonts()` (lines 694-726):
@@ -1506,7 +1506,7 @@ Max Concurrent: 7 (Wave 3)
 
 ---
 
-- [ ] 15. Update dtstyle.msg (add messages 5-25, 5-26)
+- [x] 15. Update dtstyle.msg (add messages 5-25, 5-26)
 
   **What to do**:
   - In `cde/programs/dtstyle/dtstyle.msg`, add 2 new messages to set 5 (after the existing 5-22, 5-23, 5-24 entries around line 226):
@@ -1569,7 +1569,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Task 16-19)
 
-- [ ] 16. Update Dtstyle.src + Dtstyle (C locale app-defaults)
+- [x] 16. Update Dtstyle.src + Dtstyle (C locale app-defaults)
 
   **What to do**:
   - In `cde/programs/dtstyle/Dtstyle.src`, add new resource lines in the "Font Dialog" section (after line 50, before the "Audio Dialog" section):
@@ -1661,7 +1661,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO (groups with Task 17-19)
 
-- [ ] 17. Update 7 other locale Dtstyle files (de_DE, es_ES, fr_FR, it_IT, ja_JP, zh_CN, zh_TW) — ko_KR and sv_SE are translation-only (no .app-defaults file)
+- [x] 17. Update 7 other locale Dtstyle files (de_DE, es_ES, fr_FR, it_IT, ja_JP, zh_CN, zh_TW) — ko_KR and sv_SE are translation-only (no .app-defaults file)
 
   **What to do**:
   - For each of the 7 locale directories that have an actual `app-defaults/Dtstyle` file, update it:
@@ -1752,7 +1752,7 @@ Max Concurrent: 7 (Wave 3)
   - Files: 7 locale Dtstyle files
   - Pre-commit: `cd cde/programs/localized && for f in C de_DE.UTF-8 es_ES.UTF-8 fr_FR.UTF-8 it_IT.UTF-8 ja_JP.UTF-8 zh_CN.UTF-8 zh_TW.UTF-8; do echo "== $f =="; grep -c "FontFamily" "cde/programs/localized/$f/app-defaults/Dtstyle"; done`
 
-- [ ] 18. Update Dtstyle.tmsg files for all locales (if applicable)
+- [x] 18. Update Dtstyle.tmsg files for all locales (if applicable)
 
   **What to do**:
   - The `.tmsg` files in `cde/programs/localized/*/app-defaults/Dtstyle.tmsg` are translation catalogs. If the new family resource values need translation (e.g., "System" / "User" labels), update them. If the labels are technical font names (like "system", "user"), they may not need translation.
@@ -1799,7 +1799,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO
 
-- [ ] 19. Update nlsREADME.txt and dtstyle.man documentation
+- [x] 19. Update nlsREADME.txt and dtstyle.man documentation
 
   **What to do**:
   - In `cde/programs/dtstyle/nlsREADME.txt` (around lines 51-102 which document font resources), add documentation for the new resources:
@@ -1849,7 +1849,7 @@ Max Concurrent: 7 (Wave 3)
 
   **Commit**: NO
 
-- [ ] 20. Full build verification + static analysis + manual simulation
+- [x] 20. Full build verification + static analysis + manual simulation
 
   **What to do**:
   - **Build verification**:
@@ -1948,16 +1948,16 @@ Max Concurrent: 7 (Wave 3)
 
 ## Final Verification Wave (MANDATORY)
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Verify all 20 tasks completed. Verify no Must-NOT-Have violations. Check evidence files exist.
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `make clean && make` in dtstyle. Check for warnings, unused variables, XtOffset correctness via objdump.
 
-- [ ] F3. **Manual Simulation Review** — `unspecified-high`
+- [x] F3. **Manual Simulation Review** — `unspecified-high`
   Trace through dialog lifecycle: CreateFontDlg → changeSampleFontCB → ButtonCB OK → saveFonts. Verify state machine.
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task verify: 1) implementation matches spec, 2) no cross-task contamination, 3) no unaccounted changes.
 
 ---
@@ -1992,13 +1992,13 @@ grep "SystemFont1:" cde/programs/localized/C/app-defaults/Dtstyle
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All 20 tasks completed
-- [ ] Build succeeds with zero warnings
-- [ ] All 8 locales (C + 7) have NumFontFamilies + Family0* resources
-- [ ] Session save/restore works (family index round-trip)
-- [ ] Cancel button reverts both family and size
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All 20 tasks completed
+- [x] Build succeeds with zero warnings
+- [x] All 8 locales (C + 7) have NumFontFamilies + Family0* resources
+- [x] Session save/restore works (family index round-trip)
+- [x] Cancel button reverts both family and size
 
 ---
 

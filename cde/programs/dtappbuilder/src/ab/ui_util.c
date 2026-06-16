@@ -62,6 +62,9 @@
 #include <X11/cursorfont.h>
 #include <X11/xpm.h>
 #include <Xm/XmAll.h>
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 /*
 #include <Xm/Protocols.h>
 #include <Xm/CascadeB.h>
@@ -763,6 +766,16 @@ ui_size_to_row_col(
 
     font = objxm_fontlist_to_font(fontlist);
 
+#ifdef USE_XFT
+    /* Under USE_XFT, XmFontListGetNextFont may return an XftFont*
+     * cast as XFontStruct*. Use XftFont metrics to avoid crash.
+     */
+    {
+        XftFont *xftfont = (XftFont *)font;
+        charwidth = xftfont->max_advance_width;
+        lineheight = xftfont->ascent + xftfont->descent + text_spacing;
+    }
+#else
     if ((!XGetFontProperty(font, XA_QUAD_WIDTH, &charwidth)) || charwidth == 0) {
        if (font->per_char && font->min_char_or_byte2 <= '0' &&
                                  font->max_char_or_byte2 >= '0')
@@ -772,6 +785,7 @@ ui_size_to_row_col(
     }
     lineheight = font->max_bounds.ascent + font->max_bounds.descent +
 			text_spacing;
+#endif
 
     /* Calculate new pane size */
     pane_width  = width  - (vsb_width  + spacing) - (2*p_margin_w);

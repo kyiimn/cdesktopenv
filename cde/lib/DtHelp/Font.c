@@ -909,7 +909,21 @@ __DtHelpFontDatabaseInit (
  * WARNING...what if the user_font is null? And what type is it?
  */
         string_font = (XtPointer) user_font;
-        type        = XmFONT_IS_FONT;
+#ifdef USE_XFT
+        /* Under USE_XFT, XmeRenderTableGetDefaultFont returns XftFont*
+         * from render tables that store fontconfig-pattern entries.
+         * Casting an XftFont* as XmFONT_IS_FONT would cause SaveFontStruct
+         * to treat it as XFontStruct*, leading to a crash when accessing
+         * XFontStruct-specific fields.  When user_font is non-NULL here it
+         * came from XmeRenderTableGetDefaultFont on a USE_XFT build, so
+         * it is an XftFont*.  If user_font is NULL the type doesn't matter
+         * (nothing is saved), but default to XmFONT_IS_FONT for safety.
+         */
+        if (user_font != NULL)
+            type = XmFONT_IS_XFT;
+        else
+#endif
+            type = XmFONT_IS_FONT;
       }
 
     /*

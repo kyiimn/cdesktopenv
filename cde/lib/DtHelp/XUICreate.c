@@ -576,6 +576,14 @@ HelpCreateDA(
     if (n < 0)
         value = get_fontsetproperty(__DtHelpFontSetGet(pDAS->font_info, n),
 			xa_ave_width, ((unsigned long *) &(pDAS->charWidth)));
+#ifdef USE_XFT
+    else if (n >= 10000)
+      {
+	/* Xft font — XGetFontProperty doesn't apply; fall through
+	   to the fallback path below which uses __DtHelpFontXftGet. */
+	value = False;
+      }
+#endif
     else
 	value = XGetFontProperty(__DtHelpFontStructGet(pDAS->font_info, n),
 			xa_ave_width, ((unsigned long *) &(pDAS->charWidth)));

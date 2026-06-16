@@ -41,11 +41,25 @@
  * 
  */
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#undef USE_XFT
+#endif
+
 #include "TabButtonP.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <Xm/Xm.h>
 #include <Xm/IconButtonP.h>
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+
+#ifdef USE_XFT
+#include <X11/Xft/Xft.h>
+#endif
 
 /* **************************************************************
  * constant and type declarations
@@ -639,8 +653,12 @@ get_background_gc (Widget w)
 
   if (fs != NULL)
     {
+#ifdef USE_XFT
+      /* XftFont has no fid; skip GCFont to use default font in GC */
+#else
       value_mask |= GCFont;
       values.font = fs->fid;
+#endif
     }
 
   if (tabw->tab.background_gc)

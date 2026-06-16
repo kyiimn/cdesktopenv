@@ -364,7 +364,11 @@ load_pixmap(
 }
 
 
-
+/*
+ * WARNING: Under USE_XFT, XmFontListGetNextFont may return an XftFont*
+ * cast as XFontStruct*. Callers that access font struct fields must guard
+ * with #ifdef USE_XFT and use XftFont metrics when appropriate.
+ */
 XFontStruct *
 objxm_fontlist_to_font(
     XmFontList	fontlist
