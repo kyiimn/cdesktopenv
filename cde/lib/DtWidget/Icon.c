@@ -72,6 +72,11 @@
 #define USE_XFT 1
 #undef _CDE_SAVED_USE_XFT
 #endif
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+#include <X11/Xft/Xft.h>
+#endif
+#endif
 
 /*-------------------------------------------------------------
 **	Public Interface
@@ -3429,8 +3434,13 @@ UpdateGCs(
 	values.background = G_Background (g);
 	values.fill_style = FillSolid;
 	if (XmeRenderTableGetDefaultFont(G_FontList (g), &font)) {
+#ifdef USE_XFT
+	   /* Xft fonts have no XFontStruct->fid; skip GCFont.
+	    * Rendering uses XftDrawString* at draw time. */
+#else
 	   value_mask |= GCFont;
 	   values.font = font->fid;
+#endif
         }
 	G_NormalGC (g) = XtGetGC ((Widget)mw, value_mask, &values);
 

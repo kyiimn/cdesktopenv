@@ -69,6 +69,11 @@
 #define USE_XFT 1
 #undef _CDE_SAVED_USE_XFT
 #endif
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+#include <X11/Xft/Xft.h>
+#endif
+#endif
 #include <Dt/MacrosP.h>
 #include <langinfo.h>
 #include "DtWidgetI.h"
@@ -1742,8 +1747,12 @@ UpdateGCs(
    */
   value_mask = GCForeground | GCBackground | GCFillStyle;
   if (XmeRenderTableGetDefaultFont (G_FontList (g), &font)) {
+#ifdef USE_XFT
+    /* Xft fonts have no XFontStruct->fid; skip GCFont. */
+#else
     value_mask |= GCFont;
     values.font = font->fid;
+#endif
   }
 
   if (G_UseEmbossedText (g))

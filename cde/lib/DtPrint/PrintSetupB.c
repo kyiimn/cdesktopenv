@@ -62,10 +62,24 @@
 #include <Xm/TakesDefT.h>
 #include <Xm/XmPrivate.h>
 
+#ifdef USE_XFT
+#define _CDE_SAVED_USE_XFT 1
+#endif
+
 #include <Dt/PrintSetupBP.h>
 #include <Dt/PsubDefProcI.h>
 #include <Dt/PsubUtilI.h>
 #include <Dt/PrintI.h>
+
+#ifdef _CDE_SAVED_USE_XFT
+#define USE_XFT 1
+#undef _CDE_SAVED_USE_XFT
+#endif
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+#include <X11/Xft/Xft.h>
+#endif
+#endif
 
 
 /*
@@ -3403,6 +3417,10 @@ _DtPrintSetupBoxCreateDescription(
     XtVaGetValues(PSUB_Description(psub), XmNrenderTable, &render_table, NULL);
     if(XmeRenderTableGetDefaultFont(render_table, &font))
     {
+#ifdef USE_XFT
+	/* Xft fonts: use XftFont metrics directly */
+	char_width = ((XftFont *)font)->max_advance_width;
+#else
 	Bool success;
 
 	success = XGetFontProperty(font, XA_QUAD_WIDTH, &char_width);
@@ -3417,6 +3435,7 @@ _DtPrintSetupBoxCreateDescription(
 	    else
 		char_width = font->max_bounds.width;
 	}
+#endif
 	/*
 	 * set and lock the width of description gadget
 	 */

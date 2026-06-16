@@ -35,6 +35,11 @@
 #define USE_XFT 1
 #undef _CDE_SAVED_USE_XFT
 #endif
+#ifdef USE_XFT
+#ifdef HAVE_X11_XFT_XFT_H
+#include <X11/Xft/Xft.h>
+#endif
+#endif
 
 /* Copied from Xm/RegionI.h */
 extern XmRegion _XmRegionCreate( void ) ;
@@ -860,9 +865,14 @@ CreateGC(
     values.foreground = Foreground(w);
     values.background = BackgroundPixel(w);
     values.graphics_exposures = False;
-    if (XmeRenderTableGetDefaultFont(Font(w), &fs))
+    if (XmeRenderTableGetDefaultFont(Font(w), &fs)) {
+#ifdef USE_XFT
+        /* Xft fonts have no XFontStruct->fid; skip GCFont. */
+        valueMask &= ~GCFont;
+#else
         values.font = fs->fid;
-    else
+#endif
+    } else
         valueMask &= ~GCFont;
 
     /*****  Create Normal GC *****/
