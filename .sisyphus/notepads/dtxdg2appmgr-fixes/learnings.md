@@ -158,3 +158,26 @@
 - 7 files modified, matching plan exactly
 - 3 commits (59af7d342, 39014bf72, f7e9ce62b)
 - No other CDE files touched
+
+## 2026-06-16: Fixed default directory resolution for user-local operation
+
+### Bug
+`options.c` set non-NULL defaults for `output_dir`, `icon_output_dir`, and `cache_file` (hardcoded system paths like `/usr/dt/appconfig/appmanager`). This meant `get_dt_output_dir()` and `get_icon_output_dir()` in `dtxdg2appmgr.c` never reached their `$HOME/.dt/...` fallback logic.
+
+### Fix
+1. Changed `options.c` to assign NULL when no CLI flag is given (GOption leaves `output_dir`, `icon_output_dir`, `cache_file` as NULL)
+2. Added `get_cache_file()` in `dtxdg2appmgr.c` with three-tier fallback: explicit → `$HOME/.dt/xdg-cache.db` → `/var/dt/xdg-cache.db`
+3. Changed `get_appmanager_dir()` to take `dt_output_dir` string instead of `opts` struct (since `opts->output_dir` can now be NULL)
+4. Updated main() to resolve all paths upfront via `get_*()` functions, then use resolved values throughout
+5. Added `ensure_dir(cache_dir)` for the cache file's parent directory
+6. Updated usage message to show `$HOME/.dt/...` defaults instead of system paths
+
+### Key insight
+`g_free(NULL)` is safe in GLib, so no special handling needed in `options_free()` for NULL path fields.
+
+### Build
+`cd cde/programs/dtxdg2appmgr && make clean && make` — compiles with 0 warnings, 0 errors.
+
+### Test
+`./dtxdg2appmgr --dry-run -v` — correctly resolves to `$HOME/.dt/types`, `$HOME/.dt/icons`, `$HOME/.dt/xdg-cache.db` without flags.
+`./dtxdg2appmgr --dry-run -v -o /usr/dt/appconfig/appmanager` — correctly uses explicit system path.
