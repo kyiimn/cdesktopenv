@@ -49,6 +49,9 @@ extern void GetSysFontResource(int);
 extern void GetFamilyNamesResources(void);
 extern void GetFamilyFontResources(int fam);
 
+extern XtResource customFont_resources[];
+extern void GetCustomFontResources(Widget shell);
+
 extern void GetApplicationResources( void ) ;
 extern void AddResourceConverters( void ) ;
 

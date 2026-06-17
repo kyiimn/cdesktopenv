@@ -16,7 +16,10 @@ for the following:
 .IP "\fBColor\fP"
 Select workspace colors and palettes.
 .IP "\fBFonts\fP"
-Select application font sizes.
+Select application font sizes. The Font dialog includes a "Customize..." button 
+that opens a font picker, allowing users to select any system font 
+(X11 core fonts or, when built with Xft support, fontconfig fonts).
+
 .IP "\fBBackdrop\fP"
 Select workspace backdrop patterns.
 .IP "\fBKeyboard\fP"
@@ -312,6 +315,26 @@ Defaults match the existing UserFont1 through UserFont7 values.
 Specifies the system font XLFD string for family 1, sizes 0 through 6.
 .IP "FontFamily1UserFont0..6 (class FontFamily1UserFont0..6)"
 Specifies the user font XLFD string for family 1, sizes 0 through 6.
+.PP
+The following resources control the custom font override feature:
+.TP
+.B customSysFont \ (class \ CustomSysFont)
+Specifies the system font override selected via the Font Picker.
+When set, this font replaces the current family/size slot's system font.
+An empty value means no override.
+.TP
+.B customUserFont \ (class \ CustomUserFont)
+Specifies the user font override selected via the Font Picker.
+When set, this font replaces the current family/size slot's user font.
+An empty value means no override.
+.TP
+.B customFamily \ (class \ CustomFamily)
+Specifies the font family index (0-based) for the custom override.
+Default is 0.
+.TP
+.B customSize \ (class \ CustomSize)
+Specifies the font size index (0-based) for the custom override.
+Default is 0.
 .RE
 .sp1
 .SH COPYRIGHT

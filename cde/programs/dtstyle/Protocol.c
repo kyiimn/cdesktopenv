@@ -47,10 +47,18 @@
 /* include files                         */
 /*+++++++++++++++++++++++++++++++++++++++*/
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <limits.h>
 
 #include <X11/Xlib.h>
 #include <X11/Intrinsic.h>
 #include <X11/Xatom.h>
+#include <X11/Xresource.h>
 
 #include <Xm/Protocols.h>
 
@@ -65,6 +73,7 @@
 #include "SaveRestore.h"
 #include "Main.h"
 #include "Backdrop.h"
+#include "Font.h"
 
 #include <Dt/Message.h>
 #include <Dt/UserMsg.h>
@@ -76,6 +85,14 @@
 
 #ifndef CDE_INSTALLATION_TOP
 #define CDE_INSTALLATION_TOP "/opt/dt"
+#endif
+
+#ifndef CDE_CONFIGURATION_TOP
+#define CDE_CONFIGURATION_TOP "/etc/dt"
+#endif
+
+#ifndef PKEXECPATH
+#define PKEXECPATH "/usr/bin/pkexec"
 #endif
 
 #define WS_STARTUP_RETRY_COUNT	12
@@ -109,6 +126,7 @@ static Atom     xaDtSmPreeditInfo;
 
 /* local function definitions */
 static void SmRestoreDefault(Atom);
+static int  SystemApplyFontDirect(char *fontResourceString);
 
 
 /*************************************<->*************************************
@@ -758,12 +776,12 @@ SmNewPreeditSettings(
  *  Tell Session Manager about new font resources
  *
  *************************************<->***********************************/
-void 
+void
 SmNewFontSettings(
     char *fontResourceString)
 {
 
-                     
+                    
     if (smWindow != 0)
     {
         /*
@@ -772,11 +790,281 @@ SmNewFontSettings(
          */
 
         XChangeProperty (style.display, smWindow,
-                         xaDtSmFontInfo, 
+                         xaDtSmFontInfo,
                          XA_STRING,
-                         8, PropModeReplace, 
+                         8, PropModeReplace,
                          (unsigned char *)fontResourceString,
                          strlen(fontResourceString));
     }
-}                                                                 
+}
+
+/*************************************************************************
+ * contains_newline
+ *
+ * Returns non-zero if the given NUL-terminated string contains an embedded
+ * '\n' or '\r'.  Used to reject font strings that would inject arbitrary
+ * X resources when interpolated into an Xrm database string (newline is
+ * a resource separator in Xrm).
+ *
+ * NULL is treated as "no newlines".
+ *************************************************************************/
+static int
+contains_newline(const char *s)
+{
+    if (s == NULL) return 0;
+    return (strchr(s, '\n') != NULL || strchr(s, '\r') != NULL);
+}
+
+/*************************************************************************
+ * BuildFontResourceString
+ *
+ * Build the font resource string from current font settings.
+ * This extracts the fontres construction from Font.c's ButtonCB OK case
+ * into a reusable function for the system-wide apply path.
+ *
+ * Returns: Newly allocated string (caller must XtFree), or NULL on error
+ *************************************************************************/
+char *
+BuildFontResourceString(void)
+{
+    char fontres[8192];
+    int selectedFamily;
+    int selectedSize;
+    int selectedIndex;
+    Boolean hasCustom;
+    const char *customSys;
+    const char *customUser;
+    const char *sysStr, *userStr;
+    int len;
+    char *fntstr, *fntsetstr;
+    char *result;
+
+    selectedIndex = FontDataGetSelectedIndex();
+    if (selectedIndex < 0 || selectedIndex >= FONT_INDEX(MAX_FONT_FAMILIES, MAX_FONT_SIZES))
+        return NULL;
+
+    selectedFamily = FONT_FAMILY(selectedIndex);
+    selectedSize = FONT_SIZE(selectedIndex);
+
+    hasCustom = FontDataHasCustomFont();
+    customSys = FontDataGetCustomSysStr();
+    customUser = FontDataGetCustomUserStr();
+
+    sysStr = (hasCustom && customSys) ? customSys :
+             style.xrdb.fontChoice[selectedIndex].sysStr;
+    userStr = (hasCustom && customUser) ? customUser :
+              style.xrdb.fontChoice[selectedIndex].userStr;
+
+    if (!sysStr || !userStr)
+        return NULL;
+
+    /* Reject font strings containing newlines — they would inject
+     * arbitrary X resources into the Xrm database string we build below. */
+    if (contains_newline(sysStr) || contains_newline(userStr) ||
+        contains_newline(customSys) || contains_newline(customUser))
+        return NULL;
+
+    /* FontSet: find first font entry delimited by ":" or "=" */
+    len = strcspn(userStr, ":=");
+    fntsetstr = (char *)XtCalloc(1, len + 1);
+    memcpy(fntsetstr, userStr, len);
+
+    /* Convert semicolons to commas for old X apps */
+    {
+        char *p = strstr(fntsetstr, ";");
+        while (p) { *p = ','; p = strstr(p + 1, ";"); }
+    }
+
+    /* Font: find first font entry delimited by comma, colon, or equals */
+    len = strcspn(fntsetstr, ",:=");
+    fntstr = (char *)XtCalloc(1, len + 1);
+    memcpy(fntstr, fntsetstr, len);
+
+    /* Build the resource string */
+    if (hasCustom) {
+        len = snprintf(fontres, sizeof(fontres),
+            "*systemFont: %s\n*userFont: %s\n*FontList: %s\n"
+            "*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n"
+            "*XmText*FontList: %s\n*XmTextField*FontList: %s\n"
+            "*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n"
+            "*FontFamily: %d\n*CustomSysFont: %s\n*CustomUserFont: %s\n"
+            "*CustomFamily: %d\n*CustomSize: %d\n",
+            sysStr, userStr, sysStr, sysStr, sysStr, userStr,
+            userStr, userStr, userStr, fntstr, fntsetstr,
+            selectedFamily,
+            customSys ? customSys : "",
+            customUser ? customUser : "",
+            selectedFamily, selectedSize);
+        if (len < 0 || len >= sizeof(fontres)) {
+            XtFree(fntstr);
+            XtFree(fntsetstr);
+            return NULL;
+        }
+    } else {
+        len = snprintf(fontres, sizeof(fontres),
+            "*systemFont: %s\n*userFont: %s\n*FontList: %s\n"
+            "*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n"
+            "*XmText*FontList: %s\n*XmTextField*FontList: %s\n"
+            "*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n"
+            "*FontFamily: %d\n",
+            sysStr, userStr, sysStr, sysStr, sysStr, userStr,
+            userStr, userStr, userStr, fntstr, fntsetstr,
+            selectedFamily);
+        if (len < 0 || len >= sizeof(fontres)) {
+            XtFree(fntstr);
+            XtFree(fntsetstr);
+            return NULL;
+        }
+    }
+
+    XtFree(fntstr);
+    XtFree(fntsetstr);
+
+    result = XtNewString(fontres);
+    return result;
+}
+
+/*************************************************************************
+ * RequestSystemWideApply
+ *
+ * Write the current font resource string to a user-writable temp file,
+ * then invoke pkexec dtstyle_sysapply to merge it into
+ * /etc/dt/app-defaults/Dtstyle as root.
+ *
+ * Returns: 0 on success (pkexec launched or direct write succeeded),
+ *         -1 on failure
+ *************************************************************************/
+int
+RequestSystemWideApply(char *fontResourceString)
+{
+    char tmppath[PATH_MAX];
+    int fd;
+    FILE *fp;
+    int ret;
+    pid_t pid;
+    int status;
+
+    if (fontResourceString == NULL)
+        return -1;
+
+    /* Write resource string to a user-writable temp file */
+    snprintf(tmppath, sizeof(tmppath), "/tmp/dtstyle-sysfont-XXXXXX");
+    fd = mkstemp(tmppath);
+    if (fd < 0)
+        return -1;
+
+    fp = fdopen(fd, "w");
+    if (!fp) {
+        close(fd);
+        unlink(tmppath);
+        return -1;
+    }
+
+    fputs(fontResourceString, fp);
+    fclose(fp);
+
+    /* Check if pkexec is available */
+    if (access(PKEXECPATH, X_OK) != 0) {
+        /* No pkexec - try direct write (will work only if user is root) */
+        ret = SystemApplyFontDirect(fontResourceString);
+        unlink(tmppath);
+        return ret;
+    }
+
+    /* Invoke pkexec helper to merge the temp file into the system
+     * app-defaults as root.  Use fork+exec to avoid invoking a shell
+     * (CWE-78: OS command injection via system()). */
+    pid = fork();
+    if (pid < 0) {
+        unlink(tmppath);
+        return -1;
+    }
+    if (pid == 0) {
+        /* Child: exec pkexec with the helper script */
+        execl(PKEXECPATH, "pkexec", "--disable-internal-agent",
+              CDE_INSTALLATION_TOP "/bin/dtstyle_sysapply.sh",
+              tmppath, (char *)NULL);
+        _exit(127);  /* exec failed */
+    }
+    /* Parent: wait for child */
+    while (waitpid(pid, &status, 0) < 0) {
+        if (errno != EINTR) {
+            unlink(tmppath);
+            return -1;
+        }
+    }
+    unlink(tmppath);
+
+    if (WIFEXITED(status) && WEXITSTATUS(status) == 0)
+        return 0;
+    return -1;
+}
+
+/*************************************************************************
+ * SystemApplyFontDirect (static)
+ *
+ * Direct write to <CDE_CONFIGURATION_TOP>/app-defaults/Dtstyle
+ * (root only).  Uses XrmGetFileDatabase + XrmMergeDatabases +
+ * XrmPutFileDatabase for a proper Xrm merge (G14: not raw cat).
+ *
+ * Returns: 0 on success, -1 on failure.
+ *************************************************************************/
+static int
+SystemApplyFontDirect(char *fontResourceString)
+{
+    char filepath[PATH_MAX];
+    char tmppath[PATH_MAX];
+    XrmDatabase db;
+    XrmDatabase newdb;
+    int fd;
+    mode_t old_umask;
+
+    if (fontResourceString == NULL)
+        return -1;
+
+    snprintf(filepath, sizeof(filepath), "%s/app-defaults/Dtstyle",
+             CDE_CONFIGURATION_TOP);
+
+    /* Check write permission on the target file.  ENOENT is acceptable
+     * because the XrmGetFileDatabase call below will create an empty
+     * database in that case. */
+    if (access(filepath, W_OK) != 0 && errno != ENOENT) {
+        return -1;
+    }
+
+    /* Parse existing file + merge new resources (G14: Xrm merge, not cat) */
+    db = XrmGetFileDatabase(filepath);
+    newdb = XrmGetStringDatabase(fontResourceString);
+    if (newdb == NULL) {
+        if (db) XrmDestroyDatabase(db);
+        return -1;
+    }
+    if (db == NULL) {
+        db = newdb;
+    } else {
+        XrmMergeDatabases(newdb, &db);
+    }
+
+    /* Write to temp file first (atomic via rename) */
+    snprintf(tmppath, sizeof(tmppath), "%s/app-defaults/Dtstyle.XXXXXX",
+             CDE_CONFIGURATION_TOP);
+    old_umask = umask(0077);
+    fd = mkstemp(tmppath);
+    umask(old_umask);
+    if (fd < 0) {
+        XrmDestroyDatabase(db);
+        return -1;
+    }
+    close(fd);
+
+    XrmPutFileDatabase(db, tmppath);
+    XrmDestroyDatabase(db);
+
+    if (rename(tmppath, filepath) != 0) {
+        unlink(tmppath);
+        return -1;
+    }
+
+    return 0;
+}
 

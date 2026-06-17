@@ -109,4 +109,25 @@ App-defaults file:
 ! FontFamily0UserFont0..FontFamily0UserFont6 - User fonts for family 0, sizes 0-6
 ! FontFamily1SystemFont0..FontFamily1SystemFont6 - System fonts for family 1, sizes 0-6
 ! FontFamily1UserFont0..FontFamily1UserFont6 - User fonts for family 1, sizes 0-6
+! 
+customSysFont (class CustomSysFont)
+    Specifies the system font override selected via the Font Picker.
+    When set, this font replaces the current family/size slot's system
+    font. Value is either an XLFD pattern or a fontconfig pattern
+    (e.g., "DejaVu Sans:size=12"). An empty value means no override.
+
+customUserFont (class CustomUserFont)
+    Specifies the user font override selected via the Font Picker.
+    When set, this font replaces the current family/size slot's user
+    font. Value is either an XLFD pattern or a fontconfig pattern.
+    An empty value means no override.
+
+customFamily (class CustomFamily)
+    Specifies the font family index (0-based) that the custom font
+    override applies to. Default is 0.
+
+customSize (class CustomSize)
+    Specifies the font size index (0-based) that the custom font
+    override applies to. Default is 0.
+
 

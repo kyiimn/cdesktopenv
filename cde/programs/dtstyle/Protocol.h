@@ -96,6 +96,9 @@ void SmNewSaverTime(int saverTime);
 void SmNewSaverSettings(int saverTime, int lockTime, int cycleTime,
                         char *selsaversList);
 
+extern char *BuildFontResourceString(void);
+extern int  RequestSystemWideApply(char *fontResourceString);
+
 
 #endif /* _protocol_h */
 /* DON'T ADD ANYTHING AFTER THIS #endif */

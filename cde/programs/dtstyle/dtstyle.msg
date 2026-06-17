@@ -231,6 +231,25 @@ $ _DtMessage 25 is the label of the titlebox containing the list of font familie
 $ _DtMessage 26 is a label used for accessibility/tooltip of the font family list
 26 Font Family
 
+$ The following _DtMessage entries (set 5, IDs 27-42) are used by the
+$ FontPicker dialog (FontPicker.c).
+27 Select Font
+28 Customize...
+29 Apply
+30 Apply System-Wide
+31 Source:
+32 Core X11
+33 Fontconfig
+34 All
+35 Family
+36 Size
+37 Preview
+38 AaBbCcDdEeFfGg0123456789
+39 Applying the font system-wide requires root privileges.
+40 Unable to apply font system-wide: no font selected.
+41 Font applied system-wide. New users will see this font as the default after logging in.
+42 System-wide font application failed. You may need administrator privileges.
+
 $set 6
 $ _DtMessage set 6 is for the Beep dialog
 $ _DtMessage 1,6 from set 6 have been deleted from the message catalog

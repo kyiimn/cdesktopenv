@@ -167,6 +167,11 @@ typedef struct {
     int        numFamilies;        /* Number of font families (default 2: system, user) */
     String     familyNames[MAX_FONT_FAMILIES];    /* Family identifiers from Xresources */
     String     familyLabels[MAX_FONT_FAMILIES];   /* Display labels for UI */
+    /* Custom font resources (font picker persistence) */
+    String     customSysFontRes;      /* *CustomSysFont resource */
+    String     customUserFontRes;     /* *CustomUserFont resource */
+    int        customFamilyRes;       /* *CustomFamily resource */
+    int        customSizeRes;         /* *CustomSize resource */
 } ApplicationData, *ApplicationDataPtr;
 
 typedef struct {

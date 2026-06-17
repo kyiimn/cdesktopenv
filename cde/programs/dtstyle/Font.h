@@ -54,6 +54,35 @@ typedef struct {
   String     familyLabel;  /* display label for UI list (e.g., "System", "User", "Serif") */
 } Fontset;
 
+/* FontData holds dtstyle's font dialog state. The full struct
+ * definition is in Font.c and is intentionally not exposed here.
+ * Protocol.c uses the read-only accessors below to read the currently
+ * selected font + custom-override strings when building the system-wide
+ * font resource string. */
+
+extern int          FontDataGetSelectedIndex(void);
+extern Boolean      FontDataHasCustomFont(void);
+extern String       FontDataGetCustomSysStr(void);
+extern String       FontDataGetCustomUserStr(void);
+
+/*
+ * FontDataSetCustomFont
+ *   Called by FontPicker.c (FontPickerApply) to install a custom font
+ *   override on the currently selected slot. Frees any previous override
+ *   strings + XmFontLists and replaces them with the given ones. Either
+ *   argument may be NULL, meaning "no override for that role". Passing
+ *   both NULL is equivalent to clearing the override (hasCustomFont
+ *   becomes False and the picker's selection is forgotten).
+ *
+ *   This is a write accessor — it complements the read accessors above.
+ *   Font.c owns the FontData struct; callers outside this file must use
+ *   these helpers rather than touching the struct directly.
+ */
+extern void FontDataSetCustomFont(
+    String sysStr,
+    String userStr,
+    int source);
+
 /* External Interface */
 
 

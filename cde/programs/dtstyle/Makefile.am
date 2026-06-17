@@ -2,10 +2,21 @@ MAINTAINERCLEANFILES = Makefile.in
 
 EXTRA_DIST = 	Backdrops.src Dtstyle.src Palettes.src \
 	dtstyle.msg \
+	dtstyle_sysapply.sh \
+	org.cde.dtstyle.font.policy \
 	Backdrops \
 	Dtstyle \
 	Palettes
 bin_PROGRAMS = dtstyle
+
+# System-wide font apply helper script. Installed to $(bindir) which,
+# under the CDE layout, resolves to $(CDE_INSTALLATION_TOP)/bin -
+# exactly the path Protocol.c uses to invoke this script via pkexec.
+bin_SCRIPTS = dtstyle_sysapply.sh
+
+# PolicyKit policy for system-wide font apply (pkexec)
+policydir = $(datadir)/polkit-1/actions
+policy_DATA = org.cde.dtstyle.font.policy
 
 dtstyle_CPPFLAGS = -DCDE_CONFIGURATION_TOP=\"$(CDE_CONFIGURATION_TOP)\"	\
 	-DCDE_INSTALLATION_TOP=\"$(CDE_INSTALLATION_TOP)\" -I../dthelp	\
@@ -15,7 +26,7 @@ if HAVE_XFT
 dtstyle_CPPFLAGS += $(FREETYPE2_INCS)
 endif
 
-dtstyle_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB)
+dtstyle_LDADD = $(DTCLIENTLIBS) $(XTOOLLIB) $(top_builddir)/lib/DtFont/libDtFont.la
 
 if HAVE_XFT
 dtstyle_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
@@ -63,6 +74,7 @@ noinst_HEADERS = Audio.h \
 	ColorPalette.h \
 	Dtwm.h \
 	Font.h \
+	FontPicker.h \
 	Help.h \
 	I18nEnv.h \
 	I18nMain.h \

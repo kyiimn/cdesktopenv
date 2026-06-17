@@ -78,6 +78,21 @@ Dtstyle*FontFamily3Label: %|nls-21-Monospace^FontFamily3Label|
 
 !###
 !#
+!#  Custom Font Override Resources
+!#
+!#  These resources store the user's custom font selection from the
+!#  Font Picker. When set, they override the corresponding family/size
+!#  slot in the Font dialog. An empty value means no custom override.
+!#
+!#  Do not translate the following
+!###
+Dtstyle*customSysFont:
+Dtstyle*customUserFont:
+Dtstyle*customFamily: 0
+Dtstyle*customSize: 0
+
+!###
+!#
 !#  Audio Dialog
 !#  
 !#  These resources specify the minimum and maximum tome for the bell,

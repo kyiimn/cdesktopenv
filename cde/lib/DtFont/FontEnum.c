@@ -365,8 +365,6 @@ DtEnumerateFontSizes(Display *dpy, int screen,
         list->fonts[list->count].pixel_size  = pixel_size;
         list->fonts[list->count].source      = source;
         list->count++;
-
-        free(family);
     }
 
     for (i = 0; i < unique_count; i++)
@@ -760,7 +758,24 @@ DtMergeFontLists(DtFontList *fc, DtFontList *x11)
                 continue;
             }
             seen[seen_count++] = fam;
-            result->fonts[result->count++] = fc->fonts[i];
+            if (fc->fonts[i].family_name != NULL)
+                result->fonts[result->count].family_name =
+                    strdup(fc->fonts[i].family_name);
+            if (fc->fonts[i].full_name != NULL)
+                result->fonts[result->count].full_name =
+                    strdup(fc->fonts[i].full_name);
+            if (fc->fonts[i].xlfd != NULL)
+                result->fonts[result->count].xlfd =
+                    strdup(fc->fonts[i].xlfd);
+            if (fc->fonts[i].fc_pattern != NULL)
+                result->fonts[result->count].fc_pattern =
+                    strdup(fc->fonts[i].fc_pattern);
+            result->fonts[result->count].is_scalable =
+                fc->fonts[i].is_scalable;
+            result->fonts[result->count].pixel_size =
+                fc->fonts[i].pixel_size;
+            result->fonts[result->count].source = fc->fonts[i].source;
+            result->count++;
         }
         free(seen);
         return result;
@@ -796,7 +811,23 @@ DtMergeFontLists(DtFontList *fc, DtFontList *x11)
             continue;
         }
         seen[seen_count++] = fam;
-        result->fonts[result->count++] = fc->fonts[i];
+        if (fc->fonts[i].family_name != NULL)
+            result->fonts[result->count].family_name =
+                strdup(fc->fonts[i].family_name);
+        if (fc->fonts[i].full_name != NULL)
+            result->fonts[result->count].full_name =
+                strdup(fc->fonts[i].full_name);
+        if (fc->fonts[i].xlfd != NULL)
+            result->fonts[result->count].xlfd =
+                strdup(fc->fonts[i].xlfd);
+        if (fc->fonts[i].fc_pattern != NULL)
+            result->fonts[result->count].fc_pattern =
+                strdup(fc->fonts[i].fc_pattern);
+        result->fonts[result->count].is_scalable =
+            fc->fonts[i].is_scalable;
+        result->fonts[result->count].pixel_size = fc->fonts[i].pixel_size;
+        result->fonts[result->count].source = fc->fonts[i].source;
+        result->count++;
     }
 
     /* Step 2: copy X11 entries, skipping families already in the result. */
@@ -810,7 +841,23 @@ DtMergeFontLists(DtFontList *fc, DtFontList *x11)
             continue;
         }
         seen[seen_count++] = fam;
-        result->fonts[result->count++] = x11->fonts[i];
+        if (x11->fonts[i].family_name != NULL)
+            result->fonts[result->count].family_name =
+                strdup(x11->fonts[i].family_name);
+        if (x11->fonts[i].full_name != NULL)
+            result->fonts[result->count].full_name =
+                strdup(x11->fonts[i].full_name);
+        if (x11->fonts[i].xlfd != NULL)
+            result->fonts[result->count].xlfd =
+                strdup(x11->fonts[i].xlfd);
+        if (x11->fonts[i].fc_pattern != NULL)
+            result->fonts[result->count].fc_pattern =
+                strdup(x11->fonts[i].fc_pattern);
+        result->fonts[result->count].is_scalable =
+            x11->fonts[i].is_scalable;
+        result->fonts[result->count].pixel_size = x11->fonts[i].pixel_size;
+        result->fonts[result->count].source = x11->fonts[i].source;
+        result->count++;
     }
 
     free(seen);

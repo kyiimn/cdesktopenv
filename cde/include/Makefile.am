@@ -53,6 +53,7 @@ nobase_include_HEADERS = Dt/Editor.h \
 	Dt/DndIconI.h \
 	Dt/DndP.h \
 	Dt/DtFont.h \
+	Dt/FontEnum.h \
 	Dt/DtGetMessageP.h \
 	Dt/DtHash.h \
 	Dt/DtMsgsP.h \

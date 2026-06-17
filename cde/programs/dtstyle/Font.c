@@ -55,6 +55,7 @@
 #include <Xm/Frame.h>
 #include <Xm/LabelG.h>
 #include <Xm/List.h>
+#include <Xm/PushBG.h>
 #include <Xm/Scale.h>
 #include <Xm/Text.h>
 #include <Xm/TextF.h>
@@ -80,6 +81,20 @@
 #include "Resource.h"
 #include "Protocol.h"
 #include "SaveRestore.h"
+
+/*
+ * <Dt/FontEnum.h> (transitively included by FontPicker.h) forward-declares
+ * XmFontList as `struct _XmFontListRec *`, guarded by the symbol
+ * _XmFontList_H (which Motif's own Xm.h does not actually use). The real
+ * Motif typedef is `struct __XmRenderTableRec **`. Pre-defining the guard
+ * here suppresses the broken forward declaration and lets the real Xm.h
+ * typedef from above stand. Same trick used in FontPicker.c and
+ * lib/DtFont/FontEnum.c.
+ */
+#ifndef _XmFontList_H
+#define _XmFontList_H
+#endif
+#include "FontPicker.h"
 
 /*+++++++++++++++++++++++++++++++++++++++*/
 /* Local #defines                        */
@@ -119,6 +134,14 @@ typedef struct {
     int    selectedFontIndex;
     String selectedFontStr;
     Boolean userTextChanged;
+    Widget customizeButton;      /* "Customize..." button — NEW */
+    /* Custom font override data (font picker) */
+    Boolean    hasCustomFont;        /* True if current slot has custom override */
+    String     customSysStr;        /* Custom system font XLFD or fc pattern */
+    String     customUserStr;       /* Custom user font XLFD or fc pattern */
+    XmFontList customSysFont;       /* Resolved XmFontList for custom system font */
+    XmFontList customUserFont;      /* Resolved XmFontList for custom user font */
+    DtFontEnumSource customSource;  /* Core X11 or Fontconfig */
 } FontData;
 static FontData font;
 
@@ -147,7 +170,11 @@ static void changeFamilyCB(
                         Widget w,
                         XtPointer client_data,
                         XtPointer call_data) ;
-static void valueChangedCB( 
+static void valueChangedCB(
+                        Widget w,
+                        XtPointer client_data,
+                        XtPointer call_data) ;
+static void CustomizeCB(
                         Widget w,
                         XtPointer client_data,
                         XtPointer call_data) ;
@@ -499,6 +526,21 @@ CreateFontDlg(
     XtManageChild(font.sizeList);
     XtManageChild(font.familyList);
     XtManageChildren(widget_list,count);
+
+    /* "Customize..." button - attached to the form, not familyTB.
+     * This ensures the button remains visible even when numFamilies <= 1
+     * causes familyTB to be unmanaged. */
+    n = 0;
+    XtSetArg(args[n], XmNlabelString, CMPSTR(GETMESSAGE(5, 28, "Customize..."))); n++;
+    XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
+    XtSetArg(args[n], XmNleftOffset, style.horizontalSpacing); n++;
+    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+    XtSetArg(args[n], XmNbottomOffset, style.verticalSpacing); n++;
+    font.customizeButton =
+        XmCreatePushButtonGadget(font.fontWkarea, "customizeButton", args, n);
+    XtManageChild(font.customizeButton);
+    XtAddCallback(font.customizeButton, XmNactivateCallback, CustomizeCB, NULL);
+
     XtManageChild(font.fontWkarea);
 
     /* Hide family UI when only one family (backward compat) */
@@ -636,7 +678,40 @@ ButtonCB(
            {
              int selectedFamily = (font.selectedFontIndex >= 0) ?
                                   FONT_FAMILY(font.selectedFontIndex) : 0;
-             sprintf(fontres,
+             if (font.hasCustomFont) {
+                 const char *sysStr = font.customSysStr ?
+                                      font.customSysStr :
+                                      style.xrdb.fontChoice[font.selectedFontIndex].sysStr;
+                 const char *userStr = font.customUserStr ?
+                                       font.customUserStr :
+                                       style.xrdb.fontChoice[font.selectedFontIndex].userStr;
+                 int customSize = (font.selectedFontIndex >= 0) ?
+                                  FONT_SIZE(font.selectedFontIndex) : 0;
+
+                 len = snprintf(fontres, sizeof(fontres),
+                     "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n*CustomSysFont: %s\n*CustomUserFont: %s\n*CustomFamily: %d\n*CustomSize: %d\n",
+                     sysStr,
+                     userStr,
+                     sysStr,
+                     sysStr,
+                     sysStr,
+                     userStr,
+                     userStr,
+                     userStr,
+                     userStr,
+                     fntstr, fntsetstr,
+                     selectedFamily,
+                     font.customSysStr ? font.customSysStr : "",
+                     font.customUserStr ? font.customUserStr : "",
+                     selectedFamily,
+                     customSize);
+                 if (len < 0 || len >= sizeof(fontres)) {
+                     XtFree(fntstr);
+                     XtFree(fntsetstr);
+                     return;
+                 }
+             } else {
+             len = snprintf(fontres, sizeof(fontres),
                  "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n",
                      style.xrdb.fontChoice[font.selectedFontIndex].sysStr,
                      style.xrdb.fontChoice[font.selectedFontIndex].userStr,
@@ -649,6 +724,12 @@ ButtonCB(
                      style.xrdb.fontChoice[font.selectedFontIndex].userStr,
                      fntstr, fntsetstr,
                      selectedFamily);
+             if (len < 0 || len >= sizeof(fontres)) {
+                 XtFree(fntstr);
+                 XtFree(fntsetstr);
+                 return;
+             }
+             }
            }
 
 	    XtFree(fntstr);
@@ -672,6 +753,10 @@ ButtonCB(
     case CANCEL_BUTTON:
 
       /* reset preview area fonts to original and close the window*/
+
+      /* Discard any custom font override set by the FontPicker. The
+       * setter frees the strings + XmFontLists and resets hasCustomFont. */
+      FontDataSetCustomFont((String)NULL, (String)NULL, (int)DtFontEnumAll);
 
       XtUnmanageChild(style.fontDialog);
 
@@ -754,7 +839,11 @@ changeSampleFontCB(
 
     /* Set the sample System Font string to different Font */
     n = 0;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont);
+    if (font.hasCustomFont && font.customSysFont) {
+        XtSetArg(args[n], XmNfontList, font.customSysFont);
+    } else {
+        XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont);
+    }
     n++;
     /* string_val = CMPSTR(SYSTEM_MSG);*/
     XtSetArg (args[n], XmNlabelString, CMPSTR(SYSTEM_MSG));
@@ -769,7 +858,11 @@ changeSampleFontCB(
     if (!font.userTextChanged)
       XtSetArg (args[n], XmNvalue, USER_MSG);
     n++;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont);
+    if (font.hasCustomFont && font.customUserFont) {
+        XtSetArg(args[n], XmNfontList, font.customUserFont);
+    } else {
+        XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont);
+    }
     n++;
     XtSetValues (font.userText, args, n);
     XmTextShowPosition(font.userText, 0);
@@ -816,7 +909,12 @@ changeFamilyCB(
         _DtTurnOffHourGlass(style.fontDialog);
 
     n = 0;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].sysFont); n++;
+    if (font.hasCustomFont && font.customSysFont) {
+        XtSetArg(args[n], XmNfontList, font.customSysFont);
+    } else {
+        XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].sysFont);
+    }
+    n++;
     XtSetArg(args[n], XmNlabelString, CMPSTR(SYSTEM_MSG)); n++;
     XtSetValues(font.systemLabel, args, n);
 
@@ -824,7 +922,12 @@ changeFamilyCB(
     if (!font.userTextChanged)
         XtSetArg(args[n], XmNvalue, USER_MSG);
     n++;
-    XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].userFont); n++;
+    if (font.hasCustomFont && font.customUserFont) {
+        XtSetArg(args[n], XmNfontList, font.customUserFont);
+    } else {
+        XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].userFont);
+    }
+    n++;
     XtSetValues(font.userText, args, n);
     XmTextShowPosition(font.userText, 0);
 }
@@ -834,14 +937,31 @@ changeFamilyCB(
 /*  Set flag indicating that the user    */
 /*  text field has been modified.        */
 /*+++++++++++++++++++++++++++++++++++++++*/
-static void 
+static void
 valueChangedCB(
         Widget w,
         XtPointer client_data,
         XtPointer call_data )
 
-{ 
-  font.userTextChanged = TRUE; 
+{
+  font.userTextChanged = TRUE;
+}
+
+/*+++++++++++++++++++++++++++++++++++++++*/
+/* CustomizeCB                           */
+/*  Launch the FontPicker dialog.        */
+/*+++++++++++++++++++++++++++++++++++++++*/
+static void
+CustomizeCB(
+        Widget w,
+        XtPointer client_data,
+        XtPointer call_data )
+{
+    int familyIdx = (font.selectedFontIndex >= 0) ?
+                    FONT_FAMILY(font.selectedFontIndex) : 0;
+    int sizeIdx = (font.selectedFontIndex >= 0) ?
+                  FONT_SIZE(font.selectedFontIndex) : 0;
+    PopupFontPicker(familyIdx, sizeIdx);
 }
 
 /************************************************************************
@@ -862,6 +982,9 @@ restoreFonts(
 
     xrm_name [0] = XrmStringToQuark ("Fonts");
     xrm_name [2] = 0;
+
+    /* Load app-defaults custom font resources */
+    GetCustomFontResources(shell);
 
     /* get x position */
     xrm_name [1] = XrmStringToQuark ("x");
@@ -892,6 +1015,42 @@ restoreFonts(
       font.originalFontIndex = font.selectedFontIndex;
     }
 
+    /* Restore custom font state */
+    xrm_name[1] = XrmStringToQuark("customSysStr");
+    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
+        font.customSysStr = XtNewString((char *)value.addr);
+    }
+
+    xrm_name[1] = XrmStringToQuark("customUserStr");
+    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
+        font.customUserStr = XtNewString((char *)value.addr);
+    }
+
+    xrm_name[1] = XrmStringToQuark("customFamily");
+    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
+        int customFamily = atoi((char *)value.addr);
+        /* customFamily is redundant with familyIndex below; kept for
+         * forward compatibility with future per-source custom metadata. */
+        (void)customFamily;
+    }
+
+    xrm_name[1] = XrmStringToQuark("customSize");
+    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
+        int customSize = atoi((char *)value.addr);
+        /* customSize is redundant with the size encoded in familyIndex
+         * via FONT_SIZE(selectedFontIndex); kept for forward compatibility. */
+        (void)customSize;
+    }
+
+    font.hasCustomFont = (font.customSysStr != NULL || font.customUserStr != NULL);
+
+    /* Recreate XmFontLists for restored custom font strings so the preview
+     * widgets render with the correct fonts (matches FontDataSetCustomFont). */
+    if (font.customSysStr != NULL && font.customSysStr[0] != '\0')
+        font.customSysFont = DtGetFontXmFontList(style.display, font.customSysStr);
+    if (font.customUserStr != NULL && font.customUserStr[0] != '\0')
+        font.customUserFont = DtGetFontXmFontList(style.display, font.customUserStr);
+
     xrm_name [1] = XrmStringToQuark ("ismapped");
     /* Are we supposed to be mapped? */
     if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value) &&
@@ -916,7 +1075,7 @@ saveFonts(
         int fd )
 {
     Position x,y;
-    char bufr[1024];     /* size=[1024], make bigger if needed */
+    char bufr[4096];     /* size=[4096], must fit fontconfig patterns */
     XmVendorShellExtObject  vendorExt;
     XmWidgetExtData         extData;
 
@@ -953,7 +1112,109 @@ saveFonts(
             snprintf(bufr, sizeof(bufr), "*Fonts.familyIndex: %d\n", curFamily);
             WRITE_STR2FD(fd, bufr);
         }
+
+        /* Save custom font state if a custom font was selected */
+        if (font.hasCustomFont) {
+            int curFamily = (font.selectedFontIndex >= 0) ?
+                            FONT_FAMILY(font.selectedFontIndex) : 0;
+            int curSize = (font.selectedFontIndex >= 0) ?
+                          FONT_SIZE(font.selectedFontIndex) : 0;
+            if (font.customSysStr)
+                snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr: %s\n", font.customSysStr);
+            else
+                snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr: \n");
+            WRITE_STR2FD(fd, bufr);
+            if (font.customUserStr)
+                snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr: %s\n", font.customUserStr);
+            else
+                snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr: \n");
+            WRITE_STR2FD(fd, bufr);
+            snprintf(bufr, sizeof(bufr), "*Fonts.customFamily: %d\n", curFamily);
+            WRITE_STR2FD(fd, bufr);
+            snprintf(bufr, sizeof(bufr), "*Fonts.customSize: %d\n", curSize);
+            WRITE_STR2FD(fd, bufr);
+        }
     }
+}
+
+
+/*
+ * FontData accessors.
+ * FontData's full struct is private to Font.c; Protocol.c uses these
+ * read-only accessors when building the system-wide apply resource string.
+ */
+int
+FontDataGetSelectedIndex(void)
+{
+    return font.selectedFontIndex;
+}
+
+Boolean
+FontDataHasCustomFont(void)
+{
+    return font.hasCustomFont;
+}
+
+String
+FontDataGetCustomSysStr(void)
+{
+    return font.customSysStr;
+}
+
+String
+FontDataGetCustomUserStr(void)
+{
+    return font.customUserStr;
+}
+
+/*
+ * FontDataSetCustomFont
+ *   Install a custom font override on the currently selected slot.
+ *   See Font.h for the full contract. Frees any previous override
+ *   strings and XmFontLists first. Resolves new XmFontLists from the
+ *   provided pattern strings (a NULL pattern or a resolution failure
+ *   leaves the corresponding XmFontList slot as NULL).
+ */
+void
+FontDataSetCustomFont(
+        String sysStr,
+        String userStr,
+        int source )
+{
+    /* Free previous override. */
+    if (font.customSysStr) {
+        XtFree(font.customSysStr);
+        font.customSysStr = NULL;
+    }
+    if (font.customUserStr) {
+        XtFree(font.customUserStr);
+        font.customUserStr = NULL;
+    }
+    if (font.customSysFont) {
+        XmFontListFree(font.customSysFont);
+        font.customSysFont = NULL;
+    }
+    if (font.customUserFont) {
+        XmFontListFree(font.customUserFont);
+        font.customUserFont = NULL;
+    }
+
+    if (sysStr != NULL)
+        font.customSysStr = XtNewString(sysStr);
+    if (userStr != NULL)
+        font.customUserStr = XtNewString(userStr);
+
+    font.hasCustomFont = (font.customSysStr != NULL ||
+                          font.customUserStr != NULL);
+    font.customSource = (DtFontEnumSource)source;
+
+    /* Resolve XmFontLists for preview widgets. */
+    if (font.customSysStr != NULL)
+        font.customSysFont = DtGetFontXmFontList(style.display,
+                                                 font.customSysStr);
+    if (font.customUserStr != NULL)
+        font.customUserFont = DtGetFontXmFontList(style.display,
+                                                  font.customUserStr);
 }
 
 

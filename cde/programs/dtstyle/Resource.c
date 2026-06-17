@@ -262,6 +262,21 @@ XtResource familyLabels_resources[] = {
       XtOffset(ApplicationDataPtr, familyLabels[7]), XmRString, "" },
 };
 
+/*++++++++++++++++++++++++++++++++++++++*/
+/* Custom Font Picker Resources         */
+/*++++++++++++++++++++++++++++++++++++++*/
+
+XtResource customFont_resources[] = {
+  {"customSysFont", "CustomSysFont", XmRString, sizeof(String),
+      XtOffset(ApplicationDataPtr, customSysFontRes), XmRString, (caddr_t) "" },
+  {"customUserFont", "CustomUserFont", XmRString, sizeof(String),
+      XtOffset(ApplicationDataPtr, customUserFontRes), XmRString, (caddr_t) "" },
+  {"customFamily", "CustomFamily", XmRInt, sizeof(int),
+      XtOffset(ApplicationDataPtr, customFamilyRes), XmRImmediate, (caddr_t) 0 },
+  {"customSize", "CustomSize", XmRInt, sizeof(int),
+      XtOffset(ApplicationDataPtr, customSizeRes), XmRImmediate, (caddr_t) 0 },
+};
+
 /* FontFamily0 System Font string resources - maps to existing SystemFont1-7 defaults */
 XtResource family0SysStr_resources[] = {
   {"fontFamily0SystemFont0", "FontFamily0SystemFont0", XmRString, sizeof (String),
@@ -1183,6 +1198,22 @@ GetFamilyFontResources(int fam)
     default:
         break;  /* Family index out of range — skip */
     }
+}
+
+/************************************************************************
+ * GetCustomFontResources
+ *
+ *  Description:
+ *  -----------
+ *  Retrieve custom font picker resources (persisted font selection).
+ ************************************************************************/
+void
+GetCustomFontResources(Widget shell)
+{
+    XtGetApplicationResources(shell, &style.xrdb,
+                              customFont_resources,
+                              XtNumber(customFont_resources),
+                              NULL, 0);
 }
 
 /************************************************************************
