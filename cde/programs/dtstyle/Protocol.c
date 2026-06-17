@@ -846,9 +846,9 @@ BuildFontResourceString(void)
     selectedFamily = FONT_FAMILY(selectedIndex);
     selectedSize = FONT_SIZE(selectedIndex);
 
-    hasCustom = FontDataHasCustomFont();
-    customSys = FontDataGetCustomSysStr();
-    customUser = FontDataGetCustomUserStr();
+    hasCustom = FontDataHasCustomFont(selectedFamily);
+    customSys = FontDataGetCustomSysStr(selectedFamily);
+    customUser = FontDataGetCustomUserStr(selectedFamily);
 
     sysStr = (hasCustom && customSys) ? customSys :
              style.xrdb.fontChoice[selectedIndex].sysStr;
@@ -888,10 +888,15 @@ BuildFontResourceString(void)
             "*XmText*FontList: %s\n*XmTextField*FontList: %s\n"
             "*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n"
             "*FontFamily: %d\n*CustomSysFont: %s\n*CustomUserFont: %s\n"
-            "*CustomFamily: %d\n*CustomSize: %d\n",
+            "*CustomFamily: %d\n*CustomSize: %d\n"
+            "Dtstyle.customSysFont: %s\nDtstyle.customUserFont: %s\n"
+            "Dtstyle.customFamily: %d\nDtstyle.customSize: %d\n",
             sysStr, userStr, sysStr, sysStr, sysStr, userStr,
             userStr, userStr, userStr, fntstr, fntsetstr,
             selectedFamily,
+            customSys ? customSys : "",
+            customUser ? customUser : "",
+            selectedFamily, selectedSize,
             customSys ? customSys : "",
             customUser ? customUser : "",
             selectedFamily, selectedSize);
@@ -899,6 +904,23 @@ BuildFontResourceString(void)
             XtFree(fntstr);
             XtFree(fntsetstr);
             return NULL;
+        }
+        {
+            int i;
+            int pos = len;
+            for (i = 0; i < MAX_FONT_FAMILIES; i++) {
+                if (FontDataHasCustomFont(i)) {
+                    const char *cs = FontDataGetCustomSysStr(i);
+                    const char *cu = FontDataGetCustomUserStr(i);
+                    int plen = snprintf(fontres + pos, sizeof(fontres) - pos,
+                        "Dtstyle.customSysFont.%d: %s\n"
+                        "Dtstyle.customUserFont.%d: %s\n",
+                        i, cs ? cs : "",
+                        i, cu ? cu : "");
+                    if (plen < 0 || pos + plen >= sizeof(fontres)) break;
+                    pos += plen;
+                }
+            }
         }
     } else {
         len = snprintf(fontres, sizeof(fontres),

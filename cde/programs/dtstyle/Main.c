@@ -77,6 +77,7 @@
 #endif
 
 #include <Dt/Dt.h>
+#include <Dt/DtFont.h>
 #include <Dt/GetDispRes.h>
 #include <Dt/EnvControlP.h>
 #include <Dt/Message.h>
@@ -94,6 +95,7 @@
 #include "Protocol.h"
 #include "SaveRestore.h"
 #include "ColorPalette.h"
+#include "Font.h"
 
 void loadDatabase(void); // ColorMain.c
 void ListenForWorkspaceChange(void); // Protocol.c
@@ -496,6 +498,9 @@ malloc_trace(0);
     style.display    = XtDisplay(style.shell);
     style.screen     = DefaultScreenOfDisplay(style.display);
     style.screenNum  = DefaultScreen(style.display);
+
+    DtFontInit(style.display);
+
     style.colormap   = DefaultColormap(style.display, style.screenNum);
     style.root       = DefaultRootWindow(style.display);
     style.execName   = argv[0];
@@ -560,6 +565,8 @@ malloc_trace(0);
     }
     
     GetApplicationResources();
+    GetCustomFontResources(style.shell);
+    ApplyXrdbCustomFonts();
     
     XmeGetIconControlInfo(style.screen, &useMaskRtn,
 			  &style.useMultiColorIcons, &useIconFileCacheRtn);

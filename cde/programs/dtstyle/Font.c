@@ -120,6 +120,15 @@
 /*+++++++++++++++++++++++++++++++++++++++*/
 
 typedef struct {
+    Boolean    hasCustom;
+    String     customSysStr;
+    String     customUserStr;
+    XmFontList customSysFont;
+    XmFontList customUserFont;
+    DtFontEnumSource customSource;
+} CustomFontEntry;
+
+typedef struct {
     Widget fontWkarea;
     Widget fontpictLabel;
     Widget previewTB;
@@ -130,22 +139,17 @@ typedef struct {
     Widget familyList;        /* NEW */
     Widget sizeTB;
     Widget sizeList;
-    int    originalFontIndex;
-    int    selectedFontIndex;
-    String selectedFontStr;
-    Boolean userTextChanged;
-    Widget customizeButton;      /* "Customize..." button — NEW */
-    /* Custom font override data (font picker) */
-    Boolean    hasCustomFont;        /* True if current slot has custom override */
-    String     customSysStr;        /* Custom system font XLFD or fc pattern */
-    String     customUserStr;       /* Custom user font XLFD or fc pattern */
-    XmFontList customSysFont;       /* Resolved XmFontList for custom system font */
-    XmFontList customUserFont;      /* Resolved XmFontList for custom user font */
-    DtFontEnumSource customSource;  /* Core X11 or Fontconfig */
+    int              originalFontIndex;
+    int              selectedFontIndex;
+    String           selectedFontStr;
+    Boolean          userTextChanged;
+    Widget           customizeButton;
+    CustomFontEntry  customFont[MAX_FONT_FAMILIES];
 } FontData;
-static FontData font;
 
 static saveRestore save = {FALSE, 0, };
+
+static FontData font;
 
 /*+++++++++++++++++++++++++++++++++++++++*/
 /* Internal Functions                    */
@@ -179,6 +183,62 @@ static void CustomizeCB(
                         XtPointer client_data,
                         XtPointer call_data) ;
 
+
+/*+++++++++++++++++++++++++++++++++++++++*/
+/* ApplyXrdbCustomFonts                  */
+/* Apply global *CustomSysFont /          */
+/* *CustomUserFont X resources to the    */
+/* per-family custom font state. Called  */
+/* both on normal startup (from main)    */
+/* and on session restore (from          */
+/* restoreFonts).                        */
+/*+++++++++++++++++++++++++++++++++++++++*/
+void
+ApplyXrdbCustomFonts(void)
+{
+    int fam;
+
+    if ((style.xrdb.customSysFontRes != NULL &&
+         style.xrdb.customSysFontRes[0] != '\0') ||
+        (style.xrdb.customUserFontRes != NULL &&
+         style.xrdb.customUserFontRes[0] != '\0'))
+    {
+        fam = style.xrdb.customFamilyRes;
+        if (fam < 0) fam = 0;
+        if (fam >= MAX_FONT_FAMILIES) fam = MAX_FONT_FAMILIES - 1;
+
+        String sysStr = (style.xrdb.customSysFontRes &&
+                         style.xrdb.customSysFontRes[0] != '\0')
+                        ? style.xrdb.customSysFontRes : NULL;
+        String userStr = (style.xrdb.customUserFontRes &&
+                         style.xrdb.customUserFontRes[0] != '\0')
+                        ? style.xrdb.customUserFontRes : NULL;
+
+        FontDataSetCustomFont(fam, sysStr, userStr,
+                               (int)DtFontEnumAll);
+
+        if (style.xrdb.customSizeRes >= 0 &&
+            style.xrdb.customSizeRes < style.xrdb.numFonts) {
+            font.selectedFontIndex = FONT_INDEX(fam,
+                style.xrdb.customSizeRes);
+            font.originalFontIndex = font.selectedFontIndex;
+        }
+    }
+
+    for (fam = 0; fam < MAX_FONT_FAMILIES; fam++) {
+        if (style.xrdb.customSysFontResArr[fam] != NULL &&
+            style.xrdb.customSysFontResArr[fam][0] != '\0')
+        {
+            String sysStr = style.xrdb.customSysFontResArr[fam];
+            String userStr = (style.xrdb.customUserFontResArr[fam] &&
+                             style.xrdb.customUserFontResArr[fam][0] != '\0')
+                            ? style.xrdb.customUserFontResArr[fam] : NULL;
+
+            FontDataSetCustomFont(fam, sysStr, userStr,
+                                   (int)DtFontEnumAll);
+        }
+    }
+}
 
 /*+++++++++++++++++++++++++++++++++++++++*/
 /* popup_fontBB                          */
@@ -343,6 +403,22 @@ CreateFontDlg(
     widget_list[count++] = font.fontpictLabel = 
         _DtCreateIcon(font.fontWkarea, "fontpictLabel", args, n);
 
+    /* "Customize..." button uses XmATTACH_POSITION to avoid circular
+     * geometry dependency with TitleBoxes that need bottom anchoring.
+     * TitleBoxes attach bottom=FORM with bottomOffset reserving button height. */
+    n = 0;
+    XtSetArg(args[n], XmNlabelString, CMPSTR(GETMESSAGE(5, 28, "Customize..."))); n++;
+    XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
+    XtSetArg(args[n], XmNleftOffset, style.horizontalSpacing); n++;
+    XtSetArg(args[n], XmNtopAttachment, XmATTACH_POSITION); n++;
+    XtSetArg(args[n], XmNtopPosition, 92); n++;
+    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
+    XtSetArg(args[n], XmNbottomOffset, style.verticalSpacing); n++;
+    font.customizeButton =
+        XmCreatePushButtonGadget(font.fontWkarea, "customizeButton", args, n);
+    XtManageChild(font.customizeButton);
+    XtAddCallback(font.customizeButton, XmNactivateCallback, CustomizeCB, NULL);
+
     /* Create Family TitleBox for font family selection (new feature) */
     n = 0;
     string = CMPSTR(FAMILY);
@@ -352,7 +428,8 @@ CreateFontDlg(
     XtSetArg(args[n], XmNtopOffset,          style.verticalSpacing+5);  n++;
     XtSetArg(args[n], XmNleftAttachment,     XmATTACH_FORM);       n++;
     XtSetArg(args[n], XmNleftOffset,         style.horizontalSpacing);  n++;
-    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_FORM);       n++;
+    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_POSITION);  n++;
+    XtSetArg(args[n], XmNbottomPosition,     90);                  n++;
     widget_list[count++] = font.familyTB =
         _DtCreateTitleBox(font.fontWkarea, "familyTB", args, n);
     XmStringFree(string);
@@ -398,9 +475,10 @@ CreateFontDlg(
     XtSetArg(args[n], XmNleftAttachment,     XmATTACH_WIDGET);     n++;
     XtSetArg(args[n], XmNleftWidget,         font.familyTB);       n++;
     XtSetArg(args[n], XmNleftOffset,         style.horizontalSpacing);  n++;
-    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_FORM);       n++;
+    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_POSITION);  n++;
+    XtSetArg(args[n], XmNbottomPosition,     90);                  n++;
     widget_list[count++] = font.sizeTB =
-        _DtCreateTitleBox(font.fontWkarea, "sizeTB", args, n); 
+        _DtCreateTitleBox(font.fontWkarea, "sizeTB", args, n);
     XmStringFree(string);
 
     /* calculate size for each of the fonts based on system font size */
@@ -455,8 +533,8 @@ CreateFontDlg(
     XtSetArg(args[n], XmNleftWidget,         font.sizeTB);         n++;
     XtSetArg(args[n], XmNrightAttachment,    XmATTACH_FORM);       n++;
     XtSetArg(args[n], XmNrightOffset,        style.horizontalSpacing);  n++;
-    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_FORM);       n++;
-    XtSetArg(args[n], XmNbottomOffset,       style.verticalSpacing);    n++;
+    XtSetArg(args[n], XmNbottomAttachment,   XmATTACH_POSITION);  n++;
+    XtSetArg(args[n], XmNbottomPosition,     90);                  n++;
     string = CMPSTR(PREVIEW); 
     XtSetArg(args[n], XmNtitleString, string); n++;
     widget_list[count++] = font.previewTB =
@@ -526,20 +604,6 @@ CreateFontDlg(
     XtManageChild(font.sizeList);
     XtManageChild(font.familyList);
     XtManageChildren(widget_list,count);
-
-    /* "Customize..." button - attached to the form, not familyTB.
-     * This ensures the button remains visible even when numFamilies <= 1
-     * causes familyTB to be unmanaged. */
-    n = 0;
-    XtSetArg(args[n], XmNlabelString, CMPSTR(GETMESSAGE(5, 28, "Customize..."))); n++;
-    XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNleftOffset, style.horizontalSpacing); n++;
-    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNbottomOffset, style.verticalSpacing); n++;
-    font.customizeButton =
-        XmCreatePushButtonGadget(font.fontWkarea, "customizeButton", args, n);
-    XtManageChild(font.customizeButton);
-    XtAddCallback(font.customizeButton, XmNactivateCallback, CustomizeCB, NULL);
 
     XtManageChild(font.fontWkarea);
 
@@ -678,38 +742,61 @@ ButtonCB(
            {
              int selectedFamily = (font.selectedFontIndex >= 0) ?
                                   FONT_FAMILY(font.selectedFontIndex) : 0;
-             if (font.hasCustomFont) {
-                 const char *sysStr = font.customSysStr ?
-                                      font.customSysStr :
+             int fam = selectedFamily;
+             if (font.customFont[fam].hasCustom) {
+                 const char *sysStr = font.customFont[fam].customSysStr ?
+                                      font.customFont[fam].customSysStr :
                                       style.xrdb.fontChoice[font.selectedFontIndex].sysStr;
-                 const char *userStr = font.customUserStr ?
-                                       font.customUserStr :
+                 const char *userStr = font.customFont[fam].customUserStr ?
+                                       font.customFont[fam].customUserStr :
                                        style.xrdb.fontChoice[font.selectedFontIndex].userStr;
                  int customSize = (font.selectedFontIndex >= 0) ?
                                   FONT_SIZE(font.selectedFontIndex) : 0;
 
-                 len = snprintf(fontres, sizeof(fontres),
-                     "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n*CustomSysFont: %s\n*CustomUserFont: %s\n*CustomFamily: %d\n*CustomSize: %d\n",
-                     sysStr,
-                     userStr,
-                     sysStr,
-                     sysStr,
-                     sysStr,
-                     userStr,
-                     userStr,
-                     userStr,
-                     userStr,
-                     fntstr, fntsetstr,
-                     selectedFamily,
-                     font.customSysStr ? font.customSysStr : "",
-                     font.customUserStr ? font.customUserStr : "",
-                     selectedFamily,
-                     customSize);
-                 if (len < 0 || len >= sizeof(fontres)) {
-                     XtFree(fntstr);
-                     XtFree(fntsetstr);
-                     return;
-                 }
+                  len = snprintf(fontres, sizeof(fontres),
+                      "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n*CustomSysFont: %s\n*CustomUserFont: %s\n*CustomFamily: %d\n*CustomSize: %d\nDtstyle.customSysFont: %s\nDtstyle.customUserFont: %s\nDtstyle.customFamily: %d\nDtstyle.customSize: %d\n",
+                      sysStr,
+                      userStr,
+                      sysStr,
+                      sysStr,
+                      sysStr,
+                      userStr,
+                      userStr,
+                      userStr,
+                      userStr,
+                      fntstr, fntsetstr,
+                      selectedFamily,
+                      font.customFont[fam].customSysStr ? font.customFont[fam].customSysStr : "",
+                      font.customFont[fam].customUserStr ? font.customFont[fam].customUserStr : "",
+                      selectedFamily,
+                      customSize,
+                      font.customFont[fam].customSysStr ? font.customFont[fam].customSysStr : "",
+                      font.customFont[fam].customUserStr ? font.customFont[fam].customUserStr : "",
+                      selectedFamily,
+                      customSize);
+                  if (len < 0 || len >= sizeof(fontres)) {
+                      XtFree(fntstr);
+                      XtFree(fntsetstr);
+                      return;
+                  }
+                  {
+                      int i;
+                      int pos = len;
+                      for (i = 0; i < MAX_FONT_FAMILIES; i++) {
+                          if (font.customFont[i].hasCustom) {
+                              const char *cs = font.customFont[i].customSysStr ?
+                                              font.customFont[i].customSysStr : "";
+                              const char *cu = font.customFont[i].customUserStr ?
+                                              font.customFont[i].customUserStr : "";
+                              int plen = snprintf(fontres + pos, sizeof(fontres) - pos,
+                                  "Dtstyle.customSysFont.%d: %s\n"
+                                  "Dtstyle.customUserFont.%d: %s\n",
+                                  i, cs, i, cu);
+                              if (plen < 0 || pos + plen >= sizeof(fontres)) break;
+                              pos += plen;
+                          }
+                      }
+                  }
              } else {
              len = snprintf(fontres, sizeof(fontres),
                  "*systemFont: %s\n*userFont: %s\n*FontList: %s\n*buttonFontList: %s\n*labelFontList: %s\n*textFontList: %s\n*XmText*FontList: %s\n*XmTextField*FontList: %s\n*DtEditor*textFontList: %s\n*Font: %s\n*FontSet: %s\n*FontFamily: %d\n",
@@ -751,14 +838,17 @@ ButtonCB(
          break;
 
     case CANCEL_BUTTON:
+    {
+      int fam;
 
-      /* reset preview area fonts to original and close the window*/
+      /* Reset preview area fonts to original and close the window. */
 
-      /* Discard any custom font override set by the FontPicker. The
-       * setter frees the strings + XmFontLists and resets hasCustomFont. */
-      FontDataSetCustomFont((String)NULL, (String)NULL, (int)DtFontEnumAll);
+      /* Discard custom font overrides for all families. */
+      for (fam = 0; fam < MAX_FONT_FAMILIES; fam++)
+          FontDataSetCustomFont(fam, (String)NULL, (String)NULL, (int)DtFontEnumAll);
 
       XtUnmanageChild(style.fontDialog);
+    }
 
       if (font.originalFontIndex >= 0)
         {
@@ -839,8 +929,8 @@ changeSampleFontCB(
 
     /* Set the sample System Font string to different Font */
     n = 0;
-    if (font.hasCustomFont && font.customSysFont) {
-        XtSetArg(args[n], XmNfontList, font.customSysFont);
+    if (font.customFont[fam].hasCustom && font.customFont[fam].customSysFont) {
+        XtSetArg(args[n], XmNfontList, font.customFont[fam].customSysFont);
     } else {
         XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].sysFont);
     }
@@ -858,8 +948,8 @@ changeSampleFontCB(
     if (!font.userTextChanged)
       XtSetArg (args[n], XmNvalue, USER_MSG);
     n++;
-    if (font.hasCustomFont && font.customUserFont) {
-        XtSetArg(args[n], XmNfontList, font.customUserFont);
+    if (font.customFont[fam].hasCustom && font.customFont[fam].customUserFont) {
+        XtSetArg(args[n], XmNfontList, font.customFont[fam].customUserFont);
     } else {
         XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[FONT_INDEX(fam, pos)].userFont);
     }
@@ -909,8 +999,8 @@ changeFamilyCB(
         _DtTurnOffHourGlass(style.fontDialog);
 
     n = 0;
-    if (font.hasCustomFont && font.customSysFont) {
-        XtSetArg(args[n], XmNfontList, font.customSysFont);
+    if (font.customFont[fam].hasCustom && font.customFont[fam].customSysFont) {
+        XtSetArg(args[n], XmNfontList, font.customFont[fam].customSysFont);
     } else {
         XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].sysFont);
     }
@@ -922,8 +1012,8 @@ changeFamilyCB(
     if (!font.userTextChanged)
         XtSetArg(args[n], XmNvalue, USER_MSG);
     n++;
-    if (font.hasCustomFont && font.customUserFont) {
-        XtSetArg(args[n], XmNfontList, font.customUserFont);
+    if (font.customFont[fam].hasCustom && font.customFont[fam].customUserFont) {
+        XtSetArg(args[n], XmNfontList, font.customFont[fam].customUserFont);
     } else {
         XtSetArg(args[n], XmNfontList, style.xrdb.fontChoice[idx].userFont);
     }
@@ -986,6 +1076,14 @@ restoreFonts(
     /* Load app-defaults custom font resources */
     GetCustomFontResources(shell);
 
+    /* Apply global CustomSysFont/CustomUserFont resources to the
+     * per-family custom font state. These resources are written to
+     * the X resource database when the user selects OK, and are the
+     * only persistence mechanism when dtstyle is not running under
+     * a session manager.
+     */
+    ApplyXrdbCustomFonts();
+
     /* get x position */
     xrm_name [1] = XrmStringToQuark ("x");
     if (XrmQGetResource (db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL){
@@ -1015,41 +1113,44 @@ restoreFonts(
       font.originalFontIndex = font.selectedFontIndex;
     }
 
-    /* Restore custom font state */
-    xrm_name[1] = XrmStringToQuark("customSysStr");
-    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
-        font.customSysStr = XtNewString((char *)value.addr);
+    /* Restore per-family custom font state */
+    {
+        int fam;
+        for (fam = 0; fam < MAX_FONT_FAMILIES; fam++) {
+            char resName[64];
+
+            snprintf(resName, sizeof(resName), "customSysStr.%d", fam);
+            xrm_name[1] = XrmStringToQuark(resName);
+            if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value)
+                && value.addr != NULL) {
+                font.customFont[fam].customSysStr = XtNewString((char *)value.addr);
+            }
+
+            snprintf(resName, sizeof(resName), "customUserStr.%d", fam);
+            xrm_name[1] = XrmStringToQuark(resName);
+            if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value)
+                && value.addr != NULL) {
+                font.customFont[fam].customUserStr = XtNewString((char *)value.addr);
+            }
+
+            font.customFont[fam].hasCustom =
+                (font.customFont[fam].customSysStr != NULL ||
+                 font.customFont[fam].customUserStr != NULL);
+
+            /* Recreate XmFontLists for restored custom font strings so the preview
+             * widgets render with the correct fonts (matches FontDataSetCustomFont). */
+            if (font.customFont[fam].customSysStr != NULL &&
+                font.customFont[fam].customSysStr[0] != '\0')
+                font.customFont[fam].customSysFont =
+                    DtGetFontXmFontList(style.display,
+                                        font.customFont[fam].customSysStr);
+            if (font.customFont[fam].customUserStr != NULL &&
+                font.customFont[fam].customUserStr[0] != '\0')
+                font.customFont[fam].customUserFont =
+                    DtGetFontXmFontList(style.display,
+                                        font.customFont[fam].customUserStr);
+        }
     }
-
-    xrm_name[1] = XrmStringToQuark("customUserStr");
-    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
-        font.customUserStr = XtNewString((char *)value.addr);
-    }
-
-    xrm_name[1] = XrmStringToQuark("customFamily");
-    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
-        int customFamily = atoi((char *)value.addr);
-        /* customFamily is redundant with familyIndex below; kept for
-         * forward compatibility with future per-source custom metadata. */
-        (void)customFamily;
-    }
-
-    xrm_name[1] = XrmStringToQuark("customSize");
-    if (XrmQGetResource(db, xrm_name, xrm_name, &rep_type, &value) && value.addr != NULL) {
-        int customSize = atoi((char *)value.addr);
-        /* customSize is redundant with the size encoded in familyIndex
-         * via FONT_SIZE(selectedFontIndex); kept for forward compatibility. */
-        (void)customSize;
-    }
-
-    font.hasCustomFont = (font.customSysStr != NULL || font.customUserStr != NULL);
-
-    /* Recreate XmFontLists for restored custom font strings so the preview
-     * widgets render with the correct fonts (matches FontDataSetCustomFont). */
-    if (font.customSysStr != NULL && font.customSysStr[0] != '\0')
-        font.customSysFont = DtGetFontXmFontList(style.display, font.customSysStr);
-    if (font.customUserStr != NULL && font.customUserStr[0] != '\0')
-        font.customUserFont = DtGetFontXmFontList(style.display, font.customUserStr);
 
     xrm_name [1] = XrmStringToQuark ("ismapped");
     /* Are we supposed to be mapped? */
@@ -1113,26 +1214,25 @@ saveFonts(
             WRITE_STR2FD(fd, bufr);
         }
 
-        /* Save custom font state if a custom font was selected */
-        if (font.hasCustomFont) {
-            int curFamily = (font.selectedFontIndex >= 0) ?
-                            FONT_FAMILY(font.selectedFontIndex) : 0;
-            int curSize = (font.selectedFontIndex >= 0) ?
-                          FONT_SIZE(font.selectedFontIndex) : 0;
-            if (font.customSysStr)
-                snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr: %s\n", font.customSysStr);
-            else
-                snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr: \n");
-            WRITE_STR2FD(fd, bufr);
-            if (font.customUserStr)
-                snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr: %s\n", font.customUserStr);
-            else
-                snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr: \n");
-            WRITE_STR2FD(fd, bufr);
-            snprintf(bufr, sizeof(bufr), "*Fonts.customFamily: %d\n", curFamily);
-            WRITE_STR2FD(fd, bufr);
-            snprintf(bufr, sizeof(bufr), "*Fonts.customSize: %d\n", curSize);
-            WRITE_STR2FD(fd, bufr);
+        /* Save per-family custom font state */
+        {
+            int fam;
+            for (fam = 0; fam < MAX_FONT_FAMILIES; fam++) {
+                if (!font.customFont[fam].hasCustom)
+                    continue;
+                if (font.customFont[fam].customSysStr)
+                    snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr.%d: %s\n",
+                             fam, font.customFont[fam].customSysStr);
+                else
+                    snprintf(bufr, sizeof(bufr), "*Fonts.customSysStr.%d: \n", fam);
+                WRITE_STR2FD(fd, bufr);
+                if (font.customFont[fam].customUserStr)
+                    snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr.%d: %s\n",
+                             fam, font.customFont[fam].customUserStr);
+                else
+                    snprintf(bufr, sizeof(bufr), "*Fonts.customUserStr.%d: \n", fam);
+                WRITE_STR2FD(fd, bufr);
+            }
         }
     }
 }
@@ -1150,26 +1250,32 @@ FontDataGetSelectedIndex(void)
 }
 
 Boolean
-FontDataHasCustomFont(void)
+FontDataHasCustomFont(int family)
 {
-    return font.hasCustomFont;
+    if (family < 0 || family >= MAX_FONT_FAMILIES)
+        return False;
+    return font.customFont[family].hasCustom;
 }
 
 String
-FontDataGetCustomSysStr(void)
+FontDataGetCustomSysStr(int family)
 {
-    return font.customSysStr;
+    if (family < 0 || family >= MAX_FONT_FAMILIES)
+        return NULL;
+    return font.customFont[family].customSysStr;
 }
 
 String
-FontDataGetCustomUserStr(void)
+FontDataGetCustomUserStr(int family)
 {
-    return font.customUserStr;
+    if (family < 0 || family >= MAX_FONT_FAMILIES)
+        return NULL;
+    return font.customFont[family].customUserStr;
 }
 
 /*
  * FontDataSetCustomFont
- *   Install a custom font override on the currently selected slot.
+ *   Install a custom font override for the given font family.
  *   See Font.h for the full contract. Frees any previous override
  *   strings and XmFontLists first. Resolves new XmFontLists from the
  *   provided pattern strings (a NULL pattern or a resolution failure
@@ -1177,44 +1283,51 @@ FontDataGetCustomUserStr(void)
  */
 void
 FontDataSetCustomFont(
+        int family,
         String sysStr,
         String userStr,
         int source )
 {
+    if (family < 0 || family >= MAX_FONT_FAMILIES)
+        return;
+
     /* Free previous override. */
-    if (font.customSysStr) {
-        XtFree(font.customSysStr);
-        font.customSysStr = NULL;
+    if (font.customFont[family].customSysStr) {
+        XtFree(font.customFont[family].customSysStr);
+        font.customFont[family].customSysStr = NULL;
     }
-    if (font.customUserStr) {
-        XtFree(font.customUserStr);
-        font.customUserStr = NULL;
+    if (font.customFont[family].customUserStr) {
+        XtFree(font.customFont[family].customUserStr);
+        font.customFont[family].customUserStr = NULL;
     }
-    if (font.customSysFont) {
-        XmFontListFree(font.customSysFont);
-        font.customSysFont = NULL;
+    if (font.customFont[family].customSysFont) {
+        XmFontListFree(font.customFont[family].customSysFont);
+        font.customFont[family].customSysFont = NULL;
     }
-    if (font.customUserFont) {
-        XmFontListFree(font.customUserFont);
-        font.customUserFont = NULL;
+    if (font.customFont[family].customUserFont) {
+        XmFontListFree(font.customFont[family].customUserFont);
+        font.customFont[family].customUserFont = NULL;
     }
 
     if (sysStr != NULL)
-        font.customSysStr = XtNewString(sysStr);
+        font.customFont[family].customSysStr = XtNewString(sysStr);
     if (userStr != NULL)
-        font.customUserStr = XtNewString(userStr);
+        font.customFont[family].customUserStr = XtNewString(userStr);
 
-    font.hasCustomFont = (font.customSysStr != NULL ||
-                          font.customUserStr != NULL);
-    font.customSource = (DtFontEnumSource)source;
+    font.customFont[family].hasCustom =
+        (font.customFont[family].customSysStr != NULL ||
+         font.customFont[family].customUserStr != NULL);
+    font.customFont[family].customSource = (DtFontEnumSource)source;
 
     /* Resolve XmFontLists for preview widgets. */
-    if (font.customSysStr != NULL)
-        font.customSysFont = DtGetFontXmFontList(style.display,
-                                                 font.customSysStr);
-    if (font.customUserStr != NULL)
-        font.customUserFont = DtGetFontXmFontList(style.display,
-                                                  font.customUserStr);
+    if (font.customFont[family].customSysStr != NULL)
+        font.customFont[family].customSysFont =
+            DtGetFontXmFontList(style.display,
+                                font.customFont[family].customSysStr);
+    if (font.customFont[family].customUserStr != NULL)
+        font.customFont[family].customUserFont =
+            DtGetFontXmFontList(style.display,
+                                font.customFont[family].customUserStr);
 }
 
 

@@ -172,6 +172,9 @@ typedef struct {
     String     customUserFontRes;     /* *CustomUserFont resource */
     int        customFamilyRes;       /* *CustomFamily resource */
     int        customSizeRes;         /* *CustomSize resource */
+    /* Per-family custom font resources for persistence across restarts */
+    String     customSysFontResArr[MAX_FONT_FAMILIES];
+    String     customUserFontResArr[MAX_FONT_FAMILIES];
 } ApplicationData, *ApplicationDataPtr;
 
 typedef struct {

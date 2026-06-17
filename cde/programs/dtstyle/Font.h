@@ -61,24 +61,25 @@ typedef struct {
  * font resource string. */
 
 extern int          FontDataGetSelectedIndex(void);
-extern Boolean      FontDataHasCustomFont(void);
-extern String       FontDataGetCustomSysStr(void);
-extern String       FontDataGetCustomUserStr(void);
+extern Boolean      FontDataHasCustomFont(int family);
+extern String       FontDataGetCustomSysStr(int family);
+extern String       FontDataGetCustomUserStr(int family);
 
 /*
  * FontDataSetCustomFont
  *   Called by FontPicker.c (FontPickerApply) to install a custom font
- *   override on the currently selected slot. Frees any previous override
+ *   override for the given font family. Frees any previous override
  *   strings + XmFontLists and replaces them with the given ones. Either
  *   argument may be NULL, meaning "no override for that role". Passing
- *   both NULL is equivalent to clearing the override (hasCustomFont
- *   becomes False and the picker's selection is forgotten).
+ *   both NULL is equivalent to clearing the override (hasCustom becomes
+ *   False for that family and the picker's selection is forgotten).
  *
  *   This is a write accessor — it complements the read accessors above.
  *   Font.c owns the FontData struct; callers outside this file must use
  *   these helpers rather than touching the struct directly.
  */
 extern void FontDataSetCustomFont(
+    int family,
     String sysStr,
     String userStr,
     int source);
@@ -89,6 +90,7 @@ extern void FontDataSetCustomFont(
 extern void popup_fontBB( Widget shell) ;
 extern void restoreFonts( Widget shell, XrmDatabase db) ;
 extern void saveFonts( int fd) ;
+extern void ApplyXrdbCustomFonts(void) ;
 
 
 #endif /* _font_h */

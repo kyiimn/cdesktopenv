@@ -28,3 +28,9 @@
 - Inputs are NOT freed (caller's responsibility)
 - Result is a fresh allocation that needs DtFreeFontList
 - This matches the convention of other CDE APIs (e.g., SmNewFontSettings)
+
+## 2026-06-18: Xt converter fallback strategy
+
+- Decision: Instead of trying to call Motif's original `CvtStringToXmFontList` directly (impossible because it is static and there is no public API to query a previously registered converter), the custom converter falls back to `XmFontListEntryLoad` for single XLFD strings. This is sufficient for CDE's typical `*fontList` and `*systemFont` resources, which are single font patterns.
+- Decision: Define a local `DtFontGetDisplayArg` instead of referencing Motif's internal `_XmGetDisplayArg`, because the latter is not exported in any Motif header.
+- Decision: Keep the non-XFT `DtFontInit` as a no-op stub so that callers in dtstyle/dtwm compile and link regardless of the `--enable-xft` configure setting.

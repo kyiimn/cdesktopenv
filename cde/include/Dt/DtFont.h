@@ -112,6 +112,9 @@ extern XmFontList _DtFontCreateXmFontList(
 		Display		*dpy,
 		const char	*pattern);
 
+extern void DtFontInit(
+		Display		*dpy);
+
 #ifdef __cplusplus
 }
 #endif

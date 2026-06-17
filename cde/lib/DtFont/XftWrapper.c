@@ -46,6 +46,7 @@
 #endif
 
 #include <Xm/Xm.h>
+#include <Xm/Display.h>
 
 #ifdef USE_XFT
 #undef USE_XFT
@@ -60,6 +61,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -68,6 +70,260 @@
 
 #include <Dt/DtFont.h>
 #include <DtI/DtFontI.h>
+
+static void
+DtFontGetDisplayArg(Widget widget, Cardinal *size, XrmValue *value)
+{
+    if (widget == NULL)
+        XtErrorMsg("missingWidget", "DtFontGetDisplayArg", "XtToolkitError",
+                   "DtFontGetDisplayArg called without a widget to reference",
+                   (String *)NULL, (Cardinal *)NULL);
+
+    value->size = sizeof(Display *);
+    value->addr = (XPointer)&DisplayOfScreen(XtScreenOfObject(widget));
+}
+
+static XtConvertArgRec dtFontDisplayArg[] = {
+    { XtProcedureArg, (XtPointer)DtFontGetDisplayArg, 0 },
+};
+
+static void
+CvtStringToDtFontListDestroy(XtAppContext app, XrmValue *to,
+                             XtPointer converter_data,
+                             XrmValue *args, Cardinal *num_args)
+{
+    (void)app;
+    (void)converter_data;
+    (void)args;
+    (void)num_args;
+
+    if (to != NULL && to->addr != NULL)
+        XmFontListFree(*((XmFontList *)to->addr));
+}
+
+static Boolean
+CvtStringToDtFontList(Display *dpy, XrmValue *args, Cardinal *num_args,
+                      XrmValue *from, XrmValue *to,
+                      XtPointer *converter_data)
+{
+    const char *from_string;
+    XmFontList fl;
+    XmFontListEntry entry;
+
+    (void)args;
+    (void)num_args;
+    (void)converter_data;
+
+    if (from == NULL || from->addr == NULL)
+        return FALSE;
+
+    from_string = (const char *)from->addr;
+
+    /*
+     * If the pattern starts with '-' it is an XLFD name — load it as a
+     * core X11 font via XmFontListEntryLoad so that the original font
+     * metrics are preserved.  XftFontOpenName can also match XLFD
+     * patterns, but the resulting Xft font has different metrics
+     * (anti-aliased rasterisation, different ascent/descent) that break
+     * Motif widget layout (icon positioning, label truncation, list
+     * redraw artifacts).  Only non-XLFD patterns (fontconfig names like
+     * "Sans-12" or "UbuntuMono Nerd Font") go through the Xft path.
+     */
+    if (from_string[0] != '-') {
+        fl = _DtFontCreateXmFontList(dpy, from_string);
+        if (fl != NULL) {
+            if (to->addr != NULL) {
+                if (to->size < sizeof(XmFontList)) {
+                    to->size = sizeof(XmFontList);
+                    XmFontListFree(fl);
+                    return FALSE;
+                }
+                *((XmFontList *)to->addr) = fl;
+            } else {
+                to->addr = (XPointer)&fl;
+            }
+            to->size = sizeof(XmFontList);
+            return TRUE;
+        }
+    }
+
+    /* XLFD patterns, or fontconfig patterns that Xft couldn't open,
+     * fall through to the core X11 font path. */
+    entry = XmFontListEntryLoad(dpy, (char *)from_string, XmFONT_IS_FONT,
+                                XmFONTLIST_DEFAULT_TAG);
+    if (entry != NULL) {
+        fl = XmFontListAppendEntry(NULL, entry);
+        XmFontListEntryFree(&entry);
+        if (fl != NULL) {
+            if (to->addr != NULL) {
+                if (to->size < sizeof(XmFontList)) {
+                    to->size = sizeof(XmFontList);
+                    XmFontListFree(fl);
+                    return FALSE;
+                }
+                *((XmFontList *)to->addr) = fl;
+            } else {
+                to->addr = (XPointer)&fl;
+            }
+            to->size = sizeof(XmFontList);
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+static Boolean
+CvtStringToDtFontStruct(Display *dpy, XrmValue *args, Cardinal *num_args,
+                          XrmValue *from, XrmValue *to,
+                          XtPointer *converter_data)
+{
+    const char *from_string;
+    XFontStruct *xfs;
+
+    (void)args;
+    (void)num_args;
+    (void)converter_data;
+
+    if (from == NULL || from->addr == NULL)
+        return FALSE;
+
+    from_string = (const char *)from->addr;
+
+    /*
+     * FontStruct resources (*font: ...) expect an XFontStruct.
+     * XLFD patterns always go through XLoadQueryFont directly -
+     * they are core X11 font names.
+     */
+    if (from_string[0] == '-') {
+        xfs = XLoadQueryFont(dpy, from_string);
+        if (xfs != NULL) {
+            if (to->addr != NULL) {
+                if (to->size < sizeof(XFontStruct *)) {
+                    to->size = sizeof(XFontStruct *);
+                    return FALSE;
+                }
+                *((XFontStruct **)to->addr) = xfs;
+            } else {
+                to->addr = (XPointer)&xfs;
+            }
+            to->size = sizeof(XFontStruct *);
+            return TRUE;
+        }
+    }
+
+    /*
+     * Non-XLFD (fontconfig) patterns cannot be loaded directly as
+     * XFontStruct. Resolve the pattern through fontconfig to a
+     * matching core X11 font name, then load that. If resolution
+     * fails, try the original pattern as-is, and finally "fixed".
+     */
+    if (from_string[0] != '-') {
+        FcPattern *pat = FcNameParse((const FcChar8 *)from_string);
+        if (pat != NULL) {
+            FcResult result;
+            FcPattern *match = FcFontMatch(NULL, pat, &result);
+            if (match != NULL) {
+                FcChar8 *family = NULL;
+                FcChar8 *file = NULL;
+                double dsize = 0.0;
+                int size = 0;
+                char core_pattern[256];
+
+                if (FcPatternGetString(match, FC_FAMILY, 0, &family)
+                        == FcResultMatch
+                    && family != NULL) {
+                    if (FcPatternGetDouble(match, FC_PIXEL_SIZE, 0, &dsize)
+                            == FcResultMatch
+                        && dsize > 0.0)
+                        size = (int)(dsize + 0.5);
+
+                    if (size > 0) {
+                        snprintf(core_pattern, sizeof(core_pattern),
+                                 "-%s-0-0-0-0-*-0-%d-*-*-*-*-*",
+                                 (char *)family, size);
+                        xfs = XLoadQueryFont(dpy, core_pattern);
+                        if (xfs == NULL) {
+                            snprintf(core_pattern, sizeof(core_pattern),
+                                     "-%s-*-*-*-*-*-*-%d-*-*-*-*-*-*",
+                                     (char *)family, size);
+                            xfs = XLoadQueryFont(dpy, core_pattern);
+                        }
+                        if (xfs == NULL) {
+                            snprintf(core_pattern, sizeof(core_pattern),
+                                     "%s-%d", (char *)family, size);
+                            xfs = XLoadQueryFont(dpy, core_pattern);
+                        }
+                    } else {
+                        snprintf(core_pattern, sizeof(core_pattern),
+                                 "-%s-*-*-*-*-*-*-*-*-*-*-*-*-*",
+                                 (char *)family);
+                        xfs = XLoadQueryFont(dpy, core_pattern);
+                    }
+                }
+
+                /*
+                 * Some core X11 fonts can be located by the fontconfig
+                 * file path when FcPattern exposes FC_FILE.
+                 */
+                if (xfs == NULL
+                    && FcPatternGetString(match, FC_FILE, 0, &file)
+                           == FcResultMatch
+                    && file != NULL) {
+                    xfs = XLoadQueryFont(dpy, (const char *)file);
+                }
+
+                FcPatternDestroy(match);
+            }
+            FcPatternDestroy(pat);
+        }
+
+        /* Try the original pattern as-is in case it names a core font. */
+        if (xfs == NULL)
+            xfs = XLoadQueryFont(dpy, from_string);
+    }
+
+    /* Last resort: "fixed" so Motif doesn't crash. */
+    if (xfs == NULL)
+        xfs = XLoadQueryFont(dpy, "fixed");
+
+    if (xfs != NULL) {
+        if (to->addr != NULL) {
+            if (to->size < sizeof(XFontStruct *)) {
+                to->size = sizeof(XFontStruct *);
+                XFreeFont(dpy, xfs);
+                return FALSE;
+            }
+            *((XFontStruct **)to->addr) = xfs;
+        } else {
+            to->addr = (XPointer)&xfs;
+        }
+        to->size = sizeof(XFontStruct *);
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+void
+DtFontInit(Display *dpy)
+{
+    static Boolean initialized = False;
+
+    if (initialized)
+        return;
+    initialized = True;
+
+    (void)dpy;
+
+    XtSetTypeConverter(XmRString, XmRFontList, CvtStringToDtFontList,
+                       dtFontDisplayArg, XtNumber(dtFontDisplayArg),
+                       XtCacheByDisplay, CvtStringToDtFontListDestroy);
+
+    XtSetTypeConverter(XmRString, XmRFontStruct, CvtStringToDtFontStruct,
+                       dtFontDisplayArg, XtNumber(dtFontDisplayArg),
+                       XtCacheByDisplay, NULL);
+}
 
 /*
  * Per-(Display, Drawable) XftDraw cache.
@@ -196,14 +452,10 @@ open_xft_font(Display *dpy, int screen, const char *pattern)
     if (pattern == NULL || *pattern == '\0')
         return NULL;
 
-    /* Path 1: name-based open (XLFD or fontconfig name). */
     font = XftFontOpenName(dpy, screen, pattern);
     if (font != NULL)
         return font;
 
-    /* Path 2: parse explicitly as a fontconfig pattern. This handles
-     * patterns that fontconfig's name parser rejects in XftFontOpenName
-     * but which are valid FcPattern syntax. */
     {
         FcPattern *p = FcNameParse((const FcChar8 *)pattern);
         if (p != NULL) {
@@ -409,34 +661,83 @@ _DtFontCreateXmFontList(Display *dpy, const char *pattern)
         return NULL;
 
     xft = open_xft_font(dpy, DefaultScreen(dpy), pattern);
-    if (xft == NULL)
+    if (xft == NULL) {
         return NULL;
+    }
 
-    /*
-     * Motif 2.3+ supports Xft-backed font list entries via
-     * XmFontListEntryCreate with type XmFONT_IS_XFT, then
-     * XmFontListAppendEntry. The entry holds the XftFont pointer.
-     */
     {
         XmFontListEntry entry;
         XmFontType      ftype = XmFONT_IS_XFT;
+        Widget          xmDisplay = XmGetXmDisplay(dpy);
 
-        entry = XmFontListEntryCreate((char *)XmFONTLIST_DEFAULT_TAG,
-                                       ftype,
-                                       (XtPointer)xft);
-        if (entry == NULL) {
-            XftFontClose(dpy, xft);
-            return NULL;
+        if (xmDisplay != NULL) {
+            entry = XmFontListEntryCreate_r(
+                        (char *)XmFONTLIST_DEFAULT_TAG,
+                        ftype,
+                        (XtPointer)xft,
+                        xmDisplay);
+        } else {
+            entry = XmFontListEntryCreate(
+                        (char *)XmFONTLIST_DEFAULT_TAG,
+                        ftype,
+                        (XtPointer)xft);
         }
-
-        fl = XmFontListAppendEntry(NULL, entry);
-        XmFontListEntryFree(&entry);
+        if (entry != NULL) {
+            fl = XmFontListAppendEntry(NULL, entry);
+            XmFontListEntryFree(&entry);
+            if (fl != NULL) {
+                return fl;
+            }
+        }
     }
 
-    /* The font list now owns a reference via the entry; XftFontClose
-     * happens in DtFontDestroy. For callers that use the XmFontList
-     * without going through DtFont, the entry carries the lifetime. */
-    return fl;
+    /*
+     * Strategy 2: load a core X11 font from the family name.
+     * This loses anti-aliasing but works with any Motif build.
+     * Try family-size (e.g. "Noto Sans-12"), original pattern
+     * (might be an XLFD), then "fixed" as last resort.
+     */
+    {
+        XFontStruct  *xfs = NULL;
+        FcPattern    *pat = xft->pattern;
+        char          core_pattern[256];
+        FcChar8      *family = NULL;
+        int           size = 12;
+        double       dsize;
+
+        if (FcPatternGetString(pat, FC_FAMILY, 0, &family) == FcResultMatch
+            && family != NULL) {
+            if (FcPatternGetDouble(pat, FC_PIXEL_SIZE, 0, &dsize)
+                    == FcResultMatch
+                && dsize > 0.0)
+                size = (int)(dsize + 0.5);
+
+            snprintf(core_pattern, sizeof(core_pattern),
+                     "%s-%d", (char *)family, size);
+            xfs = XLoadQueryFont(dpy, core_pattern);
+        }
+
+        if (xfs == NULL) {
+            xfs = XLoadQueryFont(dpy, pattern);
+        }
+
+        if (xfs == NULL) {
+            xfs = XLoadQueryFont(dpy, "fixed");
+        }
+
+        if (xfs != NULL) {
+            fl = XmFontListCreate(xfs, XmFONTLIST_DEFAULT_TAG);
+            if (fl != NULL) {
+                XftFontClose(dpy, xft);
+                return fl;
+            }
+            XFreeFont(dpy, xfs);
+        }
+    }
+
+    /* All strategies failed. */
+    XftFontClose(dpy, xft);
+    return NULL;
 }
 
 /* ------------------------------------------------------------------

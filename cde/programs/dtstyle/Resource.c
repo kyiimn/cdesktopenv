@@ -1210,10 +1210,31 @@ GetFamilyFontResources(int fam)
 void
 GetCustomFontResources(Widget shell)
 {
+    int fam;
+    char fullName[128];
+    char *str_type;
+    XrmValue value;
+
     XtGetApplicationResources(shell, &style.xrdb,
                               customFont_resources,
                               XtNumber(customFont_resources),
                               NULL, 0);
+
+    for (fam = 0; fam < MAX_FONT_FAMILIES; fam++) {
+        snprintf(fullName, sizeof(fullName), "Dtstyle.customSysFont.%d", fam);
+        if (XrmGetResource(XrmGetDatabase(XtDisplay(shell)),
+                           fullName, fullName, &str_type, &value)
+            && value.addr != NULL) {
+            style.xrdb.customSysFontResArr[fam] = XtNewString((char *)value.addr);
+        }
+
+        snprintf(fullName, sizeof(fullName), "Dtstyle.customUserFont.%d", fam);
+        if (XrmGetResource(XrmGetDatabase(XtDisplay(shell)),
+                           fullName, fullName, &str_type, &value)
+            && value.addr != NULL) {
+            style.xrdb.customUserFontResArr[fam] = XtNewString((char *)value.addr);
+        }
+    }
 }
 
 /************************************************************************

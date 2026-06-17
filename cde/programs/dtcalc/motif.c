@@ -106,6 +106,7 @@ extern XmWidgetExtData _XmGetWidgetExtData(
 
 #include <Dt/Session.h>
 #include <Dt/Dt.h>
+#include <Dt/DtFont.h>
 #include <Dt/Connect.h>
 #include <Dt/FileM.h>
 #include <Dt/Indicator.h>
@@ -268,6 +269,9 @@ main(int argc, char **argv)
 
   X       = (XVars) LINT_CAST(calloc(1, sizeof(XObject))) ;
   X->home = getenv("HOME") ;
+
+  XtToolkitInitialize();
+  DtFontInit(NULL);
 
   X->kframe = XtVaAppInitialize (&X->app,
 				 DTCALC_CLASS_NAME,	/* app class */

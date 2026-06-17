@@ -73,24 +73,25 @@
 #include <Dt/FontEnum.h>
 
 typedef struct {
-    Widget       pickerDialog;      /* Shell for the picker */
+    Widget       pickerDialog;      /* DtDialogBox widget */
     Widget       familyList;        /* ScrolledList of font families */
     Widget       sizeList;          /* ScrolledList of available sizes */
-    Widget       previewLabel;      /* Label showing sample text in selected font */
+    Widget       previewLabel;      /* XmLabelGadget: system font sample */
     Widget       previewText;       /* TextField showing sample text in selected font */
     Widget       sourceOption;      /* OptionMenu: Core X11 / Fontconfig / All */
-    Widget       applyButton;       /* Apply to current slot */
-    Widget       systemWideButton;  /* Apply system-wide (root) */
-    Widget       cancelButton;
 
     DtFontList  *availableFonts;    /* Current enumeration result */
+    int         *sourceMap;         /* Maps visible list index -> availableFonts index */
+    int          sourceMapCount;    /* Number of entries in sourceMap */
     char        *selectedFamily;    /* Currently selected family name */
     char        *selectedXlfd;      /* Currently selected XLFD (or NULL) */
     char        *selectedFcPattern; /* Currently selected fc pattern (USE_XFT, or NULL) */
-    XmFontList   currentFontList;   /* Resolved XmFontList for preview (ref-counted) */
+    XmFontList   currentFontList;   /* XmFontList applied to preview widgets */
+    XmRenderTable currentRenderTable; /* Unused; kept for ABI alignment */
     int          selectedSize;      /* Currently selected pixel size */
     DtFontEnumSource currentSource; /* Current enumeration source */
     Boolean      pickerActive;      /* True while picker is shown */
+    int          targetFamily;      /* Family index active when picker was opened */
 } FontPickerData;
 
 extern FontPickerData fontPicker;

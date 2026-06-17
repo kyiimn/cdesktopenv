@@ -47,6 +47,7 @@
 #include <Dt/UserMsg.h>
 #include <Dt/DtNlUtils.h>
 #include <Dt/EnvControlP.h>
+#include <Dt/DtFont.h>
 #include "DtSvcLock.h"
 
 /*****************************************
@@ -173,9 +174,11 @@ DtBigInitialize(
    /* Initialize a bunch of miscellaneous things. */
    DtNlInitialize();
    InitButtonLabels();
-   DtGlobalsInitialize (display, name, toolClass);
+    DtGlobalsInitialize (display, name, toolClass);
 
-   if ( XmIsGadget(widget) )
+    DtFontInit(display);
+
+    if ( XmIsGadget(widget) )
         _DtInitTtContextWidget = XtParent(widget);
    else
         _DtInitTtContextWidget = widget;

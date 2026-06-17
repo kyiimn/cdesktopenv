@@ -158,4 +158,16 @@ _DtFontCreateXmFontList(Display *dpy, const char *pattern)
     return fl;
 }
 
+void
+DtFontInit(Display *dpy)
+{
+    static Boolean initialized = False;
+
+    if (initialized)
+        return;
+    initialized = True;
+
+    (void)dpy;
+}
+
 #endif /* !USE_XFT */

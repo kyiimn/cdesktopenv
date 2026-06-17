@@ -76,6 +76,32 @@
 #include <Dt/FontEnum.h>
 
 /* ------------------------------------------------------------------
+ * Sorting comparator for DtFontInfo by family_name (case-insensitive).
+ */
+
+static int
+cmp_font_info_by_family(const void *a, const void *b)
+{
+    const DtFontInfo *fa = (const DtFontInfo *)a;
+    const DtFontInfo *fb = (const DtFontInfo *)b;
+    const char *na = (fa->family_name != NULL) ? fa->family_name : "";
+    const char *nb = (fb->family_name != NULL) ? fb->family_name : "";
+    return strcasecmp(na, nb);
+}
+
+/*
+ * Sort a DtFontList by family_name (case-insensitive).
+ */
+static void
+sort_font_list(DtFontList *list)
+{
+    if (list == NULL || list->count <= 1)
+        return;
+    qsort(list->fonts, (size_t)list->count, sizeof(DtFontInfo),
+          cmp_font_info_by_family);
+}
+
+/* ------------------------------------------------------------------
  * Internal helpers (always compiled)
  * ------------------------------------------------------------------ */
 
@@ -235,30 +261,36 @@ DtEnumerateFontFamilies(Display *dpy, int screen)
 
     /* The '-' pattern matches every font on the server. */
     font_names = XListFonts(dpy, "-", 8192, &count);
-    if (font_names == NULL || count <= 0) {
+    if (font_names != NULL && count > 0) {
+        x11_list = build_list_from_xlfd(font_names, count, DtFontEnumCoreX11);
+        XFreeFontNames(font_names);
+    } else {
         if (font_names != NULL)
             XFreeFontNames(font_names);
-        return NULL;
+        x11_list = NULL;
     }
 
-    x11_list = build_list_from_xlfd(font_names, count, DtFontEnumCoreX11);
-    XFreeFontNames(font_names);
-
 #ifdef USE_XFT
-    if (x11_list != NULL) {
+    {
         extern DtFontList *DtEnumerateFontFamiliesFC(Display *dpy, int screen);
         DtFontList *fc_list = DtEnumerateFontFamiliesFC(dpy, screen);
         if (fc_list != NULL) {
-            extern DtFontList *DtMergeFontLists(DtFontList *fc,
-                                                DtFontList *x11);
-            DtFontList *merged = DtMergeFontLists(fc_list, x11_list);
-            DtFreeFontList(fc_list);
-            DtFreeFontList(x11_list);
-            return merged;
+            if (x11_list != NULL) {
+                extern DtFontList *DtMergeFontLists(DtFontList *fc,
+                                                    DtFontList *x11);
+                DtFontList *merged = DtMergeFontLists(fc_list, x11_list);
+                DtFreeFontList(fc_list);
+                DtFreeFontList(x11_list);
+                sort_font_list(merged);
+                return merged;
+            }
+            sort_font_list(fc_list);
+            return fc_list;
         }
     }
 #endif
 
+    sort_font_list(x11_list);
     return x11_list;
 }
 

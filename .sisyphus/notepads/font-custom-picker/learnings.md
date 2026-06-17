@@ -1,129 +1,141 @@
-## 2026-06-17 Wave 1 Exploration: Build System & Font Architecture
+# Learnings: per-family custom font overrides in dtstyle
 
-### configure.ac Xft/fontconfig Pattern
-- Xft detection: `AC_ARG_ENABLE([xft])` with `--enable-xft`/`--disable-xft` (default: auto)
-- fontconfig check: `AC_CHECK_HEADERS([fontconfig/fontconfig.h])` + `AC_CHECK_LIB(fontconfig, FcInit)` — uses AC_CHECK_LIB, NOT PKG_CHECK_MODULES
-- Variables set: XFTLIB (`-lXft`), FONTCONFIGLIB (`-lfontconfig`), FREETYPE2_INCS (`-I<dir>`), HAVE_XFT (AM_CONDITIONAL), USE_XFT (AC_DEFINE)
-- All already exist in configure.ac — NO new configure.ac changes needed for fontconfig
+## Approach
+- FontData struct already had `CustomFontEntry customFont[MAX_FONT_FAMILIES]`; the task was purely mechanical replacement of flat field accesses with `font.customFont[fam].*`.
+- Introduced `int family` parameter to all public FontData accessors and to `FontDataSetCustomFont`.
+- Added `fontPicker.targetFamily` in `FontPickerData` so the picker records which family it was opened for; `PopupFontPicker` stores the parameter and `FontPickerApply` passes it to the setter.
+- `ButtonCB` Cancel now loops over all 8 families and calls `FontDataSetCustomFont(fam, NULL, NULL, ...)` to clear every override.
+- `saveFonts`/`restoreFonts` now persist per-family resources named `*Fonts.customSysStr.%d:` and `*Fonts.customUserStr.%d:`.
+- `changeSampleFontCB` and `changeFamilyCB` use the family derived from `font.selectedFontIndex` to pick the current family's override for preview widgets.
+- `Protocol.c BuildFontResourceString` passes `selectedFamily` to the read accessors.
 
-### lib/DtFont/Makefile.am
-- SOURCES: `DtFont.c XftWrapper.c` — add `FontEnum.c`
-- CPPFLAGS: `-I./include -DMULTIBYTE -DNLS16 -I../include @DT_INCDIR@`
-- HAVE_XFT conditional adds FREETYPE2_INCS to CPPFLAGS
-- LIBADD: `$(XFTLIB) $(FONTCONFIGLIB) $(XTOOLLIB)` (unconditional — empty when Xft disabled)
-- FontEnum.c should follow same pattern as DtFont.c/XftWrapper.c: always in SOURCES, #ifdef guarded inside
+## Build verification
+- `make -C cde/programs/dtstyle` succeeded with all object files compiled and linked.
+- `make -C cde/lib/DtFont` was already up to date (no code changes in DtFont).
 
-### programs/dtstyle/Makefile.am
-- dtstyle_SOURCES: `Main.c MainWin.c Font.c Audio.c ...` — add `FontPicker.c` after `Font.c`
-- noinst_HEADERS: `Audio.h Backdrop.h ... Font.h ...` — add `FontPicker.h` after `Font.h`
-- HAVE_XFT conditional: `dtstyle_CPPFLAGS += $(FREETYPE2_INCS)` and `dtstyle_LDADD += $(XFTLIB) $(FONTCONFIGLIB)`
-- dtstyle links `$(DTCLIENTLIBS) $(XTOOLLIB)` — need to verify libDtFont is in DTCLIENTLIBS
+## CDE style notes
+- C89-compatible: declarations at block start; no mixed declarations.
+- Existing section/header comments preserved/updated rather than removed.
+- `MAX_FONT_FAMILIES` / `FONT_FAMILY(idx)` macros from Main.h used consistently.
 
-### FontData struct (Font.c:107-123)
-- Already has: fontWkarea, fontpictLabel, previewTB, previewForm, systemLabel, userText, familyTB, familyList, sizeTB, sizeList, originalFontIndex, selectedFontIndex, selectedFontStr, userTextChanged
-- NEW fields (from plan): customizeButton, hasCustomFont, customSysStr, customUserStr, customSysFont, customUserFont, customSource
-- MUST be added at END of struct (guardrail G2: XtOffset dependency)
+## Pitfall avoided
+- `CustomFontEntry` typedef must appear before `FontData` struct because `FontData` embeds `CustomFontEntry customFont[MAX_FONT_FAMILIES]`.
 
-### widget_list[7] (Font.c:200)
-- 5 slots used (0-4), 2 free (5-6)
-- Plan says use XtManageChild() directly for new buttons (customizeButton, systemWideButton)
-- Do NOT add to widget_list[] — per Momus fix (G11)
+## 2025-06-17: Revert DrawingArea Xft workaround back to XmLabelGadget
 
-### ButtonCB fontres (Font.c:636-652)
-- 12 resource keys in specific order: systemFont, userFont, FontList, buttonFontList, labelFontList, textFontList, XmText*FontList, XmTextField*FontList, DtEditor*textFontList, Font, FontSet, FontFamily
-- sprintf into fontres[8192] buffer
-- Followed by: _DtAddToResource(style.display, fontres) and SmNewFontSettings(fontres)
+- Reverted previewLabel from XmDrawingArea (with manual DtFont_DrawImageString in expose callback) back to XmLabelGadget.
+- Removed `<Dt/DtFont.h>` includes from both `FontPicker.h` and `FontPicker.c`; the public DtFont API is no longer used here.
+- Restored `XmFontList currentFontList` + `XmRenderTable currentRenderTable` fields in `FontPickerData`.
+- `UpdatePreview` now calls `DtGetFontXmFontList(style.display, pattern)` once and applies the resulting XmFontList to both `previewLabel` and `previewText` via `XmNfontList`.
+- Cleanup in `PopdownFontPicker` uses `XmFontListFree(fontPicker.currentFontList)`; no more `DtFontDestroy` / `XFreeGC`.
+- Build `make -C cde/programs/dtstyle` succeeds. Relying on the patched openmotif 2.3.8-5 `XmFONT_IS_XFT` fix.
 
-### SmNewFontSettings (Protocol.c:761-781)
-- Sends fontres as XChangeProperty to dtsession window
-- Property atom: xaDtSmFontInfo (interned from _XA_DT_SM_FONT_INFO)
+## Findings: dtstyle font save/persistence path (post-search)
 
-### _DtAddToResource (addToRes.c:544-550)
-- Merges into BOTH XA_RESOURCE_MANAGER and _DT_SM_PREFERENCES
-- Uses sorted merge: newer values win, old tags preserved
+### Where font settings are written
+1. **Immediate per-session propagation** - Font.c ButtonCB OK case (lines 610-755)
+   - Builds `fontres` resource string with `*systemFont`, `*userFont`, `*FontList`, `*buttonFontList`, `*labelFontList`, `*textFontList`, `*XmText*FontList`, `*XmTextField*FontList`, `*DtEditor*textFontList`, `*Font`, `*FontSet`, `*FontFamily`
+   - With custom font: adds `*CustomSysFont`, `*CustomUserFont`, `*CustomFamily`, `*CustomSize`
+   - If `style.xrdb.writeXrdbImmediate` is true, calls `_DtAddToResource(style.display, fontres)` which merges into the X server's RESOURCE_MANAGER property (implemented in `/home/kyiimn/Projects/cdesktopenv/cde/lib/DtSvc/DtUtil2/addToRes.c`).
+   - Always calls `SmNewFontSettings(fontres)` which writes the same resource string to the dtsession window as the `DT_SM_FONT_INFO` property (XChangeProperty, XA_STRING).
 
-### _DtFontCreateXmFontList (DtFont.h:111)
-- Signature: `extern XmFontList _DtFontCreateXmFontList(Display *dpy, const char *pattern);`
-- Accepts both XLFD and fontconfig patterns
-- USE_XFT include guard dance in DtFont.h (lines 31-55)
+2. **Session persistence to disk** - dtsession writes the font resource string to:
+   - Path: `<savePath>/<current|home>.font/<LANG>/dt.font.<l|m|h>` (low/med/high resolution suffix)
+   - Determined by `SetFontSavePath()` in `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtsession/SmGlobals.c`
+   - Written by `SmSave.c` lines 1651-1686 via `XrmPutFileDatabase(db, smGD.fontPath)` after parsing the DT_SM_FONT_INFO property.
 
-### numFamilies <= 1 UI hiding (Font.c:504-512)
-- XtUnmanageChild(font.familyTB) and re-attach sizeTB to form
-- customizeButton MUST attach to form, not familyTB (Momus fix G12)
-## 2026-06-17 Wave 1 Task 3+4: FontEnum.c Implementation
+3. **Dtstyle dialog session save/restore** - SaveRestore.c `saveSessionCB` / `restoreSession`
+   - `saveFonts()` in `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Font.c` writes dialog state to a per-session file via `DtSessionSavePath()` using the `WRITE_STR2FD(fd, bufr)` macro.
+   - It saves:
+     - `*Fonts.ismapped: True/False`
+     - `*Fonts.x:` and `*Fonts.y:` geometry
+     - `*Fonts.familyIndex: <n>`
+     - For each family with a custom font override: `*Fonts.customSysStr.<fam>: ...` and `*Fonts.customUserStr.<fam>: ...`
+   - `restoreFonts()` reads the same Xrm database and restores `font.selectedFontIndex`, `font.customFont[fam]` strings, and recreates XmFontLists via `DtGetFontXmFontList()`.
 
-### Build Verification
-- Builds clean BOTH with `--enable-xft` and `--disable-xft`
-- File: `cde/lib/DtFont/FontEnum.c` (864 lines)
-- `make libDtFont_la-FontEnum.lo` succeeds with both configurations
-- Full library link succeeds: `libDtFont.la` produces `libDtFont.so.2.1.0`
+4. **System-wide app-defaults apply** - Protocol.c `RequestSystemWideApply()` / `SystemApplyFontDirect()`
+   - Writes to `<CDE_CONFIGURATION_TOP>/app-defaults/Dtstyle` (default `/etc/dt/app-defaults/Dtstyle`)
+   - Uses `XrmGetFileDatabase()`, `XrmMergeDatabases()`, `XrmPutFileDatabase()` to merge rather than raw concatenation.
+   - For non-root users, spawns `pkexec <CDE_INSTALLATION_TOP>/bin/dtstyle_sysapply.sh <tmpfile>` after writing resources to a `/tmp/dtstyle-sysfont-XXXXXX` temp file.
+   - Helper script `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/dtstyle_sysapply.sh` performs an awk-based key deduplication merge.
 
-### Pre-existing Bug in FontEnum.h
-- **Bug**: FontEnum.h forward-declares `XmFontList` as `struct _XmFontListRec *`, guarded by `_XmFontList_H`
-- **Problem**: Motif 2.3+ `Xm.h` typedef is `struct __XmRenderTableRec **` (pointer-to-pointer), and uses `_Xm_h` as its guard, NOT `_XmFontList_H`
-- **Result**: Forward declaration is NOT suppressed when Xm.h is included first → type conflict
-- **Workaround in FontEnum.c**: pre-define `_XmFontList_H` before including FontEnum.h, so the broken forward declaration is skipped and the real Xm.h typedef from Dt/DtFont.h stands
-- **Documented with comment block** explaining the workaround so future devs don't "clean it up"
+### Key data structures
+- `CustomFontEntry` (Font.c lines 122-129): per-family override holding `hasCustom`, `customSysStr`, `customUserStr`, `customSysFont`, `customUserFont`, `customSource`.
+- `FontData.customFont[MAX_FONT_FAMILIES]` (Font.c line 147): array of per-family custom entries.
+- Read accessors in Font.h: `FontDataGetSelectedIndex`, `FontDataHasCustomFont`, `FontDataGetCustomSysStr`, `FontDataGetCustomUserStr`.
+- Write accessor: `FontDataSetCustomFont()` in Font.c (lines 1198-1245), used by `FontPickerApply()` in FontPicker.c.
 
-### Coding Style Adopted from DtFont.c/XftWrapper.c
-- USE_XFT save/undef/restore dance at top of file (mirror DtFont.h:42-55)
-- `XmFontList` typedefs come from Dt/DtFont.h (via Xm.h), not the public header
-- Unused parameters silenced with `(void)param;`
-- Static helpers in same file (no shared internal header needed)
-- `extern` declarations for FC-only functions placed inside `#ifdef USE_XFT` blocks where they're called
-- `extern` decls for FC-only helpers used at file scope
+### Resource loading
+- `GetApplicationResources()` in Resource.c loads the fontChoice table from legacy `SystemFont1-7`/`UserFont1-7` and new per-family resources (`fontFamily0SystemFont0..6`, etc.).
+- `GetCustomFontResources()` loads `customSysFont`, `customUserFont`, `customFamily`, `customSize` from app-defaults into `ApplicationData`.
 
-### XLFD Parsing Pattern (from dtcm/font.c)
-- `sscanf(font_names[i], "-%*[^-]-%*[^-]-%*[^-]-%*[^-]-%*[^-]-%*[^-]-%d", &pixel_size)` — extracts pixel size (7th field)
-- Family name is 2nd field after leading '-', so use custom `xlfd_to_family()` to extract it (sscanf %[^-] doesn't safely handle NULL termination in nested calls)
+### Relevant files
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Font.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Font.h`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/FontPicker.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/FontPicker.h`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Protocol.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Protocol.h`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/SaveRestore.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Resource.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/Resource.h`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtstyle/dtstyle_sysapply.sh`
+- `/home/kyiimn/Projects/cdesktopenv/cde/lib/DtSvc/DtUtil2/addToRes.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/lib/DtSvc/DtUtil1/SmComm.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtsession/SmSave.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtsession/SmGlobals.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtsession/SmRestore.c`
+- `/home/kyiimn/Projects/cdesktopenv/cde/programs/dtsession/SmCommun.c`
 
-### FC API Patterns
-- `FcPatternCreate()` / `FcPatternDestroy(pat)` — must destroy
-- `FcObjectSetBuild(FC_FAMILY, ..., (char *)NULL)` — variadic, requires explicit `(char *)NULL` cast
-- `FcFontList(NULL, pat, os)` — returns `FcFontSet*`; must `FcFontSetDestroy(fs)`
-- `FcPatternGetString(pat, FC_FAMILY, 0, &value)` — returns `FcResult`; ignore result (we just check the out-param is non-NULL)
-- `FcPatternGetBool(pat, FC_SCALABLE, 0, &val)` — out param is `FcBool*` not `int*`
-- `FcPatternGetDouble(pat, FC_PIXEL_SIZE, 0, &val)` — out param is `double*`
 
-### DtFontList Memory Ownership
-- `DtEnumerateFontFamilies` returns ALLOCATED list; caller MUST call `DtFreeFontList` to free
-- DtFreeFontList frees: family_name, full_name, xlfd, fc_pattern (per entry), fonts array, list struct
-- DtMergeFontLists does NOT free inputs; only the result needs DtFreeFontList
-- FC helpers (Families, Sizes) use `strdup` for family_dup/full_dup/fc_dup — all freed by DtFreeFontList
+## Fix: per-family font persistence in dtstyle
 
-### Edge Cases Handled
-- NULL dpy / NULL pattern checks at function entry
-- XListFonts returning 0 fonts → NULL return
-- FC init failure (FcPatternCreate returns NULL) → NULL return
-- Empty result set (count == 0) → free arrays and return NULL
-- Scalable font → pixel_size = 0 in DtFontInfo
+**Problem:** Xrm stores `Dtstyle.customSysFont.0` as three quarks (`Dtstyle`, `customSysFont`, `0`) because `.` is a hierarchy separator. The original `Resource.c:GetCustomFontResources` built a two-quark name list with `XrmStringToQuark("customSysFont.0")`, which never matched the stored resource.
 
-## 2026-06-17 Task: Customize Button in Font.c
+**Fix:** Replaced the `XrmQGetResource` + manual quark assembly with `XrmGetResource` string API, passing the full resource string `Dtstyle.customSysFont.0` / `Dtstyle.customUserFont.0`. This lets Xrm parse the dots correctly. Both sys and user per-family lookups updated.
 
-### Implementation Verified
-- `make dtstyle` builds clean (only pre-existing mktemp warning, unrelated)
-- Font.c compiles with USE_XFT enabled
+**Files changed:** `cde/programs/dtstyle/Resource.c` (only).
 
-### Required Fixes Beyond the Plan
-1. **Xm/PushBG.h must be explicitly included** for `XmCreatePushButtonGadget` — `Xm/Xm.h` does not transitively pull it in on this Motif 2.3+ setup. Other dtstyle files (Audio.c:51) follow this pattern.
-2. **`_XmFontList_H` pre-define workaround is required in Font.c too** — the broken forward declaration in `Dt/FontEnum.h` triggers when `FontPicker.h` is included (since FontPicker.h pulls in `Dt/FontEnum.h`). Without the workaround, compilation fails with `conflicting types for 'XmFontList'`. Same workaround as `FontPicker.c:101-103` and `lib/DtFont/FontEnum.c:73-75`.
+**Build verification:** `cd cde && make -j4` exits 0; `programs/dtstyle/.libs/dtstyle` produced.
 
-### Placement Insight
-- Button creation is placed AFTER `XtManageChildren(widget_list, count);` but BEFORE `XtManageChild(font.fontWkarea);` (the form). Order matters: widget_list children are managed first, then customizeButton is managed standalone, then the parent form. This keeps the button visible regardless of widget_list capacity (5 used out of 7, 2 free).
-- CustomizeCB uses the same selector pattern as `changeSampleFontCB` and `changeFamilyCB`: clamp `selectedFontIndex` to 0 when < 0, then derive family/size via FONT_FAMILY/FONT_SIZE macros.
+**Note:** `ApplyXrdbCustomFonts` in `Font.c` already correctly iterates `style.xrdb.customSysFontResArr[fam]` and calls `FontDataSetCustomFont`; it just needed the array to be populated correctly by the lookup fix.
 
-## 2026-06-17 Bug Fixes: restoreFonts XmFontList recreation + saveFonts buffer size
+## 2026-06-18: Xt type converter for XmRString → XmRFontList
 
-### Bug H1 Fixed
-- `restoreFonts()` in `cde/programs/dtstyle/Font.c` restored `customSysStr`/`customUserStr` strings from session DB but never created the corresponding `XmFontList` objects (`customSysFont`/`customUserFont`). The result: preview widgets had `NULL` font lists after session restore.
-- Fix: After `font.hasCustomFont = ...` (line ~1041), added 4 lines that call `DtGetFontXmFontList(style.display, ...)` for each non-empty string — exactly mirroring the pattern in `FontDataSetCustomFont` (lines 1200-1206).
-- Both NULL check AND `str[0] != '\0'` check are needed: XtNewString("") returns a non-NULL empty string in some restoration paths.
+- Implemented `DtFontInit(Display *)` in `lib/DtFont/XftWrapper.c` (USE_XFT) and `lib/DtFont/DtFont.c` (non-XFT stub).
+- `DtFontInit` registers `CvtStringToDtFontList` via `XtSetTypeConverter(XmRString, XmRFontList, ..., XtCacheByDisplay, destroy_proc)`.
+- Converter signature matches `XtTypeConverter`: `Boolean (*)(Display*, XrmValue*, Cardinal*, XrmValue*, XrmValue*, XtPointer*)`.
+- `_XmGetDisplayArg` is a static helper inside Motif's `lib/Xm/ResConvert.c` and is not exported; CDE must supply its own display-arg procedure (`DtFontGetDisplayArg`) that returns `DisplayOfScreen(XtScreenOfObject(widget))`.
+- There is no public API to retrieve Motif's previously registered converter, so the XLFD fallback is implemented directly with `XmFontListEntryLoad(dpy, name, XmFONT_IS_FONT, XmFONTLIST_DEFAULT_TAG)`. This covers the single-font strings used by CDE font resources.
+- `_DtFontCreateXmFontList` already creates an `XmFONT_IS_XFT` entry using `XmFontListEntryCreate_r` and `XmGetXmDisplay(dpy)`, so the converter reuses it unchanged.
+- `DtFontInit` must be called after `XtOpenDisplay` / `XtInitialize` but before widgets read `XmNfontList` resources. Added calls in:
+  - `programs/dtstyle/Main.c` right after `style.display = XtDisplay(style.shell)`.
+  - `programs/dtwm/WmMain.c` right after `InitWmGlobal()` returns (display is opened inside `InitWmGlobal`).
+- Build verified with `cd cde && make -j4` exiting 0.
 
-### Bug M2 Fixed
-- `saveFonts()` `char bufr[1024]` was too small for modern fontconfig patterns. Long patterns like `-*-medium-r-normal--0-0-0-0-p-0-iso8859-1,-*-medium-r-normal--0-0-0-0-p-0-iso8859-1` (when user picks a list of fonts in FontPicker) plus 50 bytes of format wrapping overflows 1024.
-- Fix: increased buffer to `char bufr[4096]`.
-- All `snprintf` calls already use `sizeof(bufr)` as the size limit, so no other changes were needed. They previously silently truncated; now they have 4x headroom.
+## 2025-06-18: DtFontInit timing and CvtStringToDtFontStruct fontconfig resolution
 
-### (void)customFamily / (void)customSize — cosmetic only
-- These values are read into local variables and immediately discarded. The actual custom state is already captured by `selectedFontIndex` (via `FONT_FAMILY`/`FONT_SIZE` macros — see saveFonts lines 1107-1110 which recompute them from `selectedFontIndex`).
-- Decision: keep the read+discard pattern with a brief comment, for forward compatibility (if a future change decouples custom metadata from the selected family index, the Xrm round-trip won't break existing session files).
+### Bug 1: DtFontInit called too late for shell widget font conversion
+- `XtVaAppInitialize()` creates the shell widget and converts `*font:` resources inside that call.
+- `DtFontInit()` was only registered inside `DtBigInitialize()` (via `DtInitialize()`), which is called AFTER `XtVaAppInitialize()`.
+- For CDE programs that have `*font:` resources on the shell, Motif's default `CvtStringToFontStruct` runs before our converter is registered, producing:
+  `Warning: Cannot convert string "Monospace-14" to type FontStruct`
+- Fix in `dtcalc/motif.c`: call `XtToolkitInitialize(); DtFontInit(NULL);` immediately before `XtVaAppInitialize()`.
+  - `DtFontInit(NULL)` is safe: the converter's display-arg callback (`DtFontGetDisplayArg`) gets the Display from the widget at conversion time, so a NULL display argument is fine.
+- `dtstyle/Main.c` and `dtwm/WmMain.c` already call `DtFontInit()` explicitly after the shell/display is available and before child widgets are created; that timing is sufficient for child-widget font resources.
+- Kept `DtFontInit(display)` inside `DtBigInitialize()` as a safety net for apps that don't call it explicitly. The `static Boolean initialized` guard prevents double registration.
+
+### Bug 2: CvtStringToDtFontStruct did not handle fontconfig patterns
+- `XmRFontStruct` resources expect an `XFontStruct*`, which is a core X11 bitmap font. Fontconfig patterns like "Monospace-14" cannot be loaded directly via `XLoadQueryFont()`.
+- Added fontconfig-based XLFD resolution in `CvtStringToDtFontStruct()`:
+  1. XLFD patterns (leading `-`) still go directly to `XLoadQueryFont()`.
+  2. Non-XLFD patterns are parsed with `FcNameParse()`, matched with `FcFontMatch()`, and the matched pattern's `FC_FAMILY` and `FC_PIXEL_SIZE` are used to construct candidate XLFD strings.
+  3. If XLFD construction fails, `FC_FILE` (if present) is tried as a last fontconfig-provided core-font path.
+  4. The original pattern is tried as-is in case it names a core font.
+  5. Final fallback is `"fixed"`.
+- All fontconfig code is inside `#ifdef USE_XFT`. Non-XFT builds continue to use the stub in `DtFont.c`.
+- Did NOT change `CvtStringToDtFontList` (already works) or `_DtFontCreateXmFontList` (signature/behavior preserved).
+
+### Build verification
+- `cd cde && make -j4` exits 0.
+- No new compile errors/warnings from the changed files.

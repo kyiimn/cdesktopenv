@@ -37,6 +37,7 @@
 #include "WmGlobal.h"
 
 #include <locale.h>
+#include <Dt/DtFont.h>
 #include <Dt/Message.h>
 #include <Dt/EnvControlP.h>
 /*
@@ -127,6 +128,8 @@ main (int argc, char *argv [], char *environ [])
      */
 
     InitWmGlobal (argc, argv, environ);
+
+    DtFontInit(wmGD.display);
 
     /*
      * Set up PATH variable if it must run as standalone command

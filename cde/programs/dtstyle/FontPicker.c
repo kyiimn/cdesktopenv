@@ -163,9 +163,7 @@ static void UpdatePreview(void);
 static void FamilySelectCB(Widget w, XtPointer client_data, XtPointer call_data);
 static void SizeSelectCB(Widget w, XtPointer client_data, XtPointer call_data);
 static void SourceSelectCB(Widget w, XtPointer client_data, XtPointer call_data);
-static void ApplyCB(Widget w, XtPointer client_data, XtPointer call_data);
-static void SystemWideCB(Widget w, XtPointer client_data, XtPointer call_data);
-static void CancelCB(Widget w, XtPointer client_data, XtPointer call_data);
+static void PickerButtonCB(Widget w, XtPointer client_data, XtPointer call_data);
 static void PickerMapCB(Widget w, XtPointer client_data, XtPointer call_data);
 
 static char *xlfd_to_family(const char *xlfd);
@@ -187,9 +185,9 @@ static DtFontInfo *find_info_by_family(const char *family);
  *   Layout:
  *     pickerDialog (DialogShell)
  *       pickerForm (XmForm — main work area)
- *         sourceLabel + sourceOption (top, XmATTACH_FORM)
- *         familyTB  + sizeTB      (left + middle)
- *         previewTB               (right)
+ *         sourceOption (top, XmATTACH_FORM)
+ *         familyTB  + sizeTB      (top-left + top-right)
+ *         previewTB               (bottom, full width)
  *         applyButton / systemWideButton / cancelButton (bottom row)
  */
 void
@@ -197,57 +195,55 @@ CreateFontPicker(Widget parent)
 {
     int             n;
     Arg             args[MAX_ARGS];
-    Widget          pickerForm;
-    Widget          sourceLabel;
+    Widget          workArea;
+    Widget          sourceRow;
     Widget          familyTB;
     Widget          sizeTB;
     Widget          previewTB;
     Widget          previewForm;
-    Widget          buttonRowForm;
+    XmString        button_strings[3];
     XmString        string;
 
-    /* Create the dialog shell. We use xmDialogShellWidgetClass directly
-     * so the picker is a true modal-style dialog (not a DialogBox, since
-     * the layout is multi-section and we want a different button set). */
+    button_strings[0] = CMPSTR(PICKER_MSG_APPLY);
+    button_strings[1] = CMPSTR(PICKER_MSG_APPLYSYS);
+    button_strings[2] = CMPSTR((String)_DtCancelString);
+
+    n = 0;
+    XtSetArg(args[n], XmNallowOverlap,       False);  n++;
+    XtSetArg(args[n], XmNdefaultPosition,    False);   n++;
+    XtSetArg(args[n], XmNbuttonCount,        3);       n++;
+    XtSetArg(args[n], XmNbuttonLabelStrings,  button_strings); n++;
+    fontPicker.pickerDialog =
+        __DtCreateDialogBoxDialog(parent, "fontPickerDialog", args, n);
+
+    XtAddCallback(fontPicker.pickerDialog, XmNcallback, PickerButtonCB, NULL);
+    XtAddCallback(fontPicker.pickerDialog, XmNhelpCallback,
+                  (XtCallbackProc)HelpRequestCB,
+                  (XtPointer)HELP_FONT_DIALOG);
+
+    XmStringFree(button_strings[0]);
+    XmStringFree(button_strings[1]);
+    XmStringFree(button_strings[2]);
+
     n = 0;
     XtSetArg(args[n], XmNtitle, PICKER_MSG_TITLE); n++;
-    XtSetArg(args[n], XmNallowShellResize, True); n++;
-    fontPicker.pickerDialog =
-        XtVaCreatePopupShell("fontPickerDialog",
-                             xmDialogShellWidgetClass,
-                             parent,
-                             XmNtitle, PICKER_MSG_TITLE,
-                             XmNallowShellResize, True,
-                             NULL);
-
-    n = 0;
     XtSetArg(args[n], XmNuseAsyncGeometry, True); n++;
     XtSetArg(args[n], XmNmwmFunctions, DIALOG_MWM_FUNC); n++;
-    XtSetValues(fontPicker.pickerDialog, args, n);
+    XtSetValues(XtParent(fontPicker.pickerDialog), args, n);
 
-    /* The main work area is a Form that holds everything. */
-    pickerForm = XtVaCreateWidget("pickerForm",
-                                  xmFormWidgetClass,
-                                  fontPicker.pickerDialog,
-                                  XmNhorizontalSpacing, style.horizontalSpacing,
-                                  XmNverticalSpacing,   style.verticalSpacing,
-                                  XmNallowOverlap,      False,
-                                  NULL);
+    /* Work area — the form inside the DtDialogBox that holds all
+     * custom widgets. DtDialogBox manages the separator and buttons. */
+    n = 0;
+    XtSetArg(args[n], XmNchildType,          XmWORK_AREA);  n++;
+    XtSetArg(args[n], XmNhorizontalSpacing,   style.horizontalSpacing); n++;
+    XtSetArg(args[n], XmNverticalSpacing,     style.verticalSpacing); n++;
+    XtSetArg(args[n], XmNallowOverlap,        False); n++;
+    workArea = XmCreateForm(fontPicker.pickerDialog, "pickerWorkArea", args, n);
 
     /* ----- Source option menu (top of dialog) ----- */
-    n = 0;
-    string = CMPSTR(PICKER_MSG_SOURCE);
-    XtSetArg(args[n], XmNlabelString, string); n++;
-    XtSetArg(args[n], XmNtopAttachment,  XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing); n++;
-    XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNleftOffset,     style.horizontalSpacing); n++;
-    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE); n++;
-    sourceLabel = XmCreateLabelGadget(pickerForm, "sourceLabel", args, n);
-    XmStringFree(string);
-
     {
         Widget  optionMenu;
+        Widget  pulldownMenu;
         Widget  coreBtn;
         Widget  allBtn = NULL;
         XmString coreLabel, fontcfgLabel = NULL, allLabel = NULL;
@@ -256,32 +252,23 @@ CreateFontPicker(Widget parent)
         Widget fontcfgBtn;
 #endif
 
+        pulldownMenu = XmCreatePulldownMenu(workArea, "sourcePulldown", NULL, 0);
+
         coreLabel  = CMPSTR(PICKER_MSG_COREX11);
-
-        n = 0;
-        XtSetArg(args[n], XmNtopAttachment,  XmATTACH_WIDGET); n++;
-        XtSetArg(args[n], XmNtopWidget,      sourceLabel);     n++;
-        XtSetArg(args[n], XmNtopOffset,      0);               n++;
-        XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
-        XtSetArg(args[n], XmNleftWidget,     sourceLabel);     n++;
-        XtSetArg(args[n], XmNleftOffset,     4);               n++;
-        XtSetArg(args[n], XmNspacing,        0);               n++;
-        optionMenu = XmCreateOptionMenu(pickerForm, "sourceOption", args, n);
-
-        coreBtn = XmCreatePushButtonGadget(optionMenu, "coreX11", NULL, 0);
+        coreBtn = XmCreatePushButtonGadget(pulldownMenu, "coreX11", NULL, 0);
         XtVaSetValues(coreBtn, XmNlabelString, coreLabel, NULL);
         XmStringFree(coreLabel);
         XtManageChild(coreBtn);
 
 #ifdef USE_XFT
         fontcfgLabel = CMPSTR(PICKER_MSG_FONTCFG);
-        fontcfgBtn = XmCreatePushButtonGadget(optionMenu, "fontconfig", NULL, 0);
+        fontcfgBtn = XmCreatePushButtonGadget(pulldownMenu, "fontconfig", NULL, 0);
         XtVaSetValues(fontcfgBtn, XmNlabelString, fontcfgLabel, NULL);
         XmStringFree(fontcfgLabel);
         XtManageChild(fontcfgBtn);
 
         allLabel = CMPSTR(PICKER_MSG_ALL);
-        allBtn = XmCreatePushButtonGadget(optionMenu, "all", NULL, 0);
+        allBtn = XmCreatePushButtonGadget(pulldownMenu, "all", NULL, 0);
         XtVaSetValues(allBtn, XmNlabelString, allLabel, NULL);
         XmStringFree(allLabel);
         XtManageChild(allBtn);
@@ -289,24 +276,48 @@ CreateFontPicker(Widget parent)
         defaultIdx = 2;  /* DtFontEnumAll */
 #endif
 
-        XtAddCallback(optionMenu, XmNcommandChangedCallback, SourceSelectCB, NULL);
+        n = 0;
+        string = CMPSTR(PICKER_MSG_SOURCE);
+        XtSetArg(args[n], XmNlabelString,    string);                n++;
+        XtSetArg(args[n], XmNsubMenuId,      pulldownMenu);          n++;
+        XtSetArg(args[n], XmNtopAttachment,  XmATTACH_FORM);          n++;
+        XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing);  n++;
+        XtSetArg(args[n], XmNleftAttachment,  XmATTACH_FORM);          n++;
+        XtSetArg(args[n], XmNleftOffset,      style.horizontalSpacing); n++;
+        XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE);         n++;
+        optionMenu = XmCreateOptionMenu(workArea, "sourceOption", args, n);
+        XmStringFree(string);
+
+        if (defaultIdx == 2)
+            XtVaSetValues(optionMenu, XmNmenuHistory, allBtn, NULL);
+#ifdef USE_XFT
+        else if (defaultIdx == 1)
+            XtVaSetValues(optionMenu, XmNmenuHistory, fontcfgBtn, NULL);
+#endif
+        else
+            XtVaSetValues(optionMenu, XmNmenuHistory, coreBtn, NULL);
+
+        XtAddCallback(pulldownMenu, XmNentryCallback, SourceSelectCB, NULL);
         XtManageChild(optionMenu);
         fontPicker.sourceOption = optionMenu;
         fontPicker.currentSource = (DtFontEnumSource)defaultIdx;
+
+        sourceRow = optionMenu;
     }
 
-    /* ----- Family TitleBox + scrolled list (left column) ----- */
+    /* ----- Family TitleBox + scrolled list (top-left) ----- */
     n = 0;
     string = CMPSTR(PICKER_MSG_FAMILY);
     XtSetArg(args[n], XmNtitleString,    string); n++;
     XtSetArg(args[n], XmNtopAttachment,  XmATTACH_WIDGET); n++;
-    XtSetArg(args[n], XmNtopWidget,      sourceLabel);     n++;
+    XtSetArg(args[n], XmNtopWidget,      sourceRow);                n++;
     XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing + 5); n++;
     XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
     XtSetArg(args[n], XmNleftOffset,     style.horizontalSpacing); n++;
-    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNbottomOffset,   style.verticalSpacing); n++;
-    familyTB = _DtCreateTitleBox(pickerForm, "familyTB", args, n);
+    XtSetArg(args[n], XmNrightAttachment, XmATTACH_POSITION); n++;
+    XtSetArg(args[n], XmNrightPosition,    65); n++;
+    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_NONE); n++;
+    familyTB = _DtCreateTitleBox(workArea, "familyTB", args, n);
     XmStringFree(string);
 
     n = 0;
@@ -319,19 +330,22 @@ CreateFontPicker(Widget parent)
     XtAddCallback(fontPicker.familyList, XmNbrowseSelectionCallback,
                   FamilySelectCB, NULL);
 
-    /* ----- Size TitleBox + scrolled list (middle column) ----- */
+    /* ----- Size TitleBox + scrolled list (top-right) ----- */
     n = 0;
     string = CMPSTR(PICKER_MSG_SIZE);
     XtSetArg(args[n], XmNtitleString,    string); n++;
     XtSetArg(args[n], XmNtopAttachment,  XmATTACH_WIDGET); n++;
-    XtSetArg(args[n], XmNtopWidget,      sourceLabel);     n++;
+    XtSetArg(args[n], XmNtopWidget,      sourceRow);                n++;
     XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing + 5); n++;
-    XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
-    XtSetArg(args[n], XmNleftWidget,     familyTB);        n++;
+    XtSetArg(args[n], XmNleftAttachment, XmATTACH_POSITION); n++;
+    XtSetArg(args[n], XmNleftPosition,     65); n++;
     XtSetArg(args[n], XmNleftOffset,     style.horizontalSpacing); n++;
-    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNbottomOffset,   style.verticalSpacing); n++;
-    sizeTB = _DtCreateTitleBox(pickerForm, "sizeTB", args, n);
+    XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); n++;
+    XtSetArg(args[n], XmNrightOffset,    style.horizontalSpacing); n++;
+    XtSetArg(args[n], XmNbottomAttachment, XmATTACH_OPPOSITE_WIDGET); n++;
+    XtSetArg(args[n], XmNbottomWidget,      familyTB);                 n++;
+    XtSetArg(args[n], XmNbottomOffset,      0);                        n++;
+    sizeTB = _DtCreateTitleBox(workArea, "sizeTB", args, n);
     XmStringFree(string);
 
     n = 0;
@@ -344,21 +358,19 @@ CreateFontPicker(Widget parent)
     XtAddCallback(fontPicker.sizeList, XmNbrowseSelectionCallback,
                   SizeSelectCB, NULL);
 
-    /* ----- Preview TitleBox + form (right column) ----- */
+    /* ----- Preview TitleBox + form (bottom, full width) ----- */
     n = 0;
     string = CMPSTR(PICKER_MSG_PREVIEW);
     XtSetArg(args[n], XmNtitleString,    string); n++;
     XtSetArg(args[n], XmNtopAttachment,  XmATTACH_WIDGET); n++;
-    XtSetArg(args[n], XmNtopWidget,      sourceLabel);     n++;
-    XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing + 5); n++;
-    XtSetArg(args[n], XmNleftAttachment, XmATTACH_WIDGET); n++;
-    XtSetArg(args[n], XmNleftWidget,     sizeTB);          n++;
+    XtSetArg(args[n], XmNtopWidget,      familyTB);                 n++;
+    XtSetArg(args[n], XmNtopOffset,      style.verticalSpacing); n++;
+    XtSetArg(args[n], XmNleftAttachment, XmATTACH_FORM); n++;
     XtSetArg(args[n], XmNleftOffset,     style.horizontalSpacing); n++;
     XtSetArg(args[n], XmNrightAttachment, XmATTACH_FORM); n++;
     XtSetArg(args[n], XmNrightOffset,    style.horizontalSpacing); n++;
     XtSetArg(args[n], XmNbottomAttachment, XmATTACH_FORM); n++;
-    XtSetArg(args[n], XmNbottomOffset,   style.verticalSpacing); n++;
-    previewTB = _DtCreateTitleBox(pickerForm, "previewTB", args, n);
+    previewTB = _DtCreateTitleBox(workArea, "previewTB", args, n);
     XmStringFree(string);
 
     previewForm = XmCreateForm(previewTB, "previewForm", NULL, 0);
@@ -391,67 +403,12 @@ CreateFontPicker(Widget parent)
     XtManageChild(fontPicker.previewLabel);
     XtManageChild(fontPicker.previewText);
     XtManageChild(previewForm);
+    XtManageChild(familyTB);
+    XtManageChild(sizeTB);
+    XtManageChild(previewTB);
+    XtManageChild(workArea);
 
-    /* ----- Button row at the bottom of the dialog ----- */
-    buttonRowForm = XtVaCreateWidget("buttonRowForm",
-                                     xmFormWidgetClass,
-                                     pickerForm,
-                                     XmNfractionBase,     3,
-                                     XmNtopAttachment,    XmATTACH_NONE,
-                                     XmNleftAttachment,   XmATTACH_FORM,
-                                     XmNrightAttachment,  XmATTACH_FORM,
-                                     XmNbottomAttachment, XmATTACH_FORM,
-                                     XmNbottomOffset,     style.verticalSpacing,
-                                     XmNhorizontalSpacing, style.horizontalSpacing,
-                                     NULL);
-
-    fontPicker.applyButton = XtVaCreateManagedWidget("applyButton",
-        xmPushButtonGadgetClass, buttonRowForm,
-        XmNlabelString,    CMPSTR(PICKER_MSG_APPLY),
-        XmNtopAttachment,    XmATTACH_FORM,
-        XmNbottomAttachment, XmATTACH_FORM,
-        XmNleftAttachment,   XmATTACH_POSITION,
-        XmNleftPosition,     0,
-        XmNrightAttachment,  XmATTACH_POSITION,
-        XmNrightPosition,    1,
-        NULL);
-    XtAddCallback(fontPicker.applyButton, XmNactivateCallback,
-                  ApplyCB, NULL);
-
-    fontPicker.systemWideButton = XtVaCreateManagedWidget("systemWideButton",
-        xmPushButtonGadgetClass, buttonRowForm,
-        XmNlabelString,    CMPSTR(PICKER_MSG_APPLYSYS),
-        XmNtopAttachment,    XmATTACH_FORM,
-        XmNbottomAttachment, XmATTACH_FORM,
-        XmNleftAttachment,   XmATTACH_POSITION,
-        XmNleftPosition,     1,
-        XmNrightAttachment,  XmATTACH_POSITION,
-        XmNrightPosition,    2,
-        NULL);
-    XtAddCallback(fontPicker.systemWideButton, XmNactivateCallback,
-                  SystemWideCB, NULL);
-
-    fontPicker.cancelButton = XtVaCreateManagedWidget("cancelButton",
-        xmPushButtonGadgetClass, buttonRowForm,
-        XmNlabelString,    CMPSTR((String)_DtCancelString),
-        XmNtopAttachment,    XmATTACH_FORM,
-        XmNbottomAttachment, XmATTACH_FORM,
-        XmNleftAttachment,   XmATTACH_POSITION,
-        XmNleftPosition,     2,
-        XmNrightAttachment,  XmATTACH_POSITION,
-        XmNrightPosition,    3,
-        NULL);
-    XtAddCallback(fontPicker.cancelButton, XmNactivateCallback,
-                  CancelCB, NULL);
-
-    XtManageChild(buttonRowForm);
-
-    /* Manage the dialog form, but don't popup yet — PopupFontPicker does that. */
-    XtManageChild(pickerForm);
-
-    /* We want the dialog to know when it is mapped, so the family list
-     * is populated at that point. */
-    XtAddCallback(fontPicker.pickerDialog, XmNpopupCallback, PickerMapCB, NULL);
+    XtAddCallback(fontPicker.pickerDialog, XmNmapCallback, PickerMapCB, NULL);
 
     /* Suppress unused-variable warnings for build without USE_XFT. */
     (void)initialFamily;
@@ -475,6 +432,7 @@ PopupFontPicker(int familyIdx, int sizeIdx)
     }
 
     fontPicker.pickerActive = True;
+    fontPicker.targetFamily = familyIdx;
 
     /*
      * Re-populate family list. If the user previously closed the dialog
@@ -483,8 +441,8 @@ PopupFontPicker(int familyIdx, int sizeIdx)
      */
     PopulateFamilyList();
 
-    XtPopup(fontPicker.pickerDialog, XtGrabNone);
-    raiseWindow(XtWindow(fontPicker.pickerDialog));
+    XtManageChild(fontPicker.pickerDialog);
+    raiseWindow(XtWindow(XtParent(fontPicker.pickerDialog)));
 }
 
 /*
@@ -500,7 +458,6 @@ PopdownFontPicker(void)
 
     fontPicker.pickerActive = False;
     XtUnmanageChild(fontPicker.pickerDialog);
-    XtPopdown(fontPicker.pickerDialog);
 
     /* Free per-show allocations. The widgets themselves are reused. */
     if (fontPicker.availableFonts != NULL) {
@@ -523,6 +480,7 @@ PopdownFontPicker(void)
         XmFontListFree(fontPicker.currentFontList);
         fontPicker.currentFontList = NULL;
     }
+    fontPicker.currentRenderTable = NULL;
     fontPicker.selectedSize = 0;
 }
 
@@ -533,8 +491,8 @@ PopdownFontPicker(void)
 /*
  * FontPickerApply / FontPickerApplySystemWide
  *   Public hooks invoked from the Font.c ButtonCB after Task 9-13
- *   integration. They are also called from the picker's own ApplyCB /
- *   SystemWideCB. For now they just look up the currently selected
+ *   integration. They are also called from the picker's PickerButtonCB
+ *   (button_position 1 = Apply, 2 = SystemWide). For now they just look up the currently selected
  *   font and stash it into style.xrdb so subsequent previews use it.
  *   The real xrdb/session-manager write happens in Font.c's ButtonCB.
  */
@@ -559,7 +517,7 @@ FontPickerApply(void)
     userStr = fontPicker.selectedFcPattern ? fontPicker.selectedFcPattern
                                            : fontPicker.selectedXlfd;
 
-    FontDataSetCustomFont((String)sysStr, (String)userStr,
+    FontDataSetCustomFont(fontPicker.targetFamily, (String)sysStr, (String)userStr,
                           (int)fontPicker.currentSource);
 }
 
@@ -619,24 +577,41 @@ PopulateFamilyList(void)
 
     fontPicker.availableFonts = list;
 
-    items = (XmStringTable)XtMalloc((Cardinal)list->count * sizeof(XmString));
-    if (items == NULL)
+    int total = list->count;
+    int visible = 0;
+    int *map = (int *)XtMalloc((Cardinal)total * sizeof(int));
+    items = (XmStringTable)XtMalloc((Cardinal)total * sizeof(XmString));
+    if (items == NULL || map == NULL) {
+        XtFree((char *)map);
         return;
+    }
 
-    for (i = 0; i < list->count; i++) {
-        char *name = (list->fonts[i].family_name != NULL) ?
-                     list->fonts[i].family_name : (char *)"";
-        items[i] = CMPSTR(name);
+    for (i = 0; i < total; i++) {
+        if (fontPicker.currentSource == DtFontEnumAll ||
+            list->fonts[i].source == fontPicker.currentSource) {
+            char *name = (list->fonts[i].family_name != NULL) ?
+                         list->fonts[i].family_name : (char *)"";
+            items[visible] = CMPSTR(name);
+            map[visible] = i;
+            visible++;
+        }
     }
 
     XtVaSetValues(fontPicker.familyList,
                   XmNitems,     items,
-                  XmNitemCount, list->count,
+                  XmNitemCount, visible,
                   NULL);
 
-    for (i = 0; i < list->count; i++)
+    for (i = 0; i < visible; i++)
         XmStringFree(items[i]);
     XtFree((char *)items);
+
+    if (fontPicker.sourceMap != NULL) {
+        XtFree((char *)fontPicker.sourceMap);
+        fontPicker.sourceMap = NULL;
+    }
+    fontPicker.sourceMap = map;
+    fontPicker.sourceMapCount = visible;
 
     /* Re-populate the size list too — its contents depend on the
      * selected family, but if the user wants "size for the first
@@ -737,16 +712,15 @@ PopulateSizeList(void)
 
 /*
  * UpdatePreview
- *   Re-resolve the currently selected font pattern into an XmFontList
- *   and apply it to the preview widgets. The previous XmFontList
- *   (if any) is freed — this matches the reference-counting rules
- *   for XmFontList.
+ *   Resolve the currently selected font pattern into an XmFontList and
+ *   apply it to both previewLabel (LabelGadget) and previewText (Text).
+ *   The previous XmFontList is freed before assigning the new one.
  */
 static void
 UpdatePreview(void)
 {
     const char  *pattern = NULL;
-    XmFontList   newFontList;
+    XmFontList   fontList;
 
     if (fontPicker.selectedFcPattern != NULL) {
         pattern = fontPicker.selectedFcPattern;
@@ -756,16 +730,17 @@ UpdatePreview(void)
         return;
     }
 
-    newFontList = DtGetFontXmFontList(style.display, pattern);
-    if (newFontList == NULL)
+    fontList = DtGetFontXmFontList(style.display, pattern);
+    if (fontList == NULL)
         return;
+
+    XtVaSetValues(fontPicker.previewLabel, XmNfontList, fontList, NULL);
+    XtVaSetValues(fontPicker.previewText, XmNfontList, fontList, NULL);
 
     if (fontPicker.currentFontList != NULL)
         XmFontListFree(fontPicker.currentFontList);
-
-    XtVaSetValues(fontPicker.previewLabel, XmNfontList, newFontList, NULL);
-    XtVaSetValues(fontPicker.previewText,  XmNfontList, newFontList, NULL);
-    fontPicker.currentFontList = newFontList;
+    fontPicker.currentFontList = fontList;
+    fontPicker.currentRenderTable = NULL;
 }
 
 /*+++++++++++++++++++++++++++++++++++++++*/
@@ -787,10 +762,12 @@ FamilySelectCB(Widget w, XtPointer client_data, XtPointer call_data)
     pos = cb->item_position - 1;
 
     if (fontPicker.availableFonts == NULL ||
-        pos >= fontPicker.availableFonts->count)
+        fontPicker.sourceMap == NULL ||
+        pos >= fontPicker.sourceMapCount) {
         return;
+    }
 
-    info = &fontPicker.availableFonts->fonts[pos];
+    info = &fontPicker.availableFonts->fonts[fontPicker.sourceMap[pos]];
 
     /* Free old selections, capture new ones. */
     if (fontPicker.selectedFamily != NULL) {
@@ -813,13 +790,8 @@ FamilySelectCB(Widget w, XtPointer client_data, XtPointer call_data)
     if (info->fc_pattern != NULL)
         fontPicker.selectedFcPattern = XtNewString(info->fc_pattern);
 
-    /* Reset the preview until a size is picked. */
-    if (fontPicker.currentFontList != NULL) {
-        XmFontListFree(fontPicker.currentFontList);
-        fontPicker.currentFontList = NULL;
-    }
-
     PopulateSizeList();
+    UpdatePreview();
 }
 
 static void
@@ -909,76 +881,58 @@ SourceSelectCB(Widget w, XtPointer client_data, XtPointer call_data)
         XmFontListFree(fontPicker.currentFontList);
         fontPicker.currentFontList = NULL;
     }
+    fontPicker.currentRenderTable = NULL;
     XtVaSetValues(fontPicker.sizeList, XmNitemCount, 0, NULL);
     PopulateFamilyList();
 }
 
 static void
-ApplyCB(Widget w, XtPointer client_data, XtPointer call_data)
+PickerButtonCB(Widget w, XtPointer client_data, XtPointer call_data)
 {
-    (void)w;
-    (void)client_data;
-    (void)call_data;
+    DtDialogBoxCallbackStruct *cb = (DtDialogBoxCallbackStruct *)call_data;
 
-    if (fontPicker.selectedFamily == NULL ||
-        (fontPicker.selectedXlfd == NULL && fontPicker.selectedFcPattern == NULL))
-        return;
-
-    /* Stash the selection so Font.c's ButtonCB can pick it up later. */
-    FontPickerApply();
-
-    /* Close the picker; the Font dialog remains mapped for the user to
-     * commit via its own OK button. */
-    PopdownFontPicker();
-}
-
-static void
-SystemWideCB(Widget w, XtPointer client_data, XtPointer call_data)
-{
-    char *fontres;
-    int   result;
-
-    (void)w;
-    (void)client_data;
-    (void)call_data;
-
-    if (fontPicker.selectedFamily == NULL ||
-        (fontPicker.selectedXlfd == NULL && fontPicker.selectedFcPattern == NULL))
-        return;
-
-    /*
-     * First apply to the current session so the preview is consistent
-     * with what we are about to write to /etc/dt/app-defaults/Dtstyle.
-     * Then ask Protocol.c to invoke the pkexec helper that performs the
-     * actual privileged write.
-     */
-    FontPickerApply();
-
-    fontres = BuildFontResourceString();
-    if (fontres == NULL) {
-        InfoDialog(PICKER_MSG_SYSAPPLY_NOSEL, style.shell, False);
+    switch (cb->button_position) {
+    case 1:
+        if (fontPicker.selectedFamily == NULL ||
+            (fontPicker.selectedXlfd == NULL && fontPicker.selectedFcPattern == NULL))
+            return;
+        FontPickerApply();
         PopdownFontPicker();
-        return;
+        break;
+
+    case 2: {
+        char *fontres;
+        int   result;
+
+        if (fontPicker.selectedFamily == NULL ||
+            (fontPicker.selectedXlfd == NULL && fontPicker.selectedFcPattern == NULL))
+            return;
+
+        FontPickerApply();
+        fontres = BuildFontResourceString();
+        if (fontres == NULL) {
+            InfoDialog(PICKER_MSG_SYSAPPLY_NOSEL, style.shell, False);
+            PopdownFontPicker();
+            return;
+        }
+
+        result = RequestSystemWideApply(fontres);
+        XtFree(fontres);
+
+        if (result == 0)
+            InfoDialog(PICKER_MSG_SYSAPPLY_OK, style.shell, False);
+        else
+            InfoDialog(PICKER_MSG_SYSAPPLY_FAIL, style.shell, False);
+
+        PopdownFontPicker();
+        break;
     }
 
-    result = RequestSystemWideApply(fontres);
-    XtFree(fontres);
-
-    if (result == 0)
-        InfoDialog(PICKER_MSG_SYSAPPLY_OK, style.shell, False);
-    else
-        InfoDialog(PICKER_MSG_SYSAPPLY_FAIL, style.shell, False);
-
-    PopdownFontPicker();
-}
-
-static void
-CancelCB(Widget w, XtPointer client_data, XtPointer call_data)
-{
-    (void)w;
-    (void)client_data;
-    (void)call_data;
-    PopdownFontPicker();
+    case 3:
+    default:
+        PopdownFontPicker();
+        break;
+    }
 }
 
 static void
