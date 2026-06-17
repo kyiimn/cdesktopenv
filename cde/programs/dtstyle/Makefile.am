@@ -21,7 +21,7 @@ if HAVE_XFT
 dtstyle_LDADD += $(XFTLIB) $(FONTCONFIGLIB)
 endif
 
-dtstyle_SOURCES = Main.c MainWin.c Font.c Audio.c Startup.c Mouse.c	\
+dtstyle_SOURCES = Main.c MainWin.c Font.c FontPicker.c Audio.c Startup.c Mouse.c	\
 		  SaveRestore.c Backdrop.c Screen.c Keyboard.c		\
 		  ColorMain.c ColorPalette.c ColorFile.c ColorEdit.c	\
 		  Resource.c Protocol.c Dtwm.c Help.c HelpCB.c		\
@@ -29,7 +29,7 @@ dtstyle_SOURCES = Main.c MainWin.c Font.c Audio.c Startup.c Mouse.c	\
 		  Help.h Keyboard.h OWsync.h Screen.h Backdrop.h	\
 		  ColorPalette.h I18nEnv.h Main.h Protocol.h		\
 		  Startup.h ColorEdit.h Dtwm.h I18nMain.h MainWin.h	\
-		  Resource.h ColorFile.h Font.h I18nUtil.h Mouse.h	\
+		  Resource.h ColorFile.h Font.h FontPicker.h I18nUtil.h Mouse.h	\
 		  SaveRestore.h
 
 if SOLARIS
