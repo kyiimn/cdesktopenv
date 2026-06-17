@@ -1,98 +1,161 @@
 {
-  "active_plan": "/home/kyiimn/Projects/cdesktopenv/.sisyphus/plans/style-manager-font-family.md",
-  "started_at": "2026-06-15T11:37:04.880Z",
+  "active_plan": "/home/kyiimn/Projects/cdesktopenv/.sisyphus/plans/font-custom-picker.md",
+  "started_at": "2026-06-17T09:25:38.000Z",
   "session_ids": [
-    "ses_1383a9be6ffeAem12wOI2aFqR3",
-    "ses_134ca7e01ffe9Pvqg3gmD9XtMw",
-    "ses_134ca67c4ffe97p6oKW3JcofTh",
-    "ses_134ca4acbffeL9zrjkT1QtD8BQ",
-    "ses_134ca3431ffefevE5amizD3Yr7",
-    "ses_134bb831cffe2ZzYPBEWN9wqZm",
-    "ses_134bb6cbaffee6Fz7hVwau7g4Z",
-    "ses_134b6ef71ffeevrueQNtPxnaYc",
-    "ses_134b6af5bffeeAtI7lp4JtKbpC",
-    "ses_134b65c42ffesc63WdZEJZCI7n",
-    "ses_134a133c5ffeEPIl0SNYcuE8Yd",
-    "ses_134a120ddffesc4MaR2GLhW4Y5"
+    "ses_12d295020ffeEpAOTIR3I5iyW6",
+    "ses_12d07053fffe01u5TD7wLc6DE9",
+    "ses_12d070c9dffewSA0TIP6PnDaFl",
+    "ses_12d06fd99ffeDl0RCtjxlGj3Pj",
+    "ses_12d03b581ffehqglc34CWUKkno",
+    "ses_12d0250b8ffeNmjCQO4uJEr2Ae",
+    "ses_12d010e5bffe5fb13GlBqUryCI",
+    "ses_12cebdd12ffecNZ90zsaabCxs6",
+    "ses_12ce5b1b0ffes4JDLtvJFEvVr1",
+    "ses_12cd54205ffeAAb0E0v6RP2SoA",
+    "ses_12cd0f41affe9m7gF0f2g6Z0M0",
+    "ses_12cce922fffe6HUqQG5yk56I10",
+    "ses_12ccc796effeIUG1uDgUzHSCbN",
+    "ses_12cccb45bffevdREjPnbaQ8Xfr",
+    "ses_12cca158affeUU0bAofr5Nwpzj",
+    "ses_12cc198e8ffeiBpJ2zRSMIFL2R",
+    "ses_12cb74cf3ffe90nFLEZ2iew26R",
+    "ses_12cb623afffeQ3SrZhS52DHPNO",
+    "ses_12cb2fc39ffeyQGPUcjwuMbKh3",
+    "ses_12cb2a1eeffeHB0fEuCswtEgYm",
+    "ses_12cb2d592ffeFifVn2zIZxP4eM",
+    "ses_12cb2604fffeA55qekk9hwX66n",
+    "ses_12cadb7e5ffeiMxq3hdlR1ercP",
+    "ses_12c0e5eebffe1AqCw8hAxzro0t",
+    "ses_12c093e0dffe1aIwQsLFUaqs80",
+    "ses_12c097dcfffeXhHJfHzXEFXx7O",
+    "ses_12c08f00cffetmbdhFvmCQmbYj",
+    "ses_12c01317bffe2dy8bxDNnmOBqx",
+    "ses_12bff0e3affeC9OY1zyaU2fTda",
+    "ses_12bff2ffdffe40Eco22BskwkXz",
+    "ses_12bff8469ffeMAMmkBaLn5THPQ",
+    "ses_12bf5dce4ffeQc04eHTxPlfr4h",
+    "ses_12bf629e1ffe2gmA52BKPG4UFz",
+    "ses_12bf60940ffegFLmCElY46yzAQ"
   ],
-  "session_origins": {
-    "ses_1383a9be6ffeAem12wOI2aFqR3": "direct",
-    "ses_134ca7e01ffe9Pvqg3gmD9XtMw": "appended",
-    "ses_134ca67c4ffe97p6oKW3JcofTh": "appended",
-    "ses_134ca4acbffeL9zrjkT1QtD8BQ": "appended",
-    "ses_134ca3431ffefevE5amizD3Yr7": "appended",
-    "ses_134bb831cffe2ZzYPBEWN9wqZm": "appended",
-    "ses_134bb6cbaffee6Fz7hVwau7g4Z": "appended",
-    "ses_134b6ef71ffeevrueQNtPxnaYc": "appended",
-    "ses_134b6af5bffeeAtI7lp4JtKbpC": "appended",
-    "ses_134b65c42ffesc63WdZEJZCI7n": "appended",
-    "ses_134a133c5ffeEPIl0SNYcuE8Yd": "appended",
-    "ses_134a120ddffesc4MaR2GLhW4Y5": "appended"
-  },
-  "plan_name": "style-manager-font-family",
+  "plan_name": "font-custom-picker",
   "agent": "atlas",
   "task_sessions": {
     "todo:1": {
       "task_key": "todo:1",
       "task_label": "1",
-      "task_title": "Add MAX_FONT_FAMILIES and MAX_FONT_SIZES constants to Main.h",
-      "session_id": "ses_134ea9950ffexSJh8cFJpID0RD",
+      "task_title": "Add fontconfig/libfontconfig dependency to configure.ac and Makefile.am",
+      "session_id": "ses_12d03b581ffehqglc34CWUKkno",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-06-15T11:41:17.050Z"
+      "updated_at": "2026-06-17T00:30:17.495Z"
+    },
+    "todo:2": {
+      "task_key": "todo:2",
+      "task_label": "2",
+      "task_title": "Create FontEnum.h — public API header for font enumeration",
+      "session_id": "ses_12d0250b8ffeNmjCQO4uJEr2Ae",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-06-17T00:32:01.873Z"
     },
     "todo:3": {
       "task_key": "todo:3",
       "task_label": "3",
-      "task_title": "Extend ApplicationData struct in Main.h for 2D font selection",
-      "session_id": "ses_134e91a30ffek1euRgPuSUbQdQ",
+      "task_title": "Create FontEnum.c — X11 core font enumeration (XListFonts)",
+      "session_id": "ses_12d010e5bffe5fb13GlBqUryCI",
       "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-06-15T11:42:56.400Z"
+      "category": "deep",
+      "updated_at": "2026-06-17T00:41:59.156Z"
     },
     "todo:5": {
       "task_key": "todo:5",
       "task_label": "5",
-      "task_title": "Add NumFontFamilies, familyNames, familyLabels Xresources to Resource.c",
-      "session_id": "ses_134e77006ffeikQ79q6zG1WyeA",
+      "task_title": "Create FontPicker.h — dialog data structures",
+      "session_id": "ses_12cebdd12ffecNZ90zsaabCxs6",
       "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-06-15T11:47:39.193Z"
+      "category": "deep",
+      "updated_at": "2026-06-17T00:58:47.590Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "Create FontPicker.c — dialog layout (family list, preview, buttons)",
+      "session_id": "ses_12ce5b1b0ffes4JDLtvJFEvVr1",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-06-17T01:19:20.496Z"
     },
     "todo:9": {
       "task_key": "todo:9",
       "task_label": "9",
-      "task_title": "Add familyTB/familyList widgets to CreateFontDlg layout (horizontal layout)",
-      "session_id": "ses_134e1ffd0ffej04a7IiKEn4tGN",
+      "task_title": "Add \"Customize...\" button to Font.c CreateFontDlg",
+      "session_id": "ses_12cd54205ffeAAb0E0v6RP2SoA",
       "agent": "Sisyphus-Junior",
       "category": "deep",
-      "updated_at": "2026-06-15T11:56:02.346Z"
+      "updated_at": "2026-06-17T01:24:52.341Z"
+    },
+    "todo:10": {
+      "task_key": "todo:10",
+      "task_label": "10",
+      "task_title": "Add CustomFontData to Main.h + resource loading in Resource.c",
+      "session_id": "ses_12cd0f41affe9m7gF0f2g6Z0M0",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-17T01:27:08.119Z"
+    },
+    "todo:11": {
+      "task_key": "todo:11",
+      "task_label": "11",
+      "task_title": "Update Font.c ButtonCB OK to include custom font in fontres",
+      "session_id": "ses_12cce922fffe6HUqQG5yk56I10",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-06-17T01:29:27.093Z"
+    },
+    "todo:12": {
+      "task_key": "todo:12",
+      "task_label": "12",
+      "task_title": "Update Font.c saveFonts/restoreFonts for custom font state",
+      "session_id": "ses_12cccb45bffevdREjPnbaQ8Xfr",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-17T01:31:59.666Z"
+    },
+    "todo:14": {
+      "task_key": "todo:14",
+      "task_label": "14",
+      "task_title": "Add BuildFontResourceString() and RequestSystemWideApply() to Protocol.c",
+      "session_id": "ses_12cca158affeUU0bAofr5Nwpzj",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-06-17T01:40:45.375Z"
     },
     "todo:15": {
       "task_key": "todo:15",
       "task_label": "15",
-      "task_title": "Update dtstyle.msg (add messages 5-25, 5-26)",
-      "session_id": "ses_134dabdd6ffeQYkPgPAQqS2e9I",
+      "task_title": "Add \"Apply System-Wide\" button to Font dialog",
+      "session_id": "ses_12cc198e8ffeiBpJ2zRSMIFL2R",
       "agent": "Sisyphus-Junior",
-      "category": "quick",
-      "updated_at": "2026-06-15T11:58:19.349Z"
+      "category": "deep",
+      "updated_at": "2026-06-17T01:51:18.920Z"
     },
-    "todo:16": {
-      "task_key": "todo:16",
-      "task_label": "16",
-      "task_title": "Update Dtstyle.src + Dtstyle (C locale app-defaults)",
-      "session_id": "ses_134d5b3deffeweisNcetciXVYn",
+    "todo:17": {
+      "task_key": "todo:17",
+      "task_label": "17",
+      "task_title": "Update dtstyle.msg with new messages (5-27 through 5-32)",
+      "session_id": "ses_12cb623afffeQ3SrZhS52DHPNO",
       "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-06-15T12:10:00.472Z"
+      "category": "writing",
+      "updated_at": "2026-06-17T01:55:58.440Z"
     },
     "final-wave:f1": {
       "task_key": "final-wave:f1",
       "task_label": "F1",
       "task_title": "**Plan Compliance Audit** — `oracle`",
-      "session_id": "ses_134bb6cbaffee6Fz7hVwau7g4Z",
-      "agent": "oracle",
-      "updated_at": "2026-06-15T12:33:42.822Z"
+      "session_id": "ses_12cadb7e5ffeiMxq3hdlR1ercP",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-06-17T02:04:41.121Z"
     }
   }
 }
